@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: timeNote
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://ftp.everlast.love:33396/mailuser
+    username: time
+    password: EE3c3TffZWPWLHyD
+server:
+  port: 6666
