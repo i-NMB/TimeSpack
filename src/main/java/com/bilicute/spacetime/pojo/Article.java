@@ -3,7 +3,7 @@ package com.bilicute.spacetime.pojo;
 import lombok.Data;
 
 @Data
-public class Category {
+public class Article {
     private Integer id;//主键ID
     private String username;//用户名
     private String password;//密码
