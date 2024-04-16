@@ -24,16 +24,12 @@ public class UserController {
         if (username != null && username.length() >= 5 && username.length() <= 16 &&
                 password != null && password.length() >= 5 && password.length() <= 16)
         {
-
-
-
         //查询用户
         User u = userService.findByUserName(username);
         if (u!=null){
             //占用
             return Result.error("用户已被占用");
         }
-
         //没有占用
         //注册
         userService.register(username,password);

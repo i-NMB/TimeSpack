@@ -2,7 +2,6 @@ package com.bilicute.spacetime.pojo;
 
 
 import lombok.Data;
-import java.time.LocalDateTime;
 @Data
 public class User {
     private Integer createUser;//主键ID
