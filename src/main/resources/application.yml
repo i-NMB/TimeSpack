@@ -3,8 +3,15 @@ spring:
     name: timeNote
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ftp.everlast.love:33396/mailuser
-    username: time
-    password: EE3c3TffZWPWLHyD
+    url: jdbc:mysql://ftp.everlast.love:33396/time
+    username: 加密(QBOMpdU/hj2sj22R+ZyplW2BCIlY/3Sc)
+    password: 加密(OW0ima68qs1eHteZLt3FoMkSfb+PkAetofIVqDHEKTPEooj3D/D4mg==)
 server:
   port: 6666
+
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    property:
+      prefix: 加密(
+      suffix: )
