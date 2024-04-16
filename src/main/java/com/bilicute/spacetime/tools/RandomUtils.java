@@ -20,6 +20,13 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
 
     private static Random random = new Random();
 
+    /**
+     * @param length:  随机生成的字符长度
+     * @return String
+     * @author i囡漫笔
+     * @description 随机生成指定字符的字符串
+     * @date 2024/4/16 
+     */
     public static String randomString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -28,6 +35,13 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
         return sb.toString();
     }
 
+    /**
+     * @param length:  指定字符的长度
+     * @return String
+     * @author i囡漫笔
+     * @description 生成指定长度的纯数字随机字符串
+     * @date 2024/4/16
+     */
     public static String randomNumberString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
@@ -36,6 +50,14 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
         return sb.toString();
     }
 
+    /**
+     * @param fc:
+     * @param bc:
+     * @return Color
+     * @author i囡漫笔
+     * @description 随机颜色
+     * @date 2024/4/16
+     */
     public static Color randomColor(int fc, int bc) {
         int f = fc;
         int b = bc;
