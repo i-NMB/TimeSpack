@@ -4,6 +4,7 @@ import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.Md5Util;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,29 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    /**
+     * @param request: 获取的网络请求
+     * @param username: 获取的用户名
+     * @param password: 获取的密码
+     * @param code:  获取的验证码
+     * @return Result
+     * @author sinnie,iNMB,ytt
+     * @description
+     * @date 2024/4/17
+     */
     @PostMapping("/register")
-    public Result register(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password) {
-        if (username != null && username.length() >= 5 && username.length() <= 16 &&
-                password != null && password.length() >= 5 && password.length() <= 16)
-        {
+    public Result register(HttpServletRequest request, @Pattern(regexp ="^\\S{5,16}$") String username, @Validated @RequestBody String password,String code) {
+
+        code = code.toUpperCase();//验证码全转大写
+        //验证验证码
+        if (!code.equals(request.getSession().getAttribute("VerifyCode"))) {
+            request.getSession().setAttribute("VerifyCode",null);
+            return Result.error("图形验证码错误，请刷新图像验证码后重试");
+        }
+//        if (username != null && username.length() >= 5 && username.length() <= 16 &&
+//                password != null && password.length() >= 5 && password.length() <= 16)
+//        {
         //查询用户
         User u = userService.findByUserName(username);
         if (u!=null){
@@ -33,9 +52,8 @@ public class UserController {
         //注册
         userService.register(username,password);
         return Result.success();
-
-    }else{
-        return Result.error("参数不合法"); }
+//    }else{
+//        return Result.error("参数不合法"); }
     }
     public Result<String> login(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password){
     //根据用户名查询用户

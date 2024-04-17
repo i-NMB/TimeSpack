@@ -15,3 +15,7 @@ jasypt:
     property:
       prefix: 加密(
       suffix: )
+
+TimeMail:
+  username: no-reply@bilicute.com
+  password: 加密(F58NF9gBIBuYmhqnSkdG0drrqJi4rwoWGiWuJs6j/R8=)
