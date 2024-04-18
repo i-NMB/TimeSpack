@@ -44,3 +44,6 @@ sms:
       template-id: 2131112
       #您的sdkAppId
       sdk-app-id: 1400897821
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true #开启驼峰命名和下划线命名的自动转换
