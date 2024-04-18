@@ -18,7 +18,27 @@ jasypt:
 
 TimeMail:
   username: no-reply@bilicute.com
-  password: 加密(F58NF9gBIBuYmhqnSkdG0drrqJi4rwoWGiWuJs6j/R8=)
+  password: 加密(wKzQdg+v+BcGCMw0Jusyn0EphtE8YWBJ0wQc0lQVIWE=)
+  host: mail.bilicute.com
+  post: 465
 
 encoding:
   salt: 加密(9j90+cduo9txAvQbUlGgmIkVZV9ldnvZ8+x4GPYbsJ0=)
+
+sms:
+  config-type: yaml
+  blends:
+    # 自定义的标识，也就是configId这里可以是任意值（最好不要是中文）
+    tx-register:
+      #厂商标识，标定此配置是哪个厂商，详细请看厂商标识介绍部分
+      supplier: tencent
+      #accessKey
+      access-key-id: 加密(8DitJoBLl3dI/4tsZWzU7mszKy0mhWwyvmZijFw3VG+N9HuWiCibM2hAGjfI0zMqn10Rwqr6KDQ=)
+      #accessKeySecret
+      access-key-secret: 加密(ZhWwV06VOXaSONE+PrGXGno8Fq+HSbLJqWMJHanByoQsjXtDjnZazT8UVJW9FslQ7lKfPXX7lWk=)
+      #短信签名
+      signature: 加密(a1aram9mM/jDviCNo/m2fwVsIDzAY50X9z/IypDX8Jr78uBzGZ/U1A==)
+      #模板ID 非必须配置，如果使用sendMessage的快速发送需此配置
+      template-id: 2131112
+      #您的sdkAppId
+      sdk-app-id: 1400897821

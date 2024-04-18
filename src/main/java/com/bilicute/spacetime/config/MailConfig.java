@@ -20,15 +20,19 @@ public class MailConfig {
     private String username;
     @Value("${TimeMail.password}")
     private String password;
+    @Value("${TimeMail.host}")
+    private String host;
+    @Value("${TimeMail.post}")
+    private int post;
     //bean命名
     @Bean(name = "javaMailSender")
     public JavaMailSenderImpl createMailSender() {
         //创建一个 JavaMailSenderImpl 的实例，用于发送邮件。
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         //设置邮件服务器的主机。
-        mailSender.setHost("mail.everlast.love");
+        mailSender.setHost(host);
         //设置邮件服务器的端口号为 465。
-        mailSender.setPort(465);
+        mailSender.setPort(post);
         ///设置发件人的邮箱地址
         mailSender.setUsername(username);
         //设置发件人的邮箱密码

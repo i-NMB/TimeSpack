@@ -29,8 +29,8 @@ class SpaceTimeApplicationTests {
     }
     @Test
     public void contextLoads() {
-        String message = "";
-        String password = "";
+        String message = "weiJIE20011021";
+        String password = "xbmu2024";
         //一个同样的密码和秘钥，每次执行加密，密文都是不一样的。但是解密是没问题的。
         String jasyptEncrypt = stringEncryptor(password, message, true);
         System.out.println(jasyptEncrypt);

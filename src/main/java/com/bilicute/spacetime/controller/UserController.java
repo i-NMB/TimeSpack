@@ -56,7 +56,7 @@ public class UserController {
 //        return Result.error("参数不合法"); }
     }
 
-    public Result<String> login(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password){
+    public Result login(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password){
     //根据用户名查询用户
         User loginUser=userService.findByUserName(username);
     //判断该用户是否存在

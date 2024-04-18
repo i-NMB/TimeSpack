@@ -92,6 +92,13 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
+        <!--轻量级第三方引用腾讯云短信发送平台，少量的第三方依赖，无需引入诸多SDK，为项目减肥-->
+        <dependency>
+            <groupId>org.dromara.sms4j</groupId>
+            <artifactId>sms4j-spring-boot-starter</artifactId>
+            <version> 3.2.1 </version>
+        </dependency>
+
     </dependencies>
 
     <build>
