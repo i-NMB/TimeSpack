@@ -7,7 +7,7 @@ spring:
     username: 加密(QBOMpdU/hj2sj22R+ZyplW2BCIlY/3Sc)
     password: 加密(OW0ima68qs1eHteZLt3FoMkSfb+PkAetofIVqDHEKTPEooj3D/D4mg==)
 server:
-  port: 6666
+  port: 6066
 
 jasypt:
   encryptor:

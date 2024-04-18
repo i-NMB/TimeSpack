@@ -5,9 +5,10 @@ import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
-import com.bilicute.spacetime.utils.StringUtilsFromTime;
 import com.bilicute.spacetime.utils.VerifyCode;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
@@ -16,15 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
-import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
 
 @RestController
 @RequestMapping("/user")
@@ -92,21 +88,30 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Result login(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password){
+    public Result login(@Pattern(regexp ="^\\S{5,16}$") String username,
+                        @Pattern(regexp ="^\\S{5,16}$")String password,
+                        HttpServletResponse response){
     //根据用户名查询用户
         User loginUser=userService.findByUserName(username);
     //判断该用户是否存在
         if(loginUser==null){
             return Result.error("用户名错误");
         }
-        //判断密码是否正确loginguser对象中的password是密文
+        //判断密码是否正确loginUser对象中的password是密文
         if (Sha256.addSalt(password).equals(loginUser.getPassword()) ){
             //登录成功
-            return Result.success("jwt token令牌..");
+            //DONE 待完成获取JWT的令牌返回到cookie
+            Map<String,Object> claims = new HashMap<>();
+            claims.put("id",loginUser.getCreateUser());
+            claims.put("username",loginUser.getUsername());
+            String token = JwtUtil.genToken(claims);
+            response.setHeader("Authorization",token);
+            return Result.success("登录成功");
         }
         return Result.error("密码错误");
     }
 
+    // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
     @PutMapping("/update")
     public Result update(@RequestBody User user){
         userService.update(user);
@@ -126,6 +131,25 @@ public class UserController {
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
+
+//    @GetMapping("/giveToken")
+//    public Result testGiveToken(HttpServletResponse response,HttpServletRequest request){
+//        Map<String,Object> claims = new HashMap<>();
+//        claims.put("username","iNMB");
+//        String token = JwtUtil.genToken(claims);// 创建一个 cookie对象
+//        Cookie cookie = new Cookie("jwt", token);
+//        cookie.setHttpOnly(true); //不能被js访问的Cookie
+//        cookie.setMaxAge(10);
+//        //将cookie对象加入response响应
+//        response.addCookie(cookie);
+//        request.getSession().setAttribute("1",1);
+//        return Result.success("成功");
+//    }
+//
+//    @GetMapping("/token")
+//    public Result test(@RequestHeader(name = "Authorization")String token){
+//        return Result.success(JwtUtil.parseToken(token));
+//    }
 
 
 }

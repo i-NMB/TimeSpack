@@ -6,9 +6,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
 import java.util.Map;
 
+import static com.bilicute.spacetime.utils.Sha256.getKey;
+
 public class JwtUtil {
 
-    private static final String KEY = "itheima";
+    private static final String KEY = getKey();
 	
 	//接收业务数据,生成token并返回
     public static String genToken(Map<String, Object> claims) {

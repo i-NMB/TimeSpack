@@ -30,7 +30,8 @@ public class Webconfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptors)
                 .excludePathPatterns("/user/login",
                         "/user/register",
-                        "/getCode/*");
+                        "/getCode/*",
+                        "/user/giveToken");
 
     }
 }

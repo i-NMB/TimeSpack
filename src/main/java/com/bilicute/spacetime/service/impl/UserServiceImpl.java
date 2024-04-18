@@ -4,6 +4,7 @@ import com.bilicute.spacetime.mapper.UserMapper;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.Sha256;
+import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateAvatar(String avatarUrl) {
-//        Map<String,Object> map=ThreadLocalUtil.get();
-//        Integer createUser=(Integer) map.get("createUser");
-//        userMapper.updateAvatar(avatarUrl,createUser);
+        Map<String,Object> map= ThreadLocalUtil.get();
+        Integer createUser=(Integer) map.get("createUser");
+        userMapper.updateAvatar(avatarUrl,createUser);
     }
 }
