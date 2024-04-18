@@ -3,6 +3,7 @@ package com.bilicute.spacetime.controller;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.UserService;
+import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Pattern;
@@ -11,6 +12,8 @@ import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -76,6 +79,14 @@ public class UserController {
     public Result update(@RequestBody User user){
         userService.update(user);
         return Result.success();
+    }
+    @GetMapping("userInfo")
+    public Result<User> userInfo(@RequestHeader(name = "Authorization")String token){
+        //根据用户名查询用户
+        Map<String,Object> map= JwtUtil.parseToken(token);
+        String username=(String) map.get("username");
+        User user=userService.findByUserName(username);
+        return Result.success(user);
     }
 
     @PatchMapping("/updateAvatar")
