@@ -1,4 +1,4 @@
-package com.bilicute.spacetime.tools;
+package com.bilicute.spacetime.utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

@@ -1,4 +1,4 @@
-package com.bilicute.spacetime.tools;
+package com.bilicute.spacetime.utils;
 
 import java.awt.*;
 import java.util.Random;

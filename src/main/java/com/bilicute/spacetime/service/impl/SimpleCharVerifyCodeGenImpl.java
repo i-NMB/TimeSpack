@@ -2,7 +2,7 @@ package com.bilicute.spacetime.service.impl;
 
 import com.bilicute.spacetime.pojo.VerifyCode;
 import com.bilicute.spacetime.service.IVerifyCodeGen;
-import com.bilicute.spacetime.tools.RandomUtils;
+import com.bilicute.spacetime.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

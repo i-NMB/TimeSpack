@@ -4,6 +4,15 @@ package com.bilicute.spacetime.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+
+/**
+ * @author 黑马工具
+ * @description MD5加密工具
+ * @deprecated MD5未加盐安全性已过时
+ * @date 2024/4/17
+ */
+
+
 public class Md5Util {
     /**
      * 默认的密码字符串组合，用来将字节转换成 16 进制表示的字符,apache校验下载的文件的正确性用的就是默认的这个组合

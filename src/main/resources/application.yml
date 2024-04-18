@@ -19,3 +19,6 @@ jasypt:
 TimeMail:
   username: no-reply@bilicute.com
   password: 加密(F58NF9gBIBuYmhqnSkdG0drrqJi4rwoWGiWuJs6j/R8=)
+
+encoding:
+  salt: 加密(9j90+cduo9txAvQbUlGgmIkVZV9ldnvZ8+x4GPYbsJ0=)
