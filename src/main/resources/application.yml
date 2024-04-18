@@ -8,7 +8,9 @@ spring:
     password: 加密(OW0ima68qs1eHteZLt3FoMkSfb+PkAetofIVqDHEKTPEooj3D/D4mg==)
 server:
   port: 6666
-
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: on #开启驼峰命名和下划线命名的转换
 jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES

@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
+import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
+
 /**
  * @所属包名: com.bilicute.spacetime.controller
  * @类名: VerifyCodeController
@@ -89,7 +92,7 @@ public class VerifyCodeController {
         //在代理服务器端防止缓冲
         response.setDateHeader("Expires", 0);
 
-        if (StringUtilsFromTime.isEmptyString(email)){
+        if (isEmptyString(email)){
             return Result.error("邮箱为空");
         }
 
@@ -97,8 +100,8 @@ public class VerifyCodeController {
             code = iVerifyCodeGen.generate(1, 1, streams);
             //将VerifyCode绑定session
             request.getSession().setAttribute("Mail",email);
-            request.getSession().setAttribute("NewMailVerifyCode", code);
-            System.out.println("验证码为："+code);
+            request.getSession().setAttribute("MailCode", code);
+//            System.out.println("验证码为："+code);
         } catch (IOException e) {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
         }
@@ -129,16 +132,13 @@ public class VerifyCodeController {
                 return Result.error("60秒内请勿重复发送验证码");
             }
         }
-        if (StringUtilsFromTime.isEmptyString(phone)){
-            return Result.error("手机号为空");
-        }
-        if(!PhoneCodeTool.isPhone(phone)){
+        if(!isPhone(phone)){
             return Result.error("请输入正确的手机号");
         }
         String phoneCode = PhoneCodeTool.getPhoneCode();
         request.getSession().setAttribute("RequestTime",System.currentTimeMillis());
         request.getSession().setAttribute("phone",phone);
-        request.getSession().setAttribute("PhoneVerifyCode", phoneCode);
+        request.getSession().setAttribute("PhoneCode", phoneCode);
         //发送短信
         SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
         smsBlend.sendMessage(phone,phoneCode);
