@@ -13,4 +13,12 @@ public class StringUtilsFromTime {
     public static boolean isEmptyString(String string) {
         return string == null || string.isEmpty() || string.trim().isEmpty();
     }
+    public static boolean isEmptyString(String[] strings) {
+        for (String string : strings) {
+            if (string == null || string.isEmpty() || string.trim().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
