@@ -91,6 +91,7 @@ public class UserController {
 
     }
 
+    @PostMapping("/login")
     public Result login(@Pattern(regexp ="^\\S{5,16}$") String username, @Pattern(regexp ="^\\S{5,16}$")String password){
     //根据用户名查询用户
         User loginUser=userService.findByUserName(username);
@@ -111,7 +112,7 @@ public class UserController {
         userService.update(user);
         return Result.success();
     }
-    @GetMapping("userInfo")
+    @GetMapping("/userInfo")
     public Result<User> userInfo(@RequestHeader(name = "Authorization")String token){
         //根据用户名查询用户
         Map<String,Object> map= JwtUtil.parseToken(token);
