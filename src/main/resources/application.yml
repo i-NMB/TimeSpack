@@ -6,6 +6,10 @@ spring:
     url: jdbc:mysql://ftp.everlast.love:33396/time
     username: 加密(QBOMpdU/hj2sj22R+ZyplW2BCIlY/3Sc)
     password: 加密(OW0ima68qs1eHteZLt3FoMkSfb+PkAetofIVqDHEKTPEooj3D/D4mg==)
+#  data:
+#    redis:
+#      port: 6379
+#
 server:
   port: 6066
 
