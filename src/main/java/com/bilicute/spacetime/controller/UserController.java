@@ -5,6 +5,7 @@ import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
+import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import com.bilicute.spacetime.utils.VerifyCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -113,15 +114,17 @@ public class UserController {
 
     // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
     @PutMapping("/update")
-    public Result update(@RequestBody User user){
+    public Result update(@RequestBody @Validated User user){
         userService.update(user);
         return Result.success();
     }
     @GetMapping("/userInfo")
-    public Result<User> userInfo(@RequestHeader(name = "Authorization")String token){
+    public Result<User> userInfo(/*@RequestHeader(name = "Authorization")String token*/){
         //根据用户名查询用户
-       Map<String,Object> map= JwtUtil.parseToken(token);
-        String username=(String) map.get("username");
+       /*Map<String,Object> map= JwtUtil.parseToken(token);
+        String username=(String) map.get("username");*/
+        Map<String,Object>map = ThreadLocalUtil.get();
+        String username =(String) map.get("username");
         User user=userService.findByUserName(username);
         return Result.success(user);
     }
@@ -150,6 +153,9 @@ public class UserController {
 //    public Result test(@RequestHeader(name = "Authorization")String token){
 //        return Result.success(JwtUtil.parseToken(token));
 //    }
+
+
+
 
 
 }
