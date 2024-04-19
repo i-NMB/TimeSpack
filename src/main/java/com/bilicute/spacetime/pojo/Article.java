@@ -12,4 +12,5 @@ public class Article {
     private String userPic;//用户头像地址
     private String creatTime;//创建时间
     private String updateTime;//更新时间
+    private String phone;//手机号
 }
