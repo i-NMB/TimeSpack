@@ -2,11 +2,12 @@ package com.bilicute.spacetime.controller;
 
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.pojo.User;
+import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
+import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import com.bilicute.spacetime.utils.VerifyCode;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,7 @@ import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
 @RequestMapping("/user")
 @Validated
 @Slf4j
+
 
 public class UserController {
     @Autowired
@@ -87,6 +89,15 @@ public class UserController {
 
     }
 
+    /**
+     * @param username: 用户名
+     * @param password: 密码
+     * @param response: 网络响应（添加响应头）
+     * @return Result
+     * @author i囡漫笔
+     * @description 用户登陆并返回用户信息
+     * @date 2024/4/19
+     */
     @PostMapping("/login")
     public Result login(@Pattern(regexp ="^\\S{5,16}$") String username,
                         @Pattern(regexp ="^\\S{5,16}$")String password,
@@ -100,13 +111,13 @@ public class UserController {
         //判断密码是否正确loginUser对象中的password是密文
         if (Sha256.addSalt(password).equals(loginUser.getPassword()) ){
             //登录成功
-            //DONE 待完成获取JWT的令牌返回到cookie
+            //DONE 待完成获取JWT的令牌
             Map<String,Object> claims = new HashMap<>();
             claims.put("id",loginUser.getCreateUser());
             claims.put("username",loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
             response.setHeader("Authorization",token);
-            return Result.success("登录成功");
+            return Result.success(token);
         }
         return Result.error("密码错误");
     }
@@ -117,39 +128,33 @@ public class UserController {
         userService.update(user);
         return Result.success();
     }
+
+    /**
+     * @return Result
+     * @author i囡漫笔,ytt,王雅妮sinne
+     * @description 获取已登陆用户的详细信息
+     * @date 2024/4/19
+     */
     @GetMapping("/userInfo")
-    public Result<User> userInfo(@RequestHeader(name = "Authorization")String token){
+    public Result userInfo(){
         //根据用户名查询用户
-       Map<String,Object> map= JwtUtil.parseToken(token);
-        String username=(String) map.get("username");
-        User user=userService.findByUserName(username);
+        User user = QuickMethods.getLoggedUser();
+        if (user == null) {
+            return Result.error("查询信息错误");
+        }
         return Result.success(user);
     }
 
+    /**
+     * @param avatarUrl: 头像链接
+     * @return Result
+     * @author Mjlyb
+     * @description 用户上传头像链接后更新头像链接
+     * @date 2024/4/19
+     */
     @PatchMapping("/updateAvatar")
     public Result updateAvatar(@RequestParam @URL String avatarUrl){
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
-
-//    @GetMapping("/giveToken")
-//    public Result testGiveToken(HttpServletResponse response,HttpServletRequest request){
-//        Map<String,Object> claims = new HashMap<>();
-//        claims.put("username","iNMB");
-//        String token = JwtUtil.genToken(claims);// 创建一个 cookie对象
-//        Cookie cookie = new Cookie("jwt", token);
-//        cookie.setHttpOnly(true); //不能被js访问的Cookie
-//        cookie.setMaxAge(10);
-//        //将cookie对象加入response响应
-//        response.addCookie(cookie);
-//        request.getSession().setAttribute("1",1);
-//        return Result.success("成功");
-//    }
-//
-//    @GetMapping("/token")
-//    public Result test(@RequestHeader(name = "Authorization")String token){
-//        return Result.success(JwtUtil.parseToken(token));
-//    }
-
-
 }
