@@ -22,4 +22,7 @@ public interface UserMapper {
 
     @Update("update user set user_pic=#{avatarUrl},update_time=now() where create_user=#{createUser}")
     void updateAvatar(String avatarUrl,Integer createUser);
+
+    @Update("update user set password=#{sha256},update_time=now() where create_user=#{id}")
+    void updatePwd(String sha256,Integer id);
 }
