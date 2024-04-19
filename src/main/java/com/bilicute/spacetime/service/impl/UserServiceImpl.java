@@ -19,8 +19,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Override
     public User findByUserName(String username) {
-        User u = userMapper.findByUserName(username);
-        return u;
+        return userMapper.findByUserName(username);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateAvatar(String avatarUrl) {
         Map<String,Object> map= ThreadLocalUtil.get();
-        Integer createUser=(Integer) map.get("createUser");
+        Integer createUser=(Integer) map.get("id");
         userMapper.updateAvatar(avatarUrl,createUser);
     }
 }

@@ -30,7 +30,7 @@ public class User {
     @URL(message = "头像地址错误")
     private String userPic;//用户头像地址
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String creatTime;//创建时间
+    private String createTime;//创建时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String updateTime;//更新时间
     @Identity(message = "用户身份不正确")

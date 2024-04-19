@@ -45,12 +45,12 @@ public class LoginInterceptors implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         try {
             //从redis中获取token
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            String redisToken = operations.get(token);
-            if (redisToken == null) {
-                //redisToken失效
-                throw new RuntimeException();
-            }
+//            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
+//            String redisToken = operations.get(token);
+//            if (redisToken == null) {
+//                //redisToken失效
+//                throw new RuntimeException();
+//            }
             Map<String, Object> claims = JwtUtil.parseToken(token);
             ThreadLocalUtil.set(claims);//把业务数据放入ThreadLocal中
             return true;//放行
