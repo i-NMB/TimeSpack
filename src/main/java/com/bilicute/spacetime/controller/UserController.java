@@ -203,8 +203,14 @@ public class UserController {
         if(!VerifyCode.verifyByMail(request,oldMail,oldMailCode)){
             return Result.error("邮箱验证码错误");
         }
-
-
+        //判断邮箱地址是否是请求时候的邮箱地址
+        if(!newMail.equals(request.getSession().getAttribute("newMail"))){
+            return Result.error("新邮箱并非发送新邮箱验证码的邮箱");
+        }
+        newMailCode = newMailCode.toUpperCase();//小写字母转为大写
+        if (!newMailCode.equals(request.getSession().getAttribute("newMailCode"))) {
+            return Result.error("新邮箱的验证码错误");
+        }
         userService.updateMail(newMail);
         return Result.success();
     }
