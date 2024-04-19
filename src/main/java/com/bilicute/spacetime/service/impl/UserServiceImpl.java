@@ -4,7 +4,6 @@ import com.bilicute.spacetime.mapper.UserMapper;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
-import com.bilicute.spacetime.utils.Md5Util;
 import com.bilicute.spacetime.utils.Sha256;
 import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;

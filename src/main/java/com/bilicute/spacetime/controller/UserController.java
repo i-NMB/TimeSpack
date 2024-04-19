@@ -125,6 +125,7 @@ public class UserController {
             claims.put("username",loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
             response.setHeader("Authorization", token);
+            request.getSession().invalidate();
             return Result.success(token);
         }
         return Result.error("密码错误");
@@ -178,7 +179,7 @@ public class UserController {
         Map<String, Object> map = ThreadLocalUtil.get();
         String username = (String) map.get("username");
         User loginUser = userService.findByUserName(username);
-        if (!loginUser.getPassword().equals(Md5Util.getMD5String(oldPwd))) {
+        if (!loginUser.getPassword().equals(Sha256.addSalt(oldPwd))) {
             return Result.error("原密码填写不正确");
         }
         if (!rePwd.equals(newPwd)) {
@@ -190,28 +191,26 @@ public class UserController {
 
     /**
      * @param request: 网络请求（获取Session）
-     * @param oldMail: 旧邮箱
-     * @param oldMailCode: 旧邮箱验证码
+     * @param phoneCode: 手机验证码
+     * @param mail: 新邮箱
+     * @param mailCode: 新邮箱验证码
      * @return Result
      * @author i囡漫笔
      * @description 已登陆用户修改邮箱验证码
      * @date 2024/4/19
      */
     @PatchMapping("/updateMail")
-    public Result updateMail(HttpServletRequest request,String oldMail,String oldMailCode,
-                             String newMail,String newMailCode){
-        if(!VerifyCode.verifyByMail(request,oldMail,oldMailCode)){
-            return Result.error("邮箱验证码错误");
+    public Result updateMail(HttpServletRequest request,String phoneCode,
+                             String mail,String mailCode){
+        String phone = QuickMethods.getLoggedInPhone();
+        if(!VerifyCode.verifyByPhone(request,phone,phoneCode)){
+            return Result.error("手机验证码错误");
         }
-        //判断邮箱地址是否是请求时候的邮箱地址
-        if(!newMail.equals(request.getSession().getAttribute("newMail"))){
-            return Result.error("新邮箱并非发送新邮箱验证码的邮箱");
+        if (!VerifyCode.verifyByMail(request,mail,mailCode)){
+            return Result.error("新邮箱验证码错误");
         }
-        newMailCode = newMailCode.toUpperCase();//小写字母转为大写
-        if (!newMailCode.equals(request.getSession().getAttribute("newMailCode"))) {
-            return Result.error("新邮箱的验证码错误");
-        }
-        userService.updateMail(newMail);
+        userService.updateMail(mail);
+        request.getSession().invalidate();
         return Result.success();
     }
 }
