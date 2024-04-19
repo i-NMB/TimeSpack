@@ -92,7 +92,8 @@ public class UserController {
     /**
      * @param username: 用户名
      * @param password: 密码
-     * @param response: 网络响应（添加响应头）
+     * @param request: 网络响应（添加响应头）
+     * @param response
      * @return Result
      * @author i囡漫笔
      * @description 用户登陆并返回用户信息
@@ -101,26 +102,34 @@ public class UserController {
     @PostMapping("/login")
     public Result login(@Pattern(regexp ="^\\S{5,16}$") String username,
                         @Pattern(regexp ="^\\S{5,16}$")String password,
-                        HttpServletResponse response){
-    //根据用户名查询用户
+                        @Pattern(regexp ="^\\S{6}$")String code,// 添加这一行
+                        HttpServletResponse response,
+                        HttpServletRequest request){
+        // 根据用户名查询用户
         User loginUser=userService.findByUserName(username);
-    //判断该用户是否存在
+        // 判断该用户是否存在
         if(loginUser==null){
             return Result.error("用户名错误");
         }
-        //判断密码是否正确loginUser对象中的password是密文
+        if (!VerifyCode.verifyByImg(request,code)) {
+            return Result.error("验证码错误");
+        }
+        // 判断密码是否正确loginUser对象中的password是密文
         if (Sha256.addSalt(password).equals(loginUser.getPassword()) ){
-            //登录成功
-            //DONE 待完成获取JWT的令牌
+            // 判断图形验证码code是否正确
+
+            // 登录成功
+            // DONE 待完成获取JWT的令牌返回到cookie
             Map<String,Object> claims = new HashMap<>();
             claims.put("id",loginUser.getCreateUser());
             claims.put("username",loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
             response.setHeader("Authorization",token);
-            return Result.success(token);
+            return Result.success("登录成功");
         }
         return Result.error("密码错误");
     }
+
 
     // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
     @PutMapping("/update")
