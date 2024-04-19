@@ -1,16 +1,44 @@
 package com.bilicute.spacetime.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.groups.Default;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class Category {
-    private Integer id;//主键ID
-    private String username;//用户名
-    private String password;//密码
-    private String nickname;//昵称
-    private String email;//邮箱
-    private String userPic;//用户头像地址
-    private String creatTime;//创建时间
-    private String updateTime;//更新时间
-    private String phone;//手机号
+
+    @NotNull(message = "id不能为空",groups = {Update.class, Delete.class})
+    private Integer categoryId;//主键ID
+    @NotEmpty(message = "分类名称为空")
+    private String categoryName;//分类名称
+    //    @NotEmpty(message = "分类别名为空", groups = {Add.class, Update.class})
+    @NotEmpty(message = "分类别名为空")
+    private String categoryAlias;//分类别名
+    private Integer createUser;//创建人ID
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;//创建时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;//更新时间
+
+
+
+    /**
+     * @author i囡漫笔
+     * @description 分组接口,用于把Default添加到Add中，上述没有groups标识的验证符都将继承到Add
+     * @date 2024/4/19
+     */
+    public interface Add extends Default { }
+
+    /**
+     * @author i囡漫笔
+     * @description 分组接口，用于把Default添加到Update中
+     * @date 2024/4/19
+     */
+    public interface Update extends Default { }
+
+    public interface Delete{ }
 }
