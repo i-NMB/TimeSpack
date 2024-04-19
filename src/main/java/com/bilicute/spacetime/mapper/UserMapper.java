@@ -29,4 +29,7 @@ public interface UserMapper {
 
     @Update("update user set email=#{mail},update_time=now() where create_user=#{id}")
     void updateMail(String mail, Integer id);
+
+    @Update("update user set nickname=#{nickname},update_time=now() where create_user=#{id}")
+    void addNickname(String nickname, Integer id);
 }

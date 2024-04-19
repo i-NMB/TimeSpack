@@ -19,6 +19,8 @@ public interface UserService {
 
     void updateMail(String mail);
 
+    void updateNickname(String nickname,Integer id);
+
     //更新用户名
 
 

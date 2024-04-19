@@ -1,5 +1,6 @@
 package com.bilicute.spacetime.service.impl;
 
+import com.bilicute.spacetime.annotate.Identity;
 import com.bilicute.spacetime.mapper.UserMapper;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
@@ -68,5 +69,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateMail(String mail) {
         userMapper.updateMail(mail,QuickMethods.getLoggedInUserId());
+    }
+
+
+
+    @Override
+    public void updateNickname(String nickname, Integer id) {
+        userMapper.addNickname(nickname,id);
     }
 }

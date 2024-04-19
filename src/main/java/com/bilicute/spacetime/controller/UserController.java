@@ -213,4 +213,11 @@ public class UserController {
         request.getSession().invalidate();
         return Result.success();
     }
+
+    @PatchMapping("/updateNickname")
+    public Result updateNickname(String nickname){
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        userService.updateNickname(nickname,loggedInUserId);
+        return Result.success();
+    }
 }
