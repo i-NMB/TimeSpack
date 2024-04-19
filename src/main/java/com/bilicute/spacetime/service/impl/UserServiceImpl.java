@@ -2,6 +2,7 @@ package com.bilicute.spacetime.service.impl;
 
 import com.bilicute.spacetime.mapper.UserMapper;
 import com.bilicute.spacetime.pojo.User;
+import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.Md5Util;
 import com.bilicute.spacetime.utils.Sha256;
@@ -63,5 +64,10 @@ public class UserServiceImpl implements UserService {
         Map<String,Object> map= ThreadLocalUtil.get();
         Integer createUser=(Integer) map.get("id");
         userMapper.updatePwd(Sha256.addSalt(newPwd),createUser);
+    }
+
+    @Override
+    public void updateMail(String mail) {
+        userMapper.updateMail(mail,QuickMethods.getLoggedInUserId());
     }
 }

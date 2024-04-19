@@ -17,6 +17,8 @@ public interface UserService {
 //更新密码
     void updatePwd(String newPwd);
 
+    void updateMail(String mail);
+
     //更新用户名
 
 

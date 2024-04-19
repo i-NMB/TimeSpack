@@ -26,4 +26,7 @@ public interface UserMapper {
 
     @Update("update user set password=#{sha256},update_time=now() where create_user=#{id}")
     void updatePwd(String sha256,Integer id);
+
+    @Update("update user set email=#{mail},update_time=now() where create_user=#{id}")
+    void updateMail(String mail, Integer id);
 }

@@ -82,7 +82,7 @@ public class VerifyCodeController {
      * @date 2024/4/18
      */
     @PostMapping  ("/mail")
-    public Result newMailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
+    public Result MailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
         IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
         String code;
         //设置响应头
@@ -101,6 +101,35 @@ public class VerifyCodeController {
             //将VerifyCode绑定session
             request.getSession().setAttribute("Mail",email);
             request.getSession().setAttribute("MailCode", code);
+//            System.out.println("验证码为："+code);
+        } catch (IOException e) {
+            return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
+        }
+        mailService.sendEmail(email, code, "新用户");
+        log.info("新用户发送邮件验证码："+email);
+        return Result.success();
+    }
+
+    @PostMapping  ("/newMail")
+    public Result newMailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
+        IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
+        String code;
+        //设置响应头
+        response.setHeader("Pragma", "no-cache");
+        //设置响应头
+        response.setHeader("Cache-Control", "no-cache");
+        //在代理服务器端防止缓冲
+        response.setDateHeader("Expires", 0);
+
+        if (isEmptyString(email)){
+            return Result.error("邮箱为空");
+        }
+
+        try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
+            code = iVerifyCodeGen.generate(1, 1, streams);
+            //将VerifyCode绑定session
+            request.getSession().setAttribute("newMail",email);
+            request.getSession().setAttribute("newMailCode", code);
 //            System.out.println("验证码为："+code);
         } catch (IOException e) {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());

@@ -1,4 +1,4 @@
-package com.bilicute.spacetime.utils;
+package com.bilicute.spacetime.quickMethods;
 
 import com.bilicute.spacetime.pojo.Result;
 import jakarta.servlet.http.HttpServletRequest;

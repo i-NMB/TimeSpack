@@ -4,6 +4,9 @@ import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
+import com.bilicute.spacetime.utils.JwtUtil;
+import com.bilicute.spacetime.utils.Sha256;
+import com.bilicute.spacetime.quickMethods.VerifyCode;
 import com.bilicute.spacetime.utils.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,12 +46,12 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result register(HttpServletRequest request,
-                           @Pattern(regexp = "^\\S{5,16}$", message = "请输入5-16位用户名") String username,
+                           @Pattern(regexp ="^\\S{5,16}$" ,message = "请输入5-16位用户名") String username,
                            @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{6,20}$", message = "密码必须要有一个小写字母，一个大写字母和一个数字")
                                @NotNull(message = "密码不能为空")
-                                       String password,
-                           @Pattern(regexp = "^[\\da-zA-Z_-]+@[\\da-zA-Z_-]+\\.(com|cn|email)$", message = "邮箱输入错误或为不支持的邮箱")
-                                       String email,
+                               String password,
+                           @Pattern(regexp = "^[\\da-zA-Z_-]+@[\\da-zA-Z_-]+\\.(com|cn|email)$",message = "邮箱输入错误或为不支持的邮箱")
+                               String email,
                            String phone,
                            String code,
                            String phoneCode,
@@ -58,31 +61,31 @@ public class UserController {
 //        if(isEmptyString(stringsArray)){
 //            return Result.error("缺少关键参数");
 //        }
-        if (!isPhone(phone)) {
+        if(!isPhone(phone)){
             return Result.error("请输入正确的手机号");
         }
         //验证手机验证码
-        if (!VerifyCode.verifyByPhone(request, phone, phoneCode)) {
+        if(!VerifyCode.verifyByPhone(request,phone,phoneCode)){
             return Result.error("手机验证码错误");
         }
         //验证验证码
-        if (!VerifyCode.verifyByImg(request, code)) {
+        if (!VerifyCode.verifyByImg(request,code)) {
             return Result.error("图形验证码错误，请刷新图像验证码后重试");
         }
         //验证邮箱是否被修改
-        if (!VerifyCode.verifyByMail(request, email, emailCode)) {
+        if(!VerifyCode.verifyByMail(request,email,emailCode)){
             return Result.error("邮箱验证码错误");
         }
 
         //查询用户
         User u = userService.findByUserName(username);
-        if (u != null) {
+        if (u!=null){
             //占用
             return Result.error("用户名已被占用");
         }
         //没有占用
         //注册
-        userService.register(username, password, email, phone);
+        userService.register(username,password,email,phone);
         return Result.success();
 
     }
@@ -90,8 +93,7 @@ public class UserController {
     /**
      * @param username: 用户名
      * @param password: 密码
-     * @param request: 网络响应（添加响应头）
-     * @param response
+     * @param response: 网络响应（添加响应头）
      * @return Result
      * @author i囡漫笔
      * @description 用户登陆并返回用户信息
@@ -183,6 +185,27 @@ public class UserController {
             return Result.error("两次填写的新密码不一样");
         }
         userService.updatePwd(newPwd);
+        return Result.success();
+    }
+
+    /**
+     * @param request: 网络请求（获取Session）
+     * @param oldMail: 旧邮箱
+     * @param oldMailCode: 旧邮箱验证码
+     * @return Result
+     * @author i囡漫笔
+     * @description 已登陆用户修改邮箱验证码
+     * @date 2024/4/19
+     */
+    @PatchMapping("/updateMail")
+    public Result updateMail(HttpServletRequest request,String oldMail,String oldMailCode,
+                             String newMail,String newMailCode){
+        if(!VerifyCode.verifyByMail(request,oldMail,oldMailCode)){
+            return Result.error("邮箱验证码错误");
+        }
+
+
+        userService.updateMail(newMail);
         return Result.success();
     }
 }
