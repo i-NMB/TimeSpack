@@ -220,4 +220,19 @@ public class UserController {
         userService.updateNickname(nickname,loggedInUserId);
         return Result.success();
     }
+    @PatchMapping("/updatePhone")
+    public Result updatePhone(HttpServletRequest request,String mailCode,
+                             String phone,String phoneCode){
+        String mail = QuickMethods.getLoggedInEmail();
+        if(!VerifyCode.verifyByMail(request,mail,mailCode)){
+            return Result.error("邮箱验证码错误");
+        }
+        if (!VerifyCode.verifyByPhone(request,phone,phoneCode)){
+            return Result.error("新手机验证码错误");
+        }
+        userService.updatePhone(phone);
+        request.getSession().invalidate();
+        return Result.success();
+    }
+
 }

@@ -32,4 +32,6 @@ public interface UserMapper {
 
     @Update("update user set nickname=#{nickname},update_time=now() where create_user=#{id}")
     void addNickname(String nickname, Integer id);
+
+    void updatePhone(String phone, Integer loggedInUserId);
 }

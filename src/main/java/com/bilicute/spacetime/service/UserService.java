@@ -21,7 +21,8 @@ public interface UserService {
 
     void updateNickname(String nickname,Integer id);
 
-    //更新用户名
+    void updatePhone(String phone);
+
 
 
 

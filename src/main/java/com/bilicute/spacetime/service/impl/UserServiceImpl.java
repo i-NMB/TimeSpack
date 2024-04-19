@@ -77,4 +77,12 @@ public class UserServiceImpl implements UserService {
     public void updateNickname(String nickname, Integer id) {
         userMapper.addNickname(nickname,id);
     }
+
+
+    @Override
+    public void updatePhone(String phone) {
+        userMapper.updatePhone(phone,QuickMethods.getLoggedInUserId());
+    }
+
+
 }
