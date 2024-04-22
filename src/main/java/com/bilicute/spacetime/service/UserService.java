@@ -24,6 +24,5 @@ public interface UserService {
     void updatePhone(String phone);
 
 
-
-
+    boolean updatePwd(String mail, String newPassword);
 }
