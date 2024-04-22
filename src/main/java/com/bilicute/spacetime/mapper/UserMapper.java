@@ -34,4 +34,6 @@ public interface UserMapper {
     void addNickname(String nickname, Integer id);
 
     void updatePhone(String phone, Integer loggedInUserId);
+
+    void changePasswordByPhone(String newPassword, Integer loggedInUserId);
 }

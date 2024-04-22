@@ -24,6 +24,5 @@ public interface UserService {
     void updatePhone(String phone);
 
 
-
-
+    void changePasswordByPhone(String newPassword);
 }

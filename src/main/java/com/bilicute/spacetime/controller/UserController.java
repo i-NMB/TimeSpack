@@ -235,4 +235,17 @@ public class UserController {
         return Result.success();
     }
 
+    @PatchMapping("/changePasswordByPhone")
+    public Result changePasswordByPhone(HttpServletRequest request, String phoneCode, String newPassword) {
+        String phone = QuickMethods.getLoggedInPhone();
+        if (!VerifyCode.verifyByPhone(request, phone, phoneCode)) {
+            return Result.error("手机验证码错误");
+        }
+        userService.changePasswordByPhone(newPassword);
+        request.getSession().invalidate();
+        return Result.success();
+    }
+
+
+
 }
