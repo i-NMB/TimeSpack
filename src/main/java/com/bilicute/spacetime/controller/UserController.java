@@ -167,7 +167,7 @@ public class UserController {
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
-
+@PatchMapping("/updatePwd")
     public Result updatePwd(@RequestBody Map<String, String> params) {
 
         String oldPwd = params.get("old_pwd");
@@ -188,6 +188,7 @@ public class UserController {
         userService.updatePwd(newPwd);
         return Result.success();
     }
+
 
     /**
      * @param request: 网络请求（获取Session）
@@ -220,6 +221,34 @@ public class UserController {
         userService.updateNickname(nickname,loggedInUserId);
         return Result.success();
     }
+    @PatchMapping("/changePasswordByMail")
+    public Result changePasswordByMail(HttpServletRequest request,
+                                       @RequestParam String mail,
+                                       @RequestParam String mailCode,
+                                       @RequestParam String newPassword) {
+        String loggedInMail = QuickMethods.getLoggedInEmail();
+
+        // 检查当前登录邮箱是否与提供的邮箱匹配
+        if (loggedInMail == null || !loggedInMail.equals(mail)) {
+            return Result.error("邮箱不匹配");
+        }
+
+        // 验证邮箱和验证码
+        if (!VerifyCode.verifyByMail(request, mail, mailCode)) {
+            return Result.error("邮箱验证码错误");
+        }
+
+        // 更新用户密码
+        if (!userService.updatePwd(mail, newPassword)) {
+            return Result.error("密码更新失败");
+        }
+
+        // 使当前会话失效
+        request.getSession().invalidate();
+
+        return Result.success("密码修改成功，请使用新密码登录");
+    }
+
     @PatchMapping("/updatePhone")
     public Result updatePhone(HttpServletRequest request,String mailCode,
                              String phone,String phoneCode){
