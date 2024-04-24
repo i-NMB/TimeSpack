@@ -63,5 +63,23 @@ public class VerifyCode {
     }
 
 
+    public static Boolean verifyByPhoneInLoggedUser(HttpServletRequest request, String phone, String phoneCode) {
+        //判断手机号是否是请求时候的手机号
+        if (!phone.equals(request.getSession().getAttribute("loggedInPhone"))) {
+            return false;//如果不是求时候的手机号则返回验证失败
+        }
+        //返回是否验证通过
+        return phoneCode.equals(request.getSession().getAttribute("PhoneCode"));
+    }
+
+    public static Boolean verifyByMailInLoggedUser(HttpServletRequest request, String email, String emailCode) {
+        //判断邮箱地址是否是请求时候的邮箱地址
+        if (!email.equals(request.getSession().getAttribute("loggedInEmail"))) {
+            return false;
+        }
+        emailCode = emailCode.toUpperCase();//小写字母转为大写
+        return emailCode.equals(request.getSession().getAttribute("MailCode"));//返回是否验证通过
+    }
+
 }
 

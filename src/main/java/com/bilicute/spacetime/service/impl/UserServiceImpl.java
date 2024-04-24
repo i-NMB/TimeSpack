@@ -84,15 +84,4 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePhone(phone,QuickMethods.getLoggedInUserId());
     }
 
-    @Override
-    public void changePasswordByPhone(String newPassword) {
-        userMapper.changePasswordByPhone(newPassword, QuickMethods.getLoggedInUserId());
-    }
-
-    @Override
-    public boolean updatePwd(String mail, String newPassword) {
-        return false;
-    }
-
-
 }

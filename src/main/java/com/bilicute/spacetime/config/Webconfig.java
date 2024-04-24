@@ -30,7 +30,9 @@ public class Webconfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptors)
                 .excludePathPatterns("/user/login",
                         "/user/register",
-                        "/getCode/*",
+                        "/getCode/img",
+                        "/getCode/mail",
+                        "/getCode/phone",
                         "/user/giveToken");
 
     }

@@ -41,16 +41,12 @@ public class QuickMethods {
     }
 
     public static String getLoggedInEmail(){
-        Map<String,Object> jwtMap = ThreadLocalUtil.get();
-        String userName = (String) jwtMap.get("username");
-        User user = userService.findByUserName(userName);
+        User user = getLoggedUser();
         return user.getEmail();
     }
 
     public static String getLoggedInPhone(){
-        Map<String,Object> jwtMap = ThreadLocalUtil.get();
-        String userName = (String) jwtMap.get("username");
-        User user = userService.findByUserName(userName);
+        User user = getLoggedUser();
         return user.getPhone();
     }
 
@@ -60,5 +56,15 @@ public class QuickMethods {
         return userService.findByUserName(userName);
     }
 
+    public static Boolean isAdmin(){
+        User user = getLoggedUser();
+        String identity = user.getIdentity();
+        return identity.equals("Admin");
+    }
+
+    public static String getLoggedInNickname(){
+        User user = getLoggedUser();
+        return user.getNickname();
+    }
 
 }

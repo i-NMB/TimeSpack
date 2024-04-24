@@ -1,12 +1,16 @@
 package com.bilicute.spacetime.controller;
 
 import com.bilicute.spacetime.pojo.Result;
+import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.pojo.VerifyCode;
+import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.IVerifyCodeGen;
 import com.bilicute.spacetime.service.MailService;
+import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.service.impl.SimpleCharVerifyCodeGenImpl;
 import com.bilicute.spacetime.utils.PhoneCodeTool;
 import com.bilicute.spacetime.utils.StringUtilsFromTime;
+import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
 import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
@@ -105,11 +110,47 @@ public class VerifyCodeController {
         } catch (IOException e) {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
         }
-        mailService.sendEmail(email, code, "新用户");
+            mailService.sendEmail(email, code, "用户");
         log.info("新用户发送邮件验证码："+email);
         return Result.success();
     }
 
+    /**
+     * @param request:
+     * @param response:  [request, response]
+     * @return Result
+     * @author i囡漫笔
+     * @description 已登陆用户获取验证码
+     * @date 2024/4/24
+     */
+    @PostMapping  ("/mailByUser")
+    public Result UserMailVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+        IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
+        String code;
+        //设置响应头
+        response.setHeader("Pragma", "no-cache");
+        //设置响应头
+        response.setHeader("Cache-Control", "no-cache");
+        //在代理服务器端防止缓冲
+        response.setDateHeader("Expires", 0);
+        String loggedInEmail = QuickMethods.getLoggedInEmail();
+        if (isEmptyString(loggedInEmail)){
+            return Result.error("邮箱为空");
+        }
+
+        try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
+            code = iVerifyCodeGen.generate(1, 1, streams);
+            //将VerifyCode绑定session
+            request.getSession().setAttribute("loggedInEmail",loggedInEmail);
+            request.getSession().setAttribute("MailCode", code);
+//            System.out.println("验证码为："+code);
+        } catch (IOException e) {
+            return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
+        }
+        mailService.sendEmail(loggedInEmail, code, QuickMethods.getLoggedInNickname());
+        log.info("新用户发送邮件验证码："+loggedInEmail);
+        return Result.success();
+    }
 
     /**
      * @param request: 网络请求,用于Session存放
@@ -143,6 +184,33 @@ public class VerifyCodeController {
         //发送短信
         SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
         smsBlend.sendMessage(phone,phoneCode);
+        return Result.success();
+    }
+
+    @PostMapping("/phoneByUser")
+    public Result sendPhoneCodeByUser(HttpServletRequest request,HttpServletResponse response){
+        //设置响应头
+        response.setHeader("Pragma", "no-cache");
+        //设置响应头
+        response.setHeader("Cache-Control", "no-cache");
+        //在代理服务器端防止缓冲
+        response.setDateHeader("Expires", 0);
+        if (request.getSession().getAttribute("RequestTime") != null) {
+            if (System.currentTimeMillis()-(long)request.getSession().getAttribute("RequestTime") < 60000){
+                return Result.error("60秒内请勿重复发送验证码");
+            }
+        }
+        String loggedInPhone = QuickMethods.getLoggedInPhone();
+        if(!isPhone(loggedInPhone)){
+            return Result.error("请输入正确的手机号");
+        }
+        String phoneCode = PhoneCodeTool.getPhoneCode();
+        request.getSession().setAttribute("RequestTime",System.currentTimeMillis());
+        request.getSession().setAttribute("loggedInPhone",loggedInPhone);
+        request.getSession().setAttribute("PhoneCode", phoneCode);
+        //发送短信
+        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
+        smsBlend.sendMessage(loggedInPhone,phoneCode);
         return Result.success();
     }
 }

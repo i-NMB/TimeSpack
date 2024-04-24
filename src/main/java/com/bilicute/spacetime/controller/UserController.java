@@ -132,12 +132,12 @@ public class UserController {
     }
 
 
-    // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
-    @PutMapping("/update")
-    public Result update(@RequestBody User user){
-        userService.update(user);
-        return Result.success();
-    }
+//    // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
+//    @PutMapping("/update")
+//    public Result update(@RequestBody User user){
+//        userService.update(user);
+//        return Result.success();
+//    }
 
     /**
      * @return Result
@@ -167,27 +167,27 @@ public class UserController {
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
-@PatchMapping("/updatePwd")
-    public Result updatePwd(@RequestBody Map<String, String> params) {
-
-        String oldPwd = params.get("old_pwd");
-        String newPwd = params.get("new_pwd");
-        String rePwd = params.get("re_pwd");
-        if (!StringUtils.hasLength(oldPwd) || !StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd)) {
-            return Result.error("缺少必要的参数");
-        }
-        Map<String, Object> map = ThreadLocalUtil.get();
-        String username = (String) map.get("username");
-        User loginUser = userService.findByUserName(username);
-        if (!loginUser.getPassword().equals(Sha256.addSalt(oldPwd))) {
-            return Result.error("原密码填写不正确");
-        }
-        if (!rePwd.equals(newPwd)) {
-            return Result.error("两次填写的新密码不一样");
-        }
-        userService.updatePwd(newPwd);
-        return Result.success();
-    }
+//@PatchMapping("/updatePwd")
+//    public Result updatePwd(@RequestBody Map<String, String> params) {
+//
+//        String oldPwd = params.get("old_pwd");
+//        String newPwd = params.get("new_pwd");
+//        String rePwd = params.get("re_pwd");
+//        if (!StringUtils.hasLength(oldPwd) || !StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd)) {
+//            return Result.error("缺少必要的参数");
+//        }
+//        Map<String, Object> map = ThreadLocalUtil.get();
+//        String username = (String) map.get("username");
+//        User loginUser = userService.findByUserName(username);
+//        if (!loginUser.getPassword().equals(Sha256.addSalt(oldPwd))) {
+//            return Result.error("原密码填写不正确");
+//        }
+//        if (!rePwd.equals(newPwd)) {
+//            return Result.error("两次填写的新密码不一样");
+//        }
+//        userService.updatePwd(newPwd);
+//        return Result.success();
+//    }
 
 
     /**
@@ -204,7 +204,7 @@ public class UserController {
     public Result updateMail(HttpServletRequest request,String phoneCode,
                              String mail,String mailCode){
         String phone = QuickMethods.getLoggedInPhone();
-        if(!VerifyCode.verifyByPhone(request,phone,phoneCode)){
+        if(!VerifyCode.verifyByPhoneInLoggedUser(request,phone,phoneCode)){
             return Result.error("手机验证码错误");
         }
         if (!VerifyCode.verifyByMail(request,mail,mailCode)){
@@ -217,44 +217,41 @@ public class UserController {
 
     @PatchMapping("/updateNickname")
     public Result updateNickname(String nickname){
+        if (nickname == null) {
+            return Result.error("输入的昵称为空");
+        }
         Integer loggedInUserId = QuickMethods.getLoggedInUserId();
         userService.updateNickname(nickname,loggedInUserId);
         return Result.success();
     }
     @PatchMapping("/changePasswordByMail")
     public Result changePasswordByMail(HttpServletRequest request,
-                                       @RequestParam String mail,
                                        @RequestParam String mailCode,
                                        @RequestParam String newPassword) {
+        if (mailCode.isBlank()||newPassword.isBlank()) {
+            return Result.error("关键参数为空");
+        }
         String loggedInMail = QuickMethods.getLoggedInEmail();
 
-        // 检查当前登录邮箱是否与提供的邮箱匹配
-        if (loggedInMail == null || !loggedInMail.equals(mail)) {
-            return Result.error("邮箱不匹配");
+        if (!VerifyCode.verifyByMailInLoggedUser(request,loggedInMail,mailCode)){
+            return Result.error("短信验证码错误");
         }
-
-        // 验证邮箱和验证码
-        if (!VerifyCode.verifyByMail(request, mail, mailCode)) {
-            return Result.error("邮箱验证码错误");
-        }
-
         // 更新用户密码
-        if (!userService.updatePwd(mail, newPassword)) {
-            return Result.error("密码更新失败");
-        }
-
-        // 使当前会话失效
+        userService.updatePwd(newPassword);
+        // 使邮箱验证码失效
         request.getSession().invalidate();
-
-        return Result.success("密码修改成功，请使用新密码登录");
+        return Result.success();
     }
 
     @PatchMapping("/updatePhone")
     public Result updatePhone(HttpServletRequest request,String mailCode,
                              String phone,String phoneCode){
         String mail = QuickMethods.getLoggedInEmail();
-        if(!VerifyCode.verifyByMail(request,mail,mailCode)){
+        if(!VerifyCode.verifyByMailInLoggedUser(request,mail,mailCode)){
             return Result.error("邮箱验证码错误");
+        }
+        if (!isPhone(phone)){
+            return Result.error("新手机号码错误");
         }
         if (!VerifyCode.verifyByPhone(request,phone,phoneCode)){
             return Result.error("新手机验证码错误");
@@ -267,14 +264,12 @@ public class UserController {
     @PatchMapping("/changePasswordByPhone")
     public Result changePasswordByPhone(HttpServletRequest request, String phoneCode, String newPassword) {
         String phone = QuickMethods.getLoggedInPhone();
-        if (!VerifyCode.verifyByPhone(request, phone, phoneCode)) {
+        if (!VerifyCode.verifyByPhoneInLoggedUser(request, phone, phoneCode)) {
             return Result.error("手机验证码错误");
         }
-        userService.changePasswordByPhone(newPassword);
+        userService.updatePwd(newPassword);
         request.getSession().invalidate();
         return Result.success();
     }
-
-
 
 }

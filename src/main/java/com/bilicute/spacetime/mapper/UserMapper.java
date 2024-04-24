@@ -33,7 +33,6 @@ public interface UserMapper {
     @Update("update user set nickname=#{nickname},update_time=now() where create_user=#{id}")
     void addNickname(String nickname, Integer id);
 
+    @Update("update user set phone=#{phone},update_time=now() where create_user=#{loggedInUserId}")
     void updatePhone(String phone, Integer loggedInUserId);
-
-    void changePasswordByPhone(String newPassword, Integer loggedInUserId);
 }
