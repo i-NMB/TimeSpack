@@ -57,4 +57,16 @@ public class ArticleController {
         List<Article> articles = articleService.getArticlesByPage(start, pageSize);
         return Result.success(articles);
     }
+    @GetMapping("/{articleId}")
+    public Result<?> getArticleWithCategory(@PathVariable("articleId") Integer articleId) {
+        try {
+            // 使用service方法获取文章及其分类
+            Article articleWithCategory = articleService.getArticleWithCategory(articleId);
+            // 返回200 OK状态码，表示请求成功
+            return Result.success(articleWithCategory);
+        } catch (Exception e) {
+            // 处理异常情况
+            return Result.error("操作失败");
+        }
+    }
 }
