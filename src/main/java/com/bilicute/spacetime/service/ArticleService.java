@@ -5,6 +5,9 @@ import com.bilicute.spacetime.pojo.Category;
 
 import java.util.List;
 
+import java.util.List;
+
+
 public interface ArticleService {
     void add(Article article);
     public default void createArticle(Article article, Category category) {
@@ -26,4 +29,5 @@ public interface ArticleService {
     Category retrieveCategory(Integer categoryId);
 
 
+    List<Article> getArticlesByPage(int start, int pageSize);
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @所属包名: com.bilicute.spacetime.service.impl
@@ -57,6 +58,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Category retrieveCategory(Integer categoryId) {
         return null;
+    }
+
+
+
+    @Override
+    public List<Article> getArticlesByPage(int start, int pageSize) {
+        return articleMapper.getArticlesByPage(start, pageSize);
     }
 
 
