@@ -37,5 +37,7 @@ public class ArticleController {
         articleService.add(article);
         log.info("创建文章：用户"+ QuickMethods.getLoggedInUserName()+"\t文章标题："+article.getTitle());
         return Result.success();
+
     }
+
 }

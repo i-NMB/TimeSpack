@@ -38,5 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setLikes(0);
         article.setView(0);
         articleMapper.add(article);
+
     }
 }
+
