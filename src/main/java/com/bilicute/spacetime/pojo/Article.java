@@ -34,4 +34,7 @@ public class Article {
     private Integer likes;
     private Integer view;
 
+    public void setCategory(Category category) {
+
+    }
 }
