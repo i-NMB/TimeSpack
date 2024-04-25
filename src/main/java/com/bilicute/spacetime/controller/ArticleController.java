@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @所属包名: com.bilicute.spacetime.controller
  * @类名: ArticleController
@@ -49,5 +51,10 @@ public class ArticleController {
         commentService.add(comment);
         log.info("添加评论：用户" + QuickMethods.getLoggedInUserName() + "\t评论内容：" + comment.getContent());
         return Result.success();
+    }
+    @GetMapping("/page")
+    public Result getArticlesByPage(@RequestParam("start") int start, @RequestParam("pageSize") int pageSize) {
+        List<Article> articles = articleService.getArticlesByPage(start, pageSize);
+        return Result.success(articles);
     }
 }
