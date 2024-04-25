@@ -228,7 +228,7 @@ public class UserController {
     public Result changePasswordByMail(HttpServletRequest request,
                                        @RequestParam String mailCode,
                                        @RequestParam String newPassword) {
-        if (mailCode.isBlank()||newPassword.isBlank()) {
+        if (mailCode==null || newPassword==null) {
             return Result.error("关键参数为空");
         }
         String loggedInMail = QuickMethods.getLoggedInEmail();
