@@ -34,8 +34,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void add(Category category) {
         category.setCreateTime(LocalDateTime.now());
         category.setUpdateTime(LocalDateTime.now());
-        Integer id = QuickMethods.getLoggedInUserId();
-        category.setCreateUser(id);
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        category.setCreateUser(loggedInUserId);
         categoryMapper.add(category);
     }
 

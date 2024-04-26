@@ -11,9 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-    private Integer commentId;
-    private Integer articleId;
-    private Integer userId;
+    private Integer commentatorId;
     private String content;
+    private String state;
+    private Integer articleId;
+    private Integer creatUser;
     private LocalDateTime createTime;
+    private Boolean auditingState;
+    private Integer likes;
 }

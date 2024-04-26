@@ -11,13 +11,27 @@ import java.time.LocalDateTime;
 @Service
 public class CommentServiceImpl implements CommentService {
     private static CommentMapper commentMapper;
+
     @Autowired
     private void setCommentMapper(CommentMapper commentMapper) {
         CommentServiceImpl.commentMapper = commentMapper;
     }
+
     @Override
     public void add(Comment comment) {
         comment.setCreateTime(LocalDateTime.now());
         commentMapper.add(comment);
+    }
+
+    @Override
+    public void delete(Comment comment) {
+        comment.setCreateTime(LocalDateTime.now());
+        commentMapper.delete(comment);
+    }
+
+    @Override
+    public void save(Comment comment) {
+        comment.setCreateTime(LocalDateTime.now());
+        commentMapper.save(comment);
     }
 }
