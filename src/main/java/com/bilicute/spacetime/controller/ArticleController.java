@@ -144,4 +144,12 @@ public class ArticleController {
         articleService.check(id);
         return Result.success();
     }
+
+    //用户关注
+    @PostMapping("/follow")
+    public Result follow(@RequestParam("followedUserId") Integer followedUserId) {
+        articleService.follow(followedUserId);
+        return Result.success();
+    }
+
 }
