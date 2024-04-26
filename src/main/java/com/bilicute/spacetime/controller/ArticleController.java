@@ -143,6 +143,9 @@ public class ArticleController {
             return Result.error("权限不足");
         }
         Article article = articleService.findById(id);
+        if (article == null) {
+            return Result.error("指定对象不存在");
+        }
         if (Objects.equals(QuickMethods.getLoggedInUserId(), article.getCategoryId())){
             return Result.error("不能审核自己发送的文章");
         }
@@ -150,6 +153,19 @@ public class ArticleController {
             return Result.error("该文章已经被审核了，无需重复操作");
         }
         articleService.check(id);
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete")
+    public Result delete(@Min(1) @NotNull(message = "请指定审核文章") Integer id){
+        Article article = articleService.findById(id);
+        if (article == null) {
+            return Result.error("指定对象不存在");
+        }
+        if (!QuickMethods.isAdmin()||!Objects.equals(QuickMethods.getLoggedInUserId(), article.getCategoryId())){
+            return Result.error("权限不足");
+        }
+        articleService.delete(id);
         return Result.success();
     }
 

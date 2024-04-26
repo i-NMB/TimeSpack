@@ -9,17 +9,13 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CommentMapper {
     @Insert("INSERT INTO comment (commentator_id, content, state, article_id, creat_user, create_time, auditing_state, likes)"+
-             "VALUES (#{commentatorId}, #{content}, #{state}, #{articleId}, #{createUser}, #{createUser}, #{auditingState}, #{likes})")
+             "VALUES (#{commentatorId}, #{content}, #{state}, #{articleId}, #{createUser}, #{createTime}, #{auditingState}, #{likes})")
     void add(Comment comment);
 
 
-    @Delete("INSERT INTO comment (commentator_id, content, state, article_id, creat_user, create_time, auditing_state, likes)"+
-            "VALUES (#{commentatorId}, #{content}, #{state}, #{articleId}, #{createUser}, #{createUser}, #{auditingState}, #{likes})")
-    void delete(Comment comment);
+    @Delete("DELETE FROM comment WHERE commentator_id = #{commentId}")
+    void delete(Integer commentId);
 
-    @Insert("INSERT INTO comment (commentator_id, content, state, article_id, creat_user, create_time, auditing_state, likes)"+
-            "VALUES (#{commentatorId}, #{content}, #{state}, #{articleId}, #{createUser}, #{createUser}, #{auditingState}, #{likes})")
-    void save(Comment comment);
 
 
 }

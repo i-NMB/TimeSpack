@@ -20,14 +20,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete")
-    public Result deleteComment(@RequestBody Comment comment) {
-        commentService.delete(comment);
+    public Result deleteComment(Integer commentId) {
+        commentService.delete(commentId);
         return Result.success();
     }
 
-    @PostMapping("/save") // 新增处理保存评论的请求映射
-    public Result saveComment(@RequestBody Comment comment) {
-        commentService.save(comment);
-        return Result.success();
-    }
 }
