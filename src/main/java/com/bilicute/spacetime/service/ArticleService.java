@@ -3,6 +3,8 @@ package com.bilicute.spacetime.service;
 import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.pojo.PageBean;
 
+import java.util.Map;
+
 public interface ArticleService {
     void add(Article article);
 
@@ -14,7 +16,7 @@ public interface ArticleService {
 
     void like(Integer id);
 
-    void querySelfInfo(Integer loggedInUserId);
+    Map<String,Integer> querySelfInfo(Integer loggedInUserId);
 
     void check(Integer id);
 

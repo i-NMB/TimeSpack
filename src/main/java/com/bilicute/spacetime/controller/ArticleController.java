@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -116,11 +117,11 @@ public class ArticleController {
     }
 
     @GetMapping("/my")
-    public Result querySelfInfo(){
+    public Result<Map<String,Integer>> querySelfInfo(){
         Integer loggedInUserId = QuickMethods.getLoggedInUserId();
         //TODO 待完成查询自身点赞阅览量数据
-        articleService.querySelfInfo(loggedInUserId);
-        return Result.success();
+        Map<String,Integer> total =  articleService.querySelfInfo(loggedInUserId);
+        return Result.success(total);
     }
     @GetMapping("/all")
     public Result queryAllInfo(){

@@ -5,13 +5,13 @@ import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.pojo.PageBean;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.ArticleService;
-import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,9 +79,14 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void querySelfInfo(Integer loggedInUserId) {
+    public Map<String,Integer> querySelfInfo(Integer loggedInUserId) {
+        Map<String,Integer> map =  new HashMap<>();
         //TODO 查询自身所有文章的点赞和阅览
-        articleMapper.querySelfInfo(loggedInUserId);
+        Integer total_likes = articleMapper.queryLikeSelfInfo(loggedInUserId);
+        Integer total_view = articleMapper.queryViewSelfInfo(loggedInUserId);
+        map.put("likes",total_likes);
+        map.put("view",total_view);
+        return map;
     }
 
     @Override
