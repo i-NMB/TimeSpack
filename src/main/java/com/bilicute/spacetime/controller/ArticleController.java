@@ -1,16 +1,17 @@
 package com.bilicute.spacetime.controller;
 
 import com.bilicute.spacetime.pojo.Article;
+import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.ArticleService;
+import com.bilicute.spacetime.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @所属包名: com.bilicute.spacetime.controller
@@ -37,7 +38,35 @@ public class ArticleController {
         articleService.add(article);
         log.info("创建文章：用户"+ QuickMethods.getLoggedInUserName()+"\t文章标题："+article.getTitle());
         return Result.success();
-
     }
 
+    private static CommentService commentService;
+    @Autowired
+    private void setCommentService(CommentService commentService) {
+        ArticleController.commentService = commentService;
+    }
+    @PostMapping("/{articleId}/comments")
+    public Result addComment(@PathVariable Integer articleId, @RequestBody @Validated Comment comment) {
+        comment.setArticleId(articleId);
+        commentService.add(comment);
+        log.info("添加评论：用户" + QuickMethods.getLoggedInUserName() + "\t评论内容：" + comment.getContent());
+        return Result.success();
+    }
+    @GetMapping("/page")
+    public Result getArticlesByPage(@RequestParam("start") int start, @RequestParam("pageSize") int pageSize) {
+        List<Article> articles = articleService.getArticlesByPage(start, pageSize);
+        return Result.success(articles);
+    }
+    @GetMapping("/{articleId}")
+    public Result<?> getArticleWithCategory(@PathVariable("articleId") Integer articleId) {
+        try {
+            // 使用service方法获取文章及其分类
+            Article articleWithCategory = articleService.getArticleWithCategory(articleId);
+            // 返回200 OK状态码，表示请求成功
+            return Result.success(articleWithCategory);
+        } catch (Exception e) {
+            // 处理异常情况
+            return Result.error("操作失败");
+        }
+    }
 }
