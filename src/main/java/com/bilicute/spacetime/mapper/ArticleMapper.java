@@ -7,6 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 
 @Mapper
@@ -15,5 +19,21 @@ public interface ArticleMapper {
             "VALUES (#{title}, #{content}, #{coverImg}, #{state}, #{categoryId}, #{createUser}, #{createTime}, #{updateTime}, #{auditingState}, #{likes}, #{view})")
     void add(Article article);
 
-    List<Article> getArticlesByPage(@Param("start") int start,@Param("pageSize") int pageSize);
+
+    List<Article> list(Integer categoryId, String state,Boolean auditingState);
+
+    @Select("select * from article where article_id = #{id}")
+    Article findByUserid(Integer id);
+
+    @Update("update article set view = view+1 where article_id = #{id}")
+    void view(Integer id);
+
+    @Update("update article set likes = likes+1 where article_id = #{id}")
+    void like(Integer id);
+
+    //TODO 查询自身所有文章的点赞和阅览
+    void querySelfInfo(Integer loggedInUserId);
+
+    @Update("update article set auditing_state = #{auditingState} where article_id = #{id}")
+    void check(Integer id,Boolean auditingState);
 }

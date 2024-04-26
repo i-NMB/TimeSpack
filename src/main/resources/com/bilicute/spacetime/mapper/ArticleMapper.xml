@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilicute.spacetime.mapper.ArticleMapper">
+    <!--动态SQL-->
+    <select id="list" resultType="com.bilicute.spacetime.pojo.Article">
+        select * from article
+        <where>
+
+            <if test="categoryId!=null">
+                category_id=#{categoryId}
+            </if>
+
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+
+            <if test="auditingState!=null">
+                and auditing_state=#{auditingState}
+            </if>
+        </where>
+    </select>
+</mapper>
