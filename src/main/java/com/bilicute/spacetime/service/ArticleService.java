@@ -19,4 +19,6 @@ public interface ArticleService {
     void check(Integer id);
 
     void queryAllInfo();
+
+    void incrementViewCount(Integer id);
 }

@@ -36,4 +36,7 @@ public interface ArticleMapper {
 
     @Update("update article set auditing_state = #{auditingState} where article_id = #{id}")
     void check(Integer id,Boolean auditingState);
+    //TODO 文章阅读量的计数
+    @Update("UPDATE article SET view = view + 1 WHERE article_id = #{id}")
+    void incrementViewCount(Integer id);
 }

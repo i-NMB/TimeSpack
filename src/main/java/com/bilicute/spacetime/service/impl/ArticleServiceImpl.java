@@ -43,6 +43,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setView(0);
         articleMapper.add(article);
 
+
     }
 
     @Override
@@ -93,6 +94,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void queryAllInfo() {
         //TODO 查询全部用户平均的所有文章的点赞和阅览
+    }
+    @Override
+    public void incrementViewCount(Integer id) {
+        articleMapper.incrementViewCount(id);
+        //TODD文章阅读量的计数
     }
 }
 
