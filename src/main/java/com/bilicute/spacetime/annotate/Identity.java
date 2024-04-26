@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 
 public @interface Identity {
     //提供校验失败后的提示信息
-    String message() default "不支持的State类型";
+    String message() default "不支持的身份类型";
     //指定分组
     Class<?>[] groups() default {};
     //负载 获取到State注解的附加信息
