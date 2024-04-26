@@ -1,11 +1,13 @@
 package com.bilicute.spacetime.controller;
 
 import com.bilicute.spacetime.pojo.Result;
+import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.AttentionService;
-import com.bilicute.spacetime.exception.UserNotFoundException;
+import com.bilicute.spacetime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,14 +18,22 @@ public class AttentionController {
     private void setAttentionService(AttentionService attentionService) {
         AttentionController.attentionService = attentionService;
     }
-    @PostMapping
-    public Result addAttention(Integer activeUserId, Integer passiveUserId) {
 
-        try {
-            attentionService.addAttention(activeUserId, passiveUserId);
-            return Result.success();
-        } catch (UserNotFoundException e) {
-            return Result.error(e.getMessage());
+
+    private static UserService userService;
+    @Autowired
+    private void setUserService(UserService userService) {
+        AttentionController.userService = userService;
+    }
+    //用户关注
+    @PostMapping("/follow")
+    public Result follow(@RequestParam("followedUserId") Integer followedUserId) {
+        User passiveUser=userService.findByUserId(followedUserId);
+        // 判断该用户是否存在
+        if(passiveUser==null){
+            return Result.error("关注对象不存在");
         }
+        attentionService.addAttention(followedUserId);
+        return Result.success();
     }
 }
