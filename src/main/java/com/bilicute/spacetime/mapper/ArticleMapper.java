@@ -44,9 +44,8 @@ public interface ArticleMapper {
             "FROM article " +
             "WHERE create_user = #{loggedInUserId}")
     Integer queryViewSelfInfo(Integer loggedInUserId);
-    //TODO 文章阅读量的计数
-    @Update("UPDATE article SET view = view + 1 WHERE article_id = #{id}")
-    void incrementViewCount(Integer id);
+//    @Update("UPDATE article SET view = view + 1 WHERE article_id = #{id}")
+//    void incrementViewCount(Integer id);
 
 
 

@@ -22,7 +22,7 @@ public interface ArticleService {
 
     void queryAllInfo();
 
-    void incrementViewCount(Integer id);
+//    void incrementViewCount(Integer id);
 
     void follow(Integer followedUserId);
 
