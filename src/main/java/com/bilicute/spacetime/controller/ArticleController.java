@@ -77,16 +77,13 @@ public class ArticleController {
             @RequestParam(required = false) Boolean auditingState
     ){
         //如果获取审核的列表
-        if (!auditingState){
+        if (auditingState!=null&&!auditingState){
             //如果不是管理员
             if (!QuickMethods.isAdmin()){
                 PageBean<Article> pageBean = new PageBean<Article>();
-                List<Article> list = null;
-
                 Article article = new Article();
                 article.setTitle("您不是管理员");
-                assert false;
-                list.add(article);
+                List<Article> list = List.of(new Article[]{article});
                 pageBean.setItems(list);
                 return Result.errorData(pageBean);
             }

@@ -46,6 +46,14 @@ sms:
       template-id: 2131112
       #您的sdkAppId
       sdk-app-id: 1400897821
+
+cos:
+  id: 加密(RB3E8F2OKKBc6WhkTEeCSGJW+ewYwbWgrYP6lFWT6wF9gxYcgPlTiNbIQQx6ZN6+/zft5Ziyovk=)
+  key: 加密(Z4E8SplnRIIqWiS01HuYPKMOlzZDzJhgsNikJ773KTTKsG7e8njxxc7Cen760iL/T65d4zz2X0M=)
+  bucketName: 加密(ADYcv7A8NMfwdELoyuAyivCu6lyCa4C8XRv0aW2uq6sCPT3c9eeOfQ==)
+  regionAddress: 加密(Zsd+ZLWmFJIHwTAxEBx075nIClMe8MN6xfPRyE/KkEo=)
+
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true #开启驼峰命名和下划线命名的自动转换

@@ -20,6 +20,9 @@ import java.util.UUID;
 public class  FileUploadController {
     @PostMapping("/upload")
     public Result<String> upload(MultipartFile file) throws IOException {
+        if (file == null) {
+            return Result.errorData("失败，文件为空");
+        }
         String fileName = file.getOriginalFilename();
         if (StringUtilsFromTime.isEmptyString(fileName)) {
             String s="失败，文件名为空";

@@ -1,17 +1,14 @@
 package com.bilicute.spacetime.mapper;
 
 import com.bilicute.spacetime.pojo.Comment;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 
 @Mapper
 public interface CommentMapper {
-    @Insert("INSERT INTO comment (commentator_id, content, state, article_id, creat_user, create_time, auditing_state, likes)"+
+    @Insert("INSERT INTO comment (commentator_id, content, state, article_id, create_user, create_time, auditing_state, likes)"+
              "VALUES (#{commentatorId}, #{content}, #{state}, #{articleId}, #{createUser}, #{createTime}, #{auditingState}, #{likes})")
     void add(Comment comment);
 
@@ -24,5 +21,11 @@ public interface CommentMapper {
     Integer getCommentNumber(Integer articleId);
 
     List<Comment> list(Integer articleId, Boolean auditingState);
+
+    @Select("select * from comment where commentator_id=#{commentId}")
+    Comment findById(Integer commentId);
+
+    @Update("update comment set auditing_state = #{auditingState} where commentator_id = #{id}")
+    void check(Integer id,Boolean auditingState);
 }
 

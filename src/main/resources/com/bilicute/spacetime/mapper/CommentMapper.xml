@@ -7,7 +7,9 @@
     <select id="list" resultType="com.bilicute.spacetime.pojo.Comment">
         select * from comment
         <where>
+            <if test="articleId!=null">
                 article_id=#{articleId}
+            </if>
             <if test="auditingState!=null">
                 and auditing_state=#{auditingState}
             </if>

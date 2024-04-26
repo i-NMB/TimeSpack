@@ -10,4 +10,8 @@ public interface CommentService {
     Integer getCommentNumber(Integer articleId);
 
     PageBean<Comment> list(Integer pageNum, Integer pageSize, Integer articleId, Boolean auditingState);
+
+    Comment findById(Integer commentId);
+
+    void check(Integer id);
 }

@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(content);
         comment.setState("已发布");
         comment.setArticleId(articleId);
-        comment.setCreatUser(QuickMethods.getLoggedInUserId());
+        comment.setCreateUser(QuickMethods.getLoggedInUserId());
         comment.setCreateTime(LocalDateTime.now());
         comment.setAuditingState(false);
         comment.setLikes(0);
@@ -66,6 +66,16 @@ public class CommentServiceImpl implements CommentService {
         articlePageBean.setTotal(p.getTotal());
         articlePageBean.setItems(p.getResult());
         return articlePageBean;
+    }
+
+    @Override
+    public Comment findById(Integer commentId) {
+        return commentMapper.findById(commentId);
+    }
+
+    @Override
+    public void check(Integer id) {
+        commentMapper.check(id,true);
     }
 
 }

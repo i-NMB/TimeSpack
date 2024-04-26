@@ -15,7 +15,7 @@ public class Comment {
     private String content;
     private String state;
     private Integer articleId;
-    private Integer creatUser;
+    private Integer createUser;
     private LocalDateTime createTime;
     private Boolean auditingState;
     private Integer likes;
