@@ -29,4 +29,14 @@ public class AttentionServiceImpl implements AttentionService {
         attentionMapper.add(attention);
     }
 
+    @Override
+    public void deleteFollowRelation(Integer activeUserId, Integer passiveUserId) {
+        attentionMapper.delete(activeUserId);
+    }
+
+    @Override
+    public void unfollowUser(Integer passiveUserIdToUnfollow) {
+
+    }
+
 }

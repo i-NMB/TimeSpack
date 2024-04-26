@@ -36,4 +36,14 @@ public class AttentionController {
         attentionService.addAttention(followedUserId);
         return Result.success();
     }
+    @PostMapping("/unfollow")
+    public Result unfollowUser(@RequestParam Integer passiveUserIdToUnfollow) {
+        try {
+            attentionService.unfollowUser(passiveUserIdToUnfollow);
+            return  Result.success("已取关");
+        } catch (Exception e) {
+            return  Result.error("取关操作失败");
+        }
+    }
+
 }
