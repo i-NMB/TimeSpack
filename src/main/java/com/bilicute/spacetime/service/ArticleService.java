@@ -25,4 +25,6 @@ public interface ArticleService {
     void incrementViewCount(Integer id);
 
     void follow(Integer followedUserId);
+
+
 }

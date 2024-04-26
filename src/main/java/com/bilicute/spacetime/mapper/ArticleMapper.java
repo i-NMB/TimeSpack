@@ -48,6 +48,9 @@ public interface ArticleMapper {
     @Update("UPDATE article SET view = view + 1 WHERE article_id = #{id}")
     void incrementViewCount(Integer id);
 
+
+
+
     @Insert("insert into active_user(user_id, followed_user_id) values(#{userId}, #{followedUserId})")
     void follow(@Param("userId") Integer userId, @Param("followedUserId") Integer followedUserId);
 
