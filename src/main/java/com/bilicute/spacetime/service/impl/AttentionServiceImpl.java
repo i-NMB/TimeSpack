@@ -29,13 +29,14 @@ public class AttentionServiceImpl implements AttentionService {
         attentionMapper.add(attention);
     }
 
-    @Override
-    public void deleteFollowRelation(Integer activeUserId, Integer passiveUserId) {
-        attentionMapper.delete(activeUserId);
-    }
 
     @Override
     public void unfollowUser(Integer passiveUserIdToUnfollow) {
+        // 获取当前登录用户的ID
+        Integer currentUserId = QuickMethods.getLoggedInUserId();;
+        // 检查当前用户ID和被取关用户ID是否为空
+        // 删除关注关系记录
+        attentionMapper.delete(currentUserId,passiveUserIdToUnfollow);
 
     }
 

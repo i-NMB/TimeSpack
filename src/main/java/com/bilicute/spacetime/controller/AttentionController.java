@@ -38,11 +38,16 @@ public class AttentionController {
     }
     @PostMapping("/unfollow")
     public Result unfollowUser(@RequestParam Integer passiveUserIdToUnfollow) {
+        User passiveUser=userService.findByUserId(passiveUserIdToUnfollow);
+        // 判断该用户是否存在
+        if(passiveUser==null){
+            return Result.error("操作对象不存在");
+        }
         try {
             attentionService.unfollowUser(passiveUserIdToUnfollow);
-            return  Result.success("已取关");
+            return  Result.success();
         } catch (Exception e) {
-            return  Result.error("取关操作失败");
+            return  Result.error("取关操作失败"+e);
         }
     }
 

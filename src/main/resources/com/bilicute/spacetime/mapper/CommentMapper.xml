@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bilicute.spacetime.mapper.CommentMapper">
+    <!--动态SQL-->
+    <select id="list" resultType="com.bilicute.spacetime.pojo.Comment">
+        select * from comment
+        <where>
+                article_id=#{articleId}
+            <if test="auditingState!=null">
+                and auditing_state=#{auditingState}
+            </if>
+        </where>
+    </select>
+</mapper>
