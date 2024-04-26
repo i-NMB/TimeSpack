@@ -22,6 +22,8 @@ public interface ArticleService {
 
     void queryAllInfo();
 
+    void delete(Integer id);
+
 //    void incrementViewCount(Integer id);
 
 

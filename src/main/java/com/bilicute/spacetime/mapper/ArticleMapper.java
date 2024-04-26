@@ -2,13 +2,9 @@ package com.bilicute.spacetime.mapper;
 
 import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.pojo.Comment;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -44,8 +40,9 @@ public interface ArticleMapper {
             "FROM article " +
             "WHERE create_user = #{loggedInUserId}")
     Integer queryViewSelfInfo(Integer loggedInUserId);
-//    @Update("UPDATE article SET view = view + 1 WHERE article_id = #{id}")
-//    void incrementViewCount(Integer id);
+
+    @Delete("DELETE FROM article WHERE article_id = #{id}")
+    void delete(Integer id);
 
 
 
