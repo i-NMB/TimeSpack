@@ -104,6 +104,14 @@ public class ArticleController {
             articleNull.setTitle("查询的文章数据为空");
             return Result.errorData(articleNull);
         }
+        //用户如果不是管理员权限不能查看还未审核的文章
+        if (article.getAuditingState()||!Objects.equals(QuickMethods.getLoggedInUserId(), article.getCategoryId())){
+            if (!QuickMethods.isAdmin()){
+                Article articleErr = new Article();
+                articleErr.setTitle("没有权限查看未审核的文章");
+                return Result.errorData(articleErr);
+            }
+        }
         //TODO 同ip进行判断，检测IV和PV算法
         articleService.view(id);
         log.info("获取文章：用户"+QuickMethods.getLoggedInUserName()+"获取《{}》(id:{})",article.getTitle(),id);
@@ -119,7 +127,6 @@ public class ArticleController {
     @GetMapping("/my")
     public Result<Map<String,Integer>> querySelfInfo(){
         Integer loggedInUserId = QuickMethods.getLoggedInUserId();
-        //TODO 待完成查询自身点赞阅览量数据
         Map<String,Integer> total =  articleService.querySelfInfo(loggedInUserId);
         return Result.success(total);
     }
@@ -153,15 +160,15 @@ public class ArticleController {
         return Result.success();
     }
 
-    @GetMapping("/view/{id}")
-    public Result viewArticle(@PathVariable Integer id) {
-        // 增加浏览次数
-        articleService.incrementViewCount(id);
-
-        //获取文章详情
-        Article article = articleService.findById(id);
-
-        // 返回文章详情
-        return Result.success(article);
-    }
+//    @GetMapping("/view/{id}")
+//    public Result viewArticle(@PathVariable Integer id) {
+//        // 增加浏览次数
+//        articleService.incrementViewCount(id);
+//
+//        //获取文章详情
+//        Article article = articleService.findById(id);
+//
+//        // 返回文章详情
+//        return Result.success(article);
+//    }
 }
