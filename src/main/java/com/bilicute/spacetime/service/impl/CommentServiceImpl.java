@@ -18,8 +18,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void add(Comment comment) {
-        comment.setCreateTime(LocalDateTime.now());
+    public void add(String content, Integer articleId) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setState("已发布");
+        comment.setArticleId(articleId);
         commentMapper.add(comment);
     }
 

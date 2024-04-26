@@ -14,8 +14,8 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/add")
-    public Result addComment(@RequestBody Comment comment) {
-        commentService.add(comment);
+    public Result addComment(String content,Integer articleId) {
+        commentService.add(content,articleId);
         return Result.success();
     }
 

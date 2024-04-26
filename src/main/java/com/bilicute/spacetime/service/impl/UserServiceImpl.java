@@ -25,6 +25,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByUserId(Integer id) {
+        return userMapper.findByUserId(id);
+    }
+
+    @Override
     public void register(String username,String password,String email,String phone) {
         //加密
         String sha256String = Sha256.addSalt(password);

@@ -18,6 +18,7 @@ public class AttentionController {
     }
     @PostMapping
     public Result addAttention(Integer activeUserId, Integer passiveUserId) {
+
         try {
             attentionService.addAttention(activeUserId, passiveUserId);
             return Result.success();

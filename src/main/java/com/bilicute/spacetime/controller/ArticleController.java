@@ -154,29 +154,4 @@ public class ArticleController {
     }
 
 
-//    @GetMapping("/view/{id}")
-//    public Result viewArticle(@PathVariable Integer id) {
-//        // 增加浏览次数
-//        articleService.incrementViewCount(id);
-//
-//        //获取文章详情
-//        Article article = articleService.findById(id);
-//
-//        // 返回文章详情
-//        return Result.success(article);
-//    }
-    @GetMapping("/view/{id}")
-    public Result viewArticle(@PathVariable Integer id) {
-        // 增加浏览次数
-        articleService.incrementViewCount(id);
-
-        //获取文章详情
-        Article article = articleService.findById(id);
-
-        // 返回文章详情
-        return Result.success(article);
-    }
-
-
-
 }

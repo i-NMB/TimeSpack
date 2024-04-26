@@ -11,7 +11,8 @@ public interface UserMapper {
     //根据用户名查询用户
     @Select("select * from user where username=#{username}")
     User findByUserName(String username);
-
+    @Select("select * from user where create_user=#{id}")
+    User findByUserId(Integer id);
     //添加
     @Insert("insert into user(username,password,nickname,phone,email,create_time,update_time,identity)"+
             "values(#{username},#{password},#{username},#{phone},#{email},now(),now(),#{identity})")
@@ -35,4 +36,6 @@ public interface UserMapper {
 
     @Update("update user set phone=#{phone},update_time=now() where create_user=#{loggedInUserId}")
     void updatePhone(String phone, Integer loggedInUserId);
+
+
 }
