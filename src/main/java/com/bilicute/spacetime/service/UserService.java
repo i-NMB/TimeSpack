@@ -23,4 +23,7 @@ public interface UserService {
 
     void updatePhone(String phone);
 
+
+    void changePasswordByPhone(String newPassword);
+    boolean updatePwd(String mail, String newPassword);
 }
