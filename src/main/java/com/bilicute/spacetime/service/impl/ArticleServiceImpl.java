@@ -105,13 +105,6 @@ public class ArticleServiceImpl implements ArticleService {
 //        articleMapper.incrementViewCount(id);
 //    }
 
-    @Override
-    public void follow(Integer followedUserId) {
-        // 获取当前登录用户的id
-        Integer userID = QuickMethods.getLoggedInUserId();
-        // 将当前登录用户id和被关注的用户id分别存入active_user和passive表中
-        articleMapper.follow(userID, followedUserId);
-    }
 
 
 

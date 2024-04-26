@@ -153,12 +153,6 @@ public class ArticleController {
         return Result.success();
     }
 
-    //用户关注
-    @PostMapping("/follow")
-    public Result follow(@RequestParam("followedUserId") Integer followedUserId) {
-        articleService.follow(followedUserId);
-        return Result.success();
-    }
 
 //    @GetMapping("/view/{id}")
 //    public Result viewArticle(@PathVariable Integer id) {
