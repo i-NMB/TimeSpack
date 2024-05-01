@@ -4,6 +4,7 @@ package com.bilicute.spacetime.interceptors;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -11,7 +12,9 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author i囡漫笔
@@ -40,9 +43,21 @@ public class LoginInterceptors implements HandlerInterceptor {
      * ----------
      */
     @Override
+//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //令牌认证
-        String token = request.getHeader("Authorization");
+//        String token = request.getHeader("Authorization");
+        String token = "";
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    token =  cookie.getValue();
+                }
+            }
+        }
+
+
         try {
             //从redis中获取token
 //            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();

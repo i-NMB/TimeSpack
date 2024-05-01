@@ -7,6 +7,7 @@ import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
 import com.bilicute.spacetime.quickMethods.VerifyCode;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -99,16 +100,16 @@ public class UserController {
      * @date 2024/4/19
      */
     @PostMapping("/login")
-    public Result login(@Pattern(regexp ="^\\S{5,16}$") String username,
-                        @Pattern(regexp ="^\\S{5,16}$")String password,
-                        @Pattern(regexp ="^\\S{6}$")String code,// 添加这一行
+    public Result login(@Pattern(regexp ="^\\S{5,16}$" , message = "用户名长度不符合规则5-16\n") String username,
+                        @Pattern(regexp ="^\\S{5,16}$" , message = "密码长度不符合规则5-16\n")String password,
+                        @Pattern(regexp ="^\\S{6}$" , message = "图形验证码长度不正确\n")String code,// 添加这一行
                         HttpServletResponse response,
                         HttpServletRequest request){
         // 根据用户名查询用户
         User loginUser=userService.findByUserName(username);
         // 判断该用户是否存在
         if(loginUser==null){
-            return Result.error("用户名错误");
+            return Result.error("用户名或密码错误");
         }
         if (!VerifyCode.verifyByImg(request,code)) {
             return Result.error("验证码错误");
@@ -123,20 +124,22 @@ public class UserController {
             claims.put("id",loginUser.getCreateUser());
             claims.put("username",loginUser.getUsername());
             String token = JwtUtil.genToken(claims);
-            response.setHeader("Authorization", token);
+//            response.setHeader("Authorization", token);
+            // create a cookie
+            Cookie cookie = new Cookie("jwt", token);
+             cookie.setMaxAge(7 * 24 * 60 * 60); // expires in 7 days
+            // cookie.setSecure(true); //安全cookie是仅通过加密的HTTPS连接发送到服务器的cookie。安全Cookie不能通过未加密的HTTP连接传输到服务器。
+             cookie.setHttpOnly(true); //当为cookie设置HttpOnly标志时，它会告诉浏览器只有服务器才能访问此特定cookie。
+             cookie.setPath("/");
+            //add cookie to response
+            response.addCookie(cookie);
             request.getSession().invalidate();
             return Result.success(token);
         }
-        return Result.error("密码错误");
+        return Result.error("用户名或密码错误");
     }
 
 
-//    // FIXME 待修改，笼统的获取User并直接覆盖会使原有的数据丢失以及非法数据侵入
-//    @PutMapping("/update")
-//    public Result update(@RequestBody User user){
-//        userService.update(user);
-//        return Result.success();
-//    }
 
     /**
      * @return Result
@@ -271,4 +274,28 @@ public class UserController {
         return Result.success();
     }
 
+
+    @GetMapping("/out")
+    public Result deleteAllUserCookies(HttpServletRequest request, HttpServletResponse response) {
+        // 获取用户传回的所有cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // 创建一个新的Cookie对象来删除当前的cookie
+                Cookie cookieToDelete = new Cookie(cookie.getName(), null);
+                cookieToDelete.setMaxAge(0); // 立即过期
+                cookieToDelete.setPath(cookie.getPath()); // 使用相同的路径
+                if (cookie.getDomain() != null) {
+                    cookieToDelete.setDomain(cookie.getDomain()); // 如果设置了域，则使用相同的域
+                }
+                // 如果cookie是安全的，则保持该属性
+                cookieToDelete.setSecure(cookie.getSecure());
+                // 如果cookie仅通过HTTP传输，则保持该属性
+                cookieToDelete.setHttpOnly(cookie.isHttpOnly());
+                // 通过响应对象将新的cookie发送回客户端以删除它
+                response.addCookie(cookieToDelete);
+            }
+        }
+        return Result.success();
+    }
 }

@@ -3,6 +3,7 @@ package com.bilicute.spacetime.config;
 import com.bilicute.spacetime.interceptors.LoginInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,12 +29,37 @@ public class Webconfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         //登陆接口和注册接口不拦截
         registry.addInterceptor(loginInterceptors)
-                .excludePathPatterns("/user/login",
-                        "/user/register",
-                        "/getCode/img",
-                        "/getCode/mail",
-                        "/getCode/phone",
-                        "/user/giveToken");
+                .excludePathPatterns("/**/user/login",
+                        "/**/user/register",
+                        "/**/getCode/img",
+                        "/**/getCode/mail",
+                        "/**/getCode/phone",
+                        "/**/user/giveToken",
+                        "/**/article",
+                        "/i/user/login",
+                        "/i/user/register",
+                        "/i/code/img",
+                        "/i/code/mail",
+                        "/i/code/phone",
+                        "/i/user/giveToken",
+                        "/i/article");
 
     }
+
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//
+//        //允许跨域访问资源定义
+//        registry.addMapping("/**")
+//                //(只允许本地的指定端口访问)允许所有
+//                .allowedOrigins("http://127.0.0.1:8848")
+//                // 允许发送凭证: 前端如果配置改属性为true之后，则必须同步配置
+//                .allowCredentials(true)
+//                // 允许所有方法
+//                .allowedMethods("*")
+//
+//                .allowedHeaders("*");
+//    }
+
+
 }
