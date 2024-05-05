@@ -31,18 +31,17 @@ public class Webconfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptors)
                 .excludePathPatterns("/**/user/login",
                         "/**/user/register",
+                        "/**/user/getUser",
                         "/**/getCode/img",
                         "/**/getCode/mail",
                         "/**/getCode/phone",
                         "/**/user/giveToken",
                         "/**/article",
-                        "/i/user/login",
-                        "/i/user/register",
-                        "/i/code/img",
-                        "/i/code/mail",
-                        "/i/code/phone",
-                        "/i/user/giveToken",
-                        "/i/article");
+                        "/**/category/detail",
+                        "/**/comment/num",
+                        "/comment/get",
+                        "/**/article/detail")
+                .excludePathPatterns("/error");
 
     }
 

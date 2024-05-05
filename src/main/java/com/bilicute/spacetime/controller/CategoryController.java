@@ -21,6 +21,7 @@ import java.util.Objects;
  * @创建时间: 2024-04-19 12:18
  */
 
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/category")
 @Slf4j
@@ -80,7 +81,6 @@ public class CategoryController {
         if (category == null) {
             return Result.error("未找到id为 "+id+" 的分类详细");
         }
-        log.info("查看详细分类："+category.getCategoryName()+"\t操作用户"+QuickMethods.getLoggedInUserName());
         return Result.success(category);
     }
 

@@ -37,7 +37,8 @@ import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
  * @创建时间间: 2024-04-16 16:28
  */
 
-@CrossOrigin(origins = {"127.0.0.1:8848"}, maxAge = 3600, allowCredentials = "true")
+//@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/getCode")
 @Slf4j
@@ -96,7 +97,11 @@ public class VerifyCodeController {
         response.setHeader("Cache-Control", "no-cache");
         //在代理服务器端防止缓冲
         response.setDateHeader("Expires", 0);
-
+        if (request.getSession().getAttribute("RequestMailTime") != null) {
+            if (System.currentTimeMillis()-(long)request.getSession().getAttribute("RequestMailTime") < 60000){
+                return Result.error("60秒内请勿重复发送验证码");
+            }
+        }
         if (isEmptyString(email)){
             return Result.error("邮箱为空");
         }
@@ -104,6 +109,7 @@ public class VerifyCodeController {
         try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
             code = iVerifyCodeGen.generate(1, 1, streams);
             //将VerifyCode绑定session
+            request.getSession().setAttribute("RequestMailTime",System.currentTimeMillis());
             request.getSession().setAttribute("Mail",email);
             request.getSession().setAttribute("MailCode", code);
 //            System.out.println("验证码为："+code);
@@ -133,6 +139,7 @@ public class VerifyCodeController {
         response.setHeader("Cache-Control", "no-cache");
         //在代理服务器端防止缓冲
         response.setDateHeader("Expires", 0);
+
         String loggedInEmail = QuickMethods.getLoggedInEmail();
         if (isEmptyString(loggedInEmail)){
             return Result.error("邮箱为空");

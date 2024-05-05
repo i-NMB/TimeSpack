@@ -21,7 +21,7 @@ public class Article {
     private String title;//文章标题
     @NotEmpty(message = "文章内容为空")
     private String content;//文章内容
-    @NotEmpty(message = "封面图像为空")
+//    @NotEmpty(message = "封面图像为空")
     @URL(message = "封面图像参数不正确")
     private String coverImg;//封面图像
 //    @State
@@ -38,7 +38,4 @@ public class Article {
     private Integer likes;
     private Integer view;
 
-    public void setCategory(Category category) {
-
-    }
 }

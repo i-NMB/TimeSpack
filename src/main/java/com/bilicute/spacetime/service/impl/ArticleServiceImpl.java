@@ -66,6 +66,22 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public PageBean<Article> listWeighting(Integer pageNum, Integer pageSize, Integer categoryId,String state) {
+        //创建PageBean对象，用来封装查询好的数据
+        PageBean<Article> articlePageBean = new PageBean<>();
+        //开启分页查询(借助pageHelper)
+        PageHelper.startPage(pageNum,pageSize);
+        //调用Mapper完成查询
+        List<Article> as = articleMapper.listWeighting(categoryId,state,true);
+        //Page中提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数镉
+        Page<Article> p = (Page<Article>) as;
+        //把数据填充到PageBean对象中
+        articlePageBean.setTotal(p.getTotal());
+        articlePageBean.setItems(p.getResult());
+        return articlePageBean;
+    }
+
+    @Override
     public Article findById(Integer id) {
         return articleMapper.findByUserid(id);
     }
@@ -104,6 +120,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void delete(Integer id) {
         articleMapper.delete(id);
+    }
+
+    @Override
+    public void update(Article article) {
+        LocalDateTime nowTime = LocalDateTime.now();
+        article.setUpdateTime(nowTime);
+        articleMapper.update(article);
     }
 
 

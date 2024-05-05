@@ -27,5 +27,8 @@ public interface CommentMapper {
 
     @Update("update comment set auditing_state = #{auditingState} where commentator_id = #{id}")
     void check(Integer id,Boolean auditingState);
+
+    @Update("update comment set likes = likes+1 where commentator_id = #{id}")
+    void like(Integer id);
 }
 

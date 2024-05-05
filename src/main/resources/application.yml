@@ -12,6 +12,8 @@ spring:
 #
 server:
   port: 6066
+  servlet:
+    context-path: /api
 
 jasypt:
   encryptor:

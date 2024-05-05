@@ -27,6 +27,7 @@ import java.util.Objects;
  * @创建时间: 2024-04-24 19:20
  */
 
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/article")
 @Validated
@@ -93,8 +94,41 @@ public class ArticleController {
         return Result.success(articlePageBean);
     }
 
+    @GetMapping("/listWeighting")
+    public Result<PageBean<Article>> listWeighting(
+            //当前页码
+            Integer pageNum,
+            //每页条数
+            Integer pageSize,
+            //文章分类ID（可选）
+            @RequestParam(required = false) Integer categoryId,
+            //发布状态（可选）
+            @RequestParam(required = false) String state
+    ){
+        PageBean<Article> articlePageBean = articleService.listWeighting(pageNum,pageSize,categoryId,state);
+        return Result.success(articlePageBean);
+    }
+
     @GetMapping("/detail")
     public Result<Article> detail(@Min(1) @NotNull(message = "请选择详情文章") Integer id){
+        Article article =articleService.findById(id);
+        if (article == null) {
+            Article articleNull = new Article();
+            articleNull.setTitle("查询的文章数据为空");
+            return Result.errorData(articleNull);
+        }
+        if (!article.getAuditingState()){
+            Article articleError = new Article();
+            articleError.setTitle("查询的文章未被审核");
+            return Result.errorData(articleError);
+        }
+        //TODO 同ip进行判断，检测IV和PV算法
+        articleService.view(id);
+        return Result.success(article);
+    }
+
+    @GetMapping("/detailAuditing")
+    public Result<Article> detailAuditing(@Min(1) @NotNull(message = "请选择详情文章") Integer id){
         Article article =articleService.findById(id);
         if (article == null) {
             Article articleNull = new Article();
@@ -166,5 +200,20 @@ public class ArticleController {
         return Result.success();
     }
 
+    @PutMapping("/update")
+    public Result update(@RequestBody @Validated Article article){
+        System.out.println(article);
+        if (article.getArticleId()==null) {
+            return Result.error("文章ID为空");
+        }
+        if (!Objects.equals(articleService.findById(article.getArticleId()).getCreateUser(), QuickMethods.getLoggedInUserId())){
+            return Result.error("请勿修改他人创建的文章");
+        }
+        log.info("更新文章：用户"+QuickMethods.getLoggedInUserName()+
+                "\t文章原标题《"+articleService.findById(article.getArticleId()).getTitle()+
+                "》修改为《"+article.getTitle()+"》");
+        articleService.update(article);
+        return Result.success();
+    }
 
 }

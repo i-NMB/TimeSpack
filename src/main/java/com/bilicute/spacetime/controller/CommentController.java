@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 
 
+
+//@CrossOrigin(origins = "*",methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH })
 @RestController
 @RequestMapping("/comment")
 @Slf4j
@@ -115,6 +117,16 @@ public class CommentController {
             return Result.error("该评论已通过审核，无需再次审核");
         }
         commentService.check(id);
+        return Result.success();
+    }
+
+    @GetMapping("/like")
+    public Result<?> likes(@NotNull(message = "未指定评论id") Integer id){
+        Comment comment = commentService.findById(id);
+        if (comment == null) {
+            return Result.error("指定评论不存在");
+        }
+        commentService.like(id);
         return Result.success();
     }
 

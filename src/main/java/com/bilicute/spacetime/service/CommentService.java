@@ -14,4 +14,6 @@ public interface CommentService {
     Comment findById(Integer commentId);
 
     void check(Integer id);
+
+    void like(Integer id);
 }

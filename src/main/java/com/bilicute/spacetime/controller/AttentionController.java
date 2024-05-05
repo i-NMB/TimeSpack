@@ -5,11 +5,9 @@ import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.AttentionService;
 import com.bilicute.spacetime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/attention")
 public class AttentionController {

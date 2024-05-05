@@ -10,6 +10,8 @@ public interface ArticleService {
 
     PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state,Boolean auditingState);
 
+    PageBean<Article> listWeighting(Integer pageNum, Integer pageSize, Integer categoryId,String state);
+
     Article findById(Integer id);
 
     void view(Integer id);
@@ -23,6 +25,8 @@ public interface ArticleService {
     void queryAllInfo();
 
     void delete(Integer id);
+
+    void update(Article article);
 
 //    void incrementViewCount(Integer id);
 

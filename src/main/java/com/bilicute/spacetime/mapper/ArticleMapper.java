@@ -45,8 +45,15 @@ public interface ArticleMapper {
     void delete(Integer id);
 
 
+    List<Article> listWeighting(Integer categoryId, String state, boolean auditingState);
 
-
-
-
+    @Update("update article set " +
+            "title=#{title} " +
+            ",content=#{content}" +
+            ",cover_img=#{coverImg}" +
+            ",state=#{state} " +
+            ",category_id=#{categoryId} " +
+            ",update_time=#{updateTime} " +
+            "where article_id=#{articleId}")
+    void update(Article article);
 }

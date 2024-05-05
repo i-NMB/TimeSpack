@@ -78,4 +78,9 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.check(id,true);
     }
 
+    @Override
+    public void like(Integer id) {
+        commentMapper.like(id);
+    }
+
 }
