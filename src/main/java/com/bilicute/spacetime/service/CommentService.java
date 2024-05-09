@@ -16,4 +16,6 @@ public interface CommentService {
     void check(Integer id);
 
     void like(Integer id);
+
+    PageBean<Comment> listBySelf(Integer pageNum, Integer pageSize, Integer articleId, Integer userID);
 }

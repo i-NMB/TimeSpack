@@ -28,6 +28,8 @@ public interface ArticleService {
 
     void update(Article article);
 
+    PageBean<Article> listByOneself(Integer pageNum, Integer pageSize, Integer categoryId, String state, Integer userId);
+
 //    void incrementViewCount(Integer id);
 
 

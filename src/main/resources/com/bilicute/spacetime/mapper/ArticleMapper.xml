@@ -24,7 +24,7 @@
     <select id="listWeighting" resultType="com.bilicute.spacetime.pojo.Article">
         select
         *,
-        (likes * 5 + view * 1 - TIMESTAMPDIFF(DAY , update_time, NOW()) * (-3)) as weighted_rank
+        (likes * 5 + view * 1 - TIMESTAMPDIFF(DAY , update_time, NOW()) * 3) as weighted_rank
         from article
         <where>
             <if test="categoryId!=null">
@@ -38,5 +38,19 @@
             </if>
         </where>
         order by weighted_rank desc
+    </select>
+    <select id="listByOneself" resultType="com.bilicute.spacetime.pojo.Article">
+        select * from article
+        <where>
+            create_user=#{userId}
+            <if test="categoryId!=null">
+                and category_id=#{categoryId}
+            </if>
+
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+        </where>
+        ORDER BY article_id DESC
     </select>
 </mapper>

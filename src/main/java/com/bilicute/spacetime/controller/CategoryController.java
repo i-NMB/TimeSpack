@@ -21,7 +21,7 @@ import java.util.Objects;
  * @创建时间: 2024-04-19 12:18
  */
 
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/category")
 @Slf4j
