@@ -83,4 +83,23 @@ public class CommentServiceImpl implements CommentService {
         commentMapper.like(id);
     }
 
+    @Override
+    public PageBean<Comment> listBySelf(Integer pageNum, Integer pageSize, Integer articleId, Integer userID) {
+        //创建PageBean对象，用来封装查询好的数据
+        PageBean<Comment> articlePageBean = new PageBean<>();
+        //开启分页查询(借助pageHelper)
+        PageHelper.startPage(pageNum,pageSize);
+        //获取userID
+//        Map<String,Object> userMap = ThreadLocalUtil.get();
+//        Integer userId = (Integer) userMap.get("id");
+        //调用Mapper完成查询
+        List<Comment> as = commentMapper.listBySelf(articleId,userID);
+        //Page中提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数镉
+        Page<Comment> p = (Page<Comment>) as;
+        //把数据填充到PageBean对象中
+        articlePageBean.setTotal(p.getTotal());
+        articlePageBean.setItems(p.getResult());
+        return articlePageBean;
+    }
+
 }

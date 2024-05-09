@@ -30,5 +30,7 @@ public interface CommentMapper {
 
     @Update("update comment set likes = likes+1 where commentator_id = #{id}")
     void like(Integer id);
+
+    List<Comment> listBySelf(Integer articleId, Integer userID);
 }
 

@@ -37,6 +37,7 @@ public class Webconfig implements WebMvcConfigurer {
                         "/**/getCode/phone",
                         "/**/user/giveToken",
                         "/**/article",
+                        "/**/article/listWeighting",
                         "/**/category/detail",
                         "/**/comment/num",
                         "/comment/get",

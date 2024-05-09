@@ -56,4 +56,6 @@ public interface ArticleMapper {
             ",update_time=#{updateTime} " +
             "where article_id=#{articleId}")
     void update(Article article);
+
+    List<Article> listByOneself(Integer categoryId, String state, Integer userId);
 }

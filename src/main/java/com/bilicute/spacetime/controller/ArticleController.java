@@ -47,8 +47,22 @@ public class ArticleController {
      * @description 添加文章
      * @date 2024/4/25
      */
-    @PostMapping
+    @PostMapping("/add")
     public Result add(@RequestBody @Validated Article article){
+        if (article == null) {
+            return Result.error("文章上传错误");
+        }
+
+        if (article.getTitle() == null||article.getTitle().isBlank()) {
+            return Result.error("文章标题为空");
+        }
+        if (article.getCategoryId() == null) {
+            return Result.error("文章所属分类为空");
+        }
+        if (article.getCategoryId()!=3&&(article.getContent() == null||article.getContent().isBlank())) {
+            return Result.error("文章内容为空");
+        }
+
         articleService.add(article);
         log.info("创建文章：用户"+ QuickMethods.getLoggedInUserName()+"\t文章标题："+article.getTitle());
         return Result.success();
@@ -65,7 +79,7 @@ public class ArticleController {
      * @description 分页查询，
      * @date 2024/4/25
      */
-    @GetMapping
+    @GetMapping(value = {"","/admin"})
     public Result<PageBean<Article>> list(
             //当前页码
             Integer pageNum,
@@ -149,6 +163,7 @@ public class ArticleController {
         return Result.success(article);
     }
 
+    @GetMapping("/like")
     @PatchMapping("/like")
     public Result like(@Validated @Min(1) @NotNull(message = "请指定点赞文章") Integer id){
         articleService.like(id);
@@ -193,9 +208,15 @@ public class ArticleController {
         if (article == null) {
             return Result.error("指定对象不存在");
         }
-        if (!QuickMethods.isAdmin()||!Objects.equals(QuickMethods.getLoggedInUserId(), article.getCategoryId())){
-            return Result.error("权限不足");
+        Integer userId=QuickMethods.getLoggedInUserId();
+        if (!QuickMethods.isAdmin()){
+            if (!userId.equals(article.getCreateUser())){
+                System.out.println(""+!QuickMethods.isAdmin()+!userId.equals(article.getCreateUser()));
+                System.out.println("登陆用户id"+QuickMethods.getLoggedInUserId()+",文章创建者id"+article.getCreateUser()+".");
+                return Result.error("权限不足");
+            }
         }
+
         articleService.delete(id);
         return Result.success();
     }
@@ -214,6 +235,22 @@ public class ArticleController {
                 "》修改为《"+article.getTitle()+"》");
         articleService.update(article);
         return Result.success();
+    }
+
+    @GetMapping("/oneself")
+    public Result<PageBean<Article>> listByOneself(
+            //当前页码
+            Integer pageNum,
+            //每页条数
+            Integer pageSize,
+            //文章分类ID（可选）
+            @RequestParam(required = false) Integer categoryId,
+            //发布状态（可选）
+            @RequestParam(required = false) String state
+    ){
+        Integer userId = QuickMethods.getLoggedInUserId();
+        PageBean<Article> articlePageBean = articleService.listByOneself(pageNum,pageSize,categoryId,state,userId);
+        return Result.success(articlePageBean);
     }
 
 }

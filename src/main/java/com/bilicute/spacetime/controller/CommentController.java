@@ -49,8 +49,13 @@ public class CommentController {
     @DeleteMapping("/delete")
     public Result deleteComment(@NotNull(message = "请输入待删除的评论") Integer commentId) {
         Comment theComment = commentService.findById(commentId);
-        if (!QuickMethods.isAdmin()|| !Objects.equals(theComment.getCreateUser(), QuickMethods.getLoggedInUserId())){
-            return Result.error("没有权限删除");
+        if (theComment == null) {
+            return Result.error("该评论不存在");
+        }
+        if (!QuickMethods.isAdmin()){
+            if (!Objects.equals(theComment.getCreateUser(), QuickMethods.getLoggedInUserId())){
+                return Result.error("没有权限删除");
+            }
         }
         commentService.delete(commentId);
         return Result.success();
@@ -66,7 +71,7 @@ public class CommentController {
         return Result.success(number);
     }
 
-    @GetMapping("/get")
+    @GetMapping(value = {"/get","/admin"})
     public Result<PageBean<Comment>> list(
             //当前页码
             Integer pageNum,
@@ -98,7 +103,6 @@ public class CommentController {
                 pageBean.setItems(list);
                 return Result.errorData(pageBean);
             }
-            log.info("管理员查询审核列表：用户"+ QuickMethods.getLoggedInUserName());
         }
         PageBean<Comment> commentPageBean = commentService.list(pageNum,pageSize,articleId,auditingState);
         return Result.success(commentPageBean);
@@ -129,5 +133,19 @@ public class CommentController {
         commentService.like(id);
         return Result.success();
     }
+    @GetMapping("/oneself")
+    public Result<PageBean<Comment>> listBySelf(
+            //当前页码
+            Integer pageNum,
+            //每页条数
+            Integer pageSize,
+            //文章ID
+            @RequestParam(required = false) Integer articleId
+    ){
+        Integer userID = QuickMethods.getLoggedInUserId();
+        PageBean<Comment> commentPageBean = commentService.listBySelf(pageNum,pageSize,articleId,userID);
+        return Result.success(commentPageBean);
+    }
+
 
 }
