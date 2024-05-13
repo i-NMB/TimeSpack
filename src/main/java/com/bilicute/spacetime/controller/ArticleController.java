@@ -192,7 +192,7 @@ public class ArticleController {
         if (article == null) {
             return Result.error("指定对象不存在");
         }
-        if (Objects.equals(QuickMethods.getLoggedInUserId(), article.getCategoryId())){
+        if (Objects.equals(QuickMethods.getLoggedInUserId(), article.getCreateUser())){
             return Result.error("不能审核自己发送的文章");
         }
         if (article.getAuditingState()){
