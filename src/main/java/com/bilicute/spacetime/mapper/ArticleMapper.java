@@ -27,7 +27,6 @@ public interface ArticleMapper {
     @Update("update article set likes = likes+1 where article_id = #{id}")
     void like(Integer id);
 
-    //TODO 查询自身所有文章的点赞和阅览
     @Select("SELECT SUM(likes) AS total_likes " +
             "FROM article " +
             "WHERE create_user = #{loggedInUserId}")

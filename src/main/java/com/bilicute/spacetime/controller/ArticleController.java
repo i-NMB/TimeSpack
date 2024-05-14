@@ -157,8 +157,8 @@ public class ArticleController {
                 return Result.errorData(articleErr);
             }
         }
-        //TODO 同ip进行判断，检测IV和PV算法
-        articleService.view(id);
+
+//        articleService.view(id);
         log.info("获取文章：用户"+QuickMethods.getLoggedInUserName()+"获取《{}》(id:{})",article.getTitle(),id);
         return Result.success(article);
     }
@@ -166,6 +166,7 @@ public class ArticleController {
     @GetMapping("/like")
     @PatchMapping("/like")
     public Result like(@Validated @Min(1) @NotNull(message = "请指定点赞文章") Integer id){
+//        TODO 修改赞只能赞一次
         articleService.like(id);
         return Result.success();
     }
@@ -176,12 +177,7 @@ public class ArticleController {
         Map<String,Integer> total =  articleService.querySelfInfo(loggedInUserId);
         return Result.success(total);
     }
-    @GetMapping("/all")
-    public Result queryAllInfo(){
-        //TODO 待完成查询全部用户平均点赞阅览量数据
-        articleService.queryAllInfo();
-        return Result.success();
-    }
+
 
     @PatchMapping("/checked")
     public Result checked(@Min(1) @NotNull(message = "请指定审核文章") Integer id){

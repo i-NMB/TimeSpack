@@ -177,6 +177,7 @@ public class UserController {
      */
     @PatchMapping("/updateAvatar")
     public Result updateAvatar(@RequestParam @URL String avatarUrl){
+        //TODO 头像上传接口，更新时检测是否为指定域名
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }

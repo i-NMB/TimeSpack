@@ -99,7 +99,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Map<String,Integer> querySelfInfo(Integer loggedInUserId) {
         Map<String,Integer> map =  new HashMap<>();
-        //TODO 查询自身所有文章的点赞和阅览
+        //查询自身所有文章的点赞和阅览
         Integer total_likes = articleMapper.queryLikeSelfInfo(loggedInUserId);
         Integer total_view = articleMapper.queryViewSelfInfo(loggedInUserId);
         map.put("likes",total_likes);
