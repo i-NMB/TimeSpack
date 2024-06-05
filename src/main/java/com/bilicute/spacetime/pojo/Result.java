@@ -30,5 +30,4 @@ public class Result<T> {
     public static Result error(String message) {
         return new Result(1, message, null);
     }
-
 }
