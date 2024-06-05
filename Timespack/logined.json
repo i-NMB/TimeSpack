@@ -1,0 +1,15 @@
+{
+	"code": 0,
+	"message": "操作成功",
+	"data": {
+		"createUser": 2,
+		"username": "iNMB2024",
+		"nickname": "i囡漫笔",
+		"email": "inmb@foxmail.com",
+		"userPic": "https://.jpg",
+		"createTime": "2024-04-18 16:51:30",
+		"updateTime": "2024-04-24 16:02:57",
+		"identity": "Admin",
+		"phone": "13145215384"
+	}
+}

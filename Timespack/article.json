@@ -1,0 +1,30 @@
+{
+	"code": 0,
+	"message": "操作成功",
+	"data": [
+		{
+			"categoryId": 2,
+			"categoryName": "文章",
+			"categoryAlias": "text",
+			"createUser": 2,
+			"createTime": "2024-04-25 00:00:00",
+			"updateTime": "2024-04-25 15:12:43"
+		},
+		{
+			"categoryId": 3,
+			"categoryName": "图片欣赏",
+			"categoryAlias": "pic",
+			"createUser": 2,
+			"createTime": "2024-05-05 00:00:00",
+			"updateTime": "2024-05-05 20:37:39"
+		},
+		{
+			"categoryId": 4,
+			"categoryName": "图文并茂",
+			"categoryAlias": "pic_text",
+			"createUser": 2,
+			"createTime": "2024-05-05 00:00:00",
+			"updateTime": "2024-05-05 20:37:59"
+		}
+	]
+}

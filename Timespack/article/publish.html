@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>文章发布</title>
+		<link rel="stylesheet" href="../css/index.css" />
+		<link rel="stylesheet" href="../css/article/publish.css" />
+		<!-- jquery依赖 -->
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/jquery.pjax.min.js"></script>
+		<!-- UIkit CSS -->
+		<link rel="stylesheet" href="../css/uikit.min.css" />
+		<!-- UIkit JS -->
+		<script src="../js/uikit.min.js"></script>
+		<script src="../js/uikit-icons.min.js"></script>
+		<!-- Vue3依赖 -->
+		<script src="../js/vue.global.prod.js"></script>
+		<!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+		<!-- Toastify依赖 -->
+		<script src="../Toastify/toastify-js.js"></script>
+		<link rel="stylesheet" href="../Toastify/toastify.min.css" />
+		<!-- 自研依赖 -->
+		<script src="../Toastify/diyPopStyle.js"></script>
+		<!-- Marked依赖 -->
+		<script src="../Marked/marked.min.js"></script>
+		<!-- 高亮依赖 -->
+		<link rel="stylesheet" href="../Marked/github-markdown-light.min.css" />
+		
+		<link href="../wangEditor/style.css" rel="stylesheet">
+		<style>
+		  #editor—wrapper {
+		    border: 1px solid #ccc;
+		    z-index: 100; /* 按需定义 */
+		  }
+		  #toolbar-container { border-bottom: 1px solid #ccc; }
+		  #editor-container { height: 500px; }
+		</style>
+	</head>
+	<body>
+		<nav class="uk-navbar-container nav">
+		    <div class="uk-container">
+		        <div uk-navbar>
+			            <div class="uk-navbar-left">
+		                <ul class="uk-navbar-nav">
+							<li>
+								<div class="logo">
+								</div>
+							</li>
+		                    <li><a href="/">首页</a></li>
+		                    <li class="uk-active">
+		                        <a href="/article/publish.html">文章发布</a>
+		                    </li>
+		                    <li><a href="#">问题反馈</a></li>
+		                </ul>
+		            </div>
+		            <div class="uk-navbar-right">
+		                <ul class="uk-navbar-nav" id="login">
+		                    <li class="uk-active">
+		                        <a href="/user/userInfo.html" v-cloak>{{ login_info.nickname }}<span uk-navbar-parent-icon></span></a>
+		                        <div class="uk-navbar-dropdown">
+		                            <ul class="uk-nav uk-navbar-dropdown-nav">
+		                                <li class="uk-nav-header">文章</li>
+										<li><a href="/user/userInfo.html">文章管理</a></li>
+										<li class="uk-nav-header">个人中心</li>
+										<li><a href="/user/userInfo.html">修改信息</a></li>
+										<li><a href="/user/userInfo.html">修改密码</a></li>
+										<li class="uk-nav-divider"></li>
+										<li><a onclick="clearAllCookie()">退出登陆</a></li>
+		                            </ul>
+		                        </div>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</nav>
+		<div class="container-publish uk-box-shadow-xlarge uk-padding uk-align-center uk-flex">
+			<div class="title uk-flex uk-flex-center uk-margin-top">
+				<h2 class="uk-margin-large">文章发布中心</h2>
+			</div>
+			<div class="bodys uk-margin">
+				<fieldset class="uk-fieldset" id="article">
+				    <legend class="uk-legend">文章发布</legend>
+				    <div class="uk-margin">
+				        <input class="uk-input uk-form-large" type="text" placeholder="文章标题" id="title">
+				    </div>
+				    <div class="uk-margin">
+						<p>分类</p>
+				        <select class="uk-select" v-model="val" id="selectcs">
+				            <option v-for="cat in categoryData.data" :value="cat.categoryId">{{ cat.categoryName }}</option>
+				        </select>
+				    </div>
+					<div v-show="val!='2'">
+						<p>封面美图</p>
+						<div class="js-upload uk-placeholder uk-text-center uk-padding-small uk-margin-remove-bottom" id="upImg">
+						    <span uk-icon="icon: cloud-upload"></span>
+						    <span class="uk-text-middle">拖动上传图片或</span>
+						    <div uk-form-custom>
+						        <input type="file" multiple>
+						        <span class="uk-link">选择</span>
+						    </div>
+						</div>
+						<progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+					</div>
+				</fieldset>
+				<div class="uk-margin max-width">
+				    <div id="editor—wrapper">
+				        <div id="toolbar-container"><!-- 工具栏 --></div>
+				        <div id="editor-container"><!-- 编辑器 --></div>
+				    </div>
+				</div>
+			</div>
+			<button class="uk-button uk-button-primary" onclick="writeArticle()">提交</button>
+		</div>
+		<script src="../wangEditor/index.js"></script>
+		<script src="../js/login_state.js"></script>
+		<script src="../js/publish/initVue.js"></script>
+		<script src="../js/publish/Textbox.js"></script>
+		<script>
+			function getHTML(){
+				console.log(editor.getHtml());
+			}
+			function getSelect(){
+				console.warn($("#selectcs").find("option:selected").val());
+			}
+		</script>
+		<script>
+		    var bar = document.getElementById('js-progressbar');
+		    UIkit.upload('.js-upload', {
+				name: 'file',
+		        url: '/api/upload',
+		        multiple: true,
+		        beforeSend: function () {
+		            console.log('beforeSend', arguments);
+		        },
+		        beforeAll: function () {
+					showPop("文件准备上传","success");
+		            console.log('beforeAll', arguments);
+		        },
+		        load: function () {
+		            console.log('load', arguments);
+		        },
+		        error: function () {
+		            console.log('error', arguments);
+					showPop("上传过程中有些许错误：","error");
+					console.error("上传过程中有些许错误：",arguments[0].stack);
+		        },
+		        complete: function () {
+		            console.log('complete', arguments);
+		        },
+		
+		        loadStart: function (e) {
+		            console.log('loadStart', arguments);
+		            bar.removeAttribute('hidden');
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        progress: function (e) {
+		            console.log('progress', arguments);
+		
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        loadEnd: function (e) {
+		            console.log('loadEnd', arguments);
+					
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        completeAll: function () {
+		            console.log('completeAll', arguments);
+		            setTimeout(function () {
+		                bar.setAttribute('hidden', 'hidden');
+		            }, 1000);
+					// if(arguments.target.response)
+					var responseString = arguments[0].response; // 假设这是字符串类型的响应
+					var responseObject;
+					try {
+					    responseObject = JSON.parse(responseString);
+					    console.warn(responseObject.code); // 现在应该能够访问 code 属性了
+						if (responseObject.code==1) {
+							showPop("上传失败："+responseObject.message,"error");
+							return;
+						} else if(responseObject.code=="不符合文件头部，文件类型校验失败！"){
+							showPop("上传失败：文件类型不正确"+responseObject.message,"error");
+							return;
+						}
+						showPop("文件上传成功","success");
+						$("#upImg").val(responseObject.data);
+						$("#upImg").html("已上传"+responseObject.data);
+					} catch (e) {
+					    console.error('错误的json答复Error parsing JSON response:', e);
+					}
+					
+		        }
+		
+		    });
+		
+		</script>
+	</body>
+</html>

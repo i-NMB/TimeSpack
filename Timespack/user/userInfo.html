@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>首页 - 时光漫步</title>
+		<link rel="stylesheet" href="../css/index.css" />
+		<link rel="stylesheet" href="../css/user/userInfo.css" />
+		<!-- jquery依赖 -->
+		<script src="../js/jquery.min.js"></script>
+		<script src="../js/jquery.pjax.min.js"></script>
+		<!-- UIkit CSS -->
+		<link rel="stylesheet" href="../css/uikit.min.css" />
+		<!-- UIkit JS -->
+		<script src="../js/uikit.min.js"></script>
+		<script src="../js/uikit-icons.min.js"></script>
+		<!-- Vue3依赖 -->
+		<!-- <script src="../js/vue.global.prod.js"></script> -->
+		<script src="../js/vue.global.js"></script>
+		<!-- Toastify依赖 -->
+		<script src="../Toastify/toastify-js.js"></script>
+		<link rel="stylesheet" href="../Toastify/toastify.min.css" />
+		<!-- 自研依赖 -->
+		<script src="../Toastify/diyPopStyle.js"></script>
+		<!-- Marked依赖 -->
+		<script src="../Marked/marked.min.js"></script>
+		<!-- 高亮依赖 -->
+		<link rel="stylesheet" href="../Marked/github-markdown-light.min.css" />
+	</head>
+	<body>
+		<!-- 头部nav开始 -->
+		<nav class="uk-navbar-container nav">
+		    <div class="uk-container">
+		        <div uk-navbar>
+			            <div class="uk-navbar-left">
+		                <ul class="uk-navbar-nav">
+							<li>
+								<div class="logo">
+								</div>
+							</li>
+		                    <li class="uk-active"><a href="/">首页</a></li>
+		                    <li>
+		                        <a href="/article/publish.html">文章发布</a>
+		                    </li>
+		                    <li><a href="mailto://feedback@bilicute.com">问题反馈</a></li>
+		                </ul>
+		            </div>
+		            <div class="uk-navbar-right">
+		                <ul class="uk-navbar-nav" id="login">
+		                    <li class="uk-active">
+		                        <a href="/user/userInfo.html" v-cloak>{{ login_info.nickname }}<span uk-navbar-parent-icon></span></a>
+		                        <div class="uk-navbar-dropdown">
+		                            <ul class="uk-nav uk-navbar-dropdown-nav">
+		                                <li class="uk-nav-header">文章</li>
+										<li><a href="/user/userInfo.html">文章管理</a></li>
+										<li class="uk-nav-header">个人中心</li>
+										<li><a href="/user/userInfo.html">修改信息</a></li>
+										<li><a href="/user/userInfo.html">修改密码</a></li>
+										<li class="uk-nav-divider"></li>
+										<li><a onclick="clearAllCookie()">退出登陆</a></li>
+		                            </ul>
+		                        </div>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</nav>
+		<!-- 头部nav结束 -->
+		<div class="container uk-box-shadow-xlarge uk-padding uk-align-center uk-flex" id="top">
+			<div class="navigation uk-width-1-5 uk-height-1-1" >
+				<div class="uk-card uk-card-default uk-card-body">
+				    <ul class="uk-nav-default uk-nav-parent-icon" uk-nav uk-switcher="connect: .switcher-container;animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+						<div class="uk-margin uk-margin-top uk-margin-left uk-align-center">信息设置</div>
+						<li class="uk-active uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: user"></span> 个人基本信息</a></li>
+				        <li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: nut"></span> 基本信息修改</a></li>
+				        <li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: cog"></span> 密保信息修改</a></li>
+						<li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: lock"></span> 账号密码修改</a></li>
+				        <div class="uk-margin uk-margin-top uk-margin-left uk-align-center">内容管理</div>
+				        <li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: file-text"></span> 文章管理</a></li>
+				        <li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: comments"></span> 评论管理</a></li>
+				        <li class="uk-margin-bottom"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: bookmark"></span> 数据统计</a></li>
+						<div class="uk-margin uk-margin-top uk-margin-left uk-align-center" v-if="user.identity=='Admin'">管理审计</div>
+						<li class="uk-margin-bottom" v-if="user.identity=='Admin'"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: code"></span> 文章审核</a></li>
+						<li class="uk-margin-bottom" v-if="user.identity=='Admin'"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: code"></span> 评论审核</a></li>
+				        <hr>
+				        <li class="uk-margin"><a href="javascript:;"><span class="uk-margin-small-right" uk-icon="icon: close"></span> 注销</a></li>
+				    </ul>
+				</div>
+			</div>
+			<div class="main-info uk-width-expand uk-height-1-1">
+				<ul class="uk-nav-parent-icon uk-switcher switcher-container" id="info">
+					<li class="info uk-flex uk-flex-center uk-flex-middle" >
+						<div class="info-framework uk-margin-large uk-margin-large-top uk-flex-center uk-flex-middle">
+							<div class="info-avatar uk-flex uk-flex-center uk-flex-middle">
+								<img class="uk-border-circle uk-margin" :src="user.userPic ? user.userPic : '../img/avatar.png'" width="200" height="200" alt="用户头像">
+								<!-- <div class="js-upload uk-placeholder uk-text-center uk-width-2-3 uk-padding-small">
+								    <span uk-icon="icon: cloud-upload"></span>
+								    <span class="uk-text-middle">拖动上传图片或</span>
+								    <div uk-form-custom>
+								        <input type="file" multiple>
+								        <span class="uk-link">选择</span>
+								    </div>
+								</div>
+								<progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress> -->
+								<div>欢迎您，{{ user.nickname }}！您的账户身份为<span class="info-identity uk-margin-small-left">{{ user.identity=='Admin' ? '管理员' : '用户' }}</span></div>
+							</div>
+							<div class="info-main uk-margin-large">
+								<div class="uk-column-1-2 uk-column-divider">
+								    <p>登录用户名:&ensp;<span class=uk-text-large>{{ user.username }}</span><span class="uk-text-meta"><br>用户名是用于登录的唯一标识</span></p>
+									<p>用户昵称:&ensp;<span class=uk-text-large>{{ user.nickname }}</span><span class="uk-text-meta"><br>用户昵称是用来展示的名字</span></p>
+									<p>邮箱地址:&ensp;<span class=uk-text-large>{{ user.email }}</span><span class="uk-text-meta"><br>邮箱地址可以接收通知以及修改密码</span></p>
+									<p>手机号码:&ensp;<span class=uk-text-large>{{ user.phone }}</span><span class="uk-text-meta"><br>手机号码是实名以及修改密码的工具</span></p>
+								    <blockquote cite="#" class="uk-column-span">
+								        <p>{{ yiyan.content }}</p>
+								        <footer>Originating from <cite><a href="javascript:;" class="uk-text-primary">{{ yiyan.origin }}</a></cite></footer>
+								    </blockquote>
+								    <p class="uk-margin-remove uk-padding uk-padding-remove-left uk-padding-remove-right">用户创建时间{{user.createTime}}<span class="uk-text-meta"><br>记录了您的账户创建的时间</span></p>
+									<p class="uk-margin-remove uk-padding uk-padding-remove-left uk-padding-remove-right">最近信息修改时间{{user.updateTime}}<span class="uk-text-meta"><br>您最后账户修改信息的时间</span></p>
+								</div>
+							</div>
+						</div>
+					</li>
+				    <li class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin-large uk-margin-large-top uk-flex-center uk-flex-middle">
+							<div class="info-avatar uk-flex uk-flex-center uk-flex-middle">
+								<img class="uk-border-circle uk-margin" :src="user.userPic ? user.userPic : '../img/avatar.png'" width="200" height="200" alt="用户头像">
+								<div class="js-upload uk-placeholder uk-text-center uk-width-2-3 uk-padding-small uk-margin-remove-bottom" >
+								    <span uk-icon="icon: cloud-upload"></span>
+								    <span class="uk-text-middle">拖动上传图片或</span>
+								    <div uk-form-custom>
+								        <input type="file" multiple>
+								        <span class="uk-link">选择</span>
+								    </div>
+								</div>
+								<div id="avatar" class="uk-margin">
+								</div>
+								<progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+								<div>欢迎您，{{ user.nickname }}！您可以在这里修改基本信息</div>
+							</div>
+							<div class="info-main uk-margin-large uk-margin-large-top">
+								<div class="info-username">
+									<div>
+										<span>登录用户名:&emsp;</span>
+										<div>
+										    <input class="uk-input uk-form-width-medium not-allowed" type="text" :placeholder="user.username" :value="user.username" disabled uk-tooltip="注册后不允许修改">
+										</div>
+									</div>
+									<span class="uk-text-meta">用户名是用于登录的唯一标识，一般不允许修改</span>
+								</div>
+								<div class="info-username">
+									<div>
+										<span>用户昵称:&emsp;</span>
+										<div>
+										    <input class="uk-input uk-form-width-medium" type="text" :placeholder="user.nickname" :value="user.nickname" uk-tooltip="一个留在粉丝心中的印象" id="nickname">
+										</div>
+									</div>
+									<span class="uk-text-meta">用户昵称是用来展示的名字</span>
+								</div>
+							</div>
+						</div>
+						<button class="uk-button uk-button-primary uk-width-1-5 uk-margin-small-bottom" @click="patchNickname()">提交</button>
+					</li>
+				    <li class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top">
+								修改密保信息
+								<p class="uk-text-meta">
+									邮箱地址和手机号若绑定错误可能会造成密码丢失
+								</p>
+							</div>
+							<ul uk-tab="animation: uk-animation-fade">
+							    <li><a href="javascript:;">修改邮箱地址</a></li>
+							    <li><a href="javascript:;">修改手机号码</a></li>
+							</ul>
+							
+							<ul class="uk-switcher uk-margin">
+							    <li>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon" uk-icon="icon: mail"></span>
+									        <input class="uk-input" type="text" placeholder="输入新邮箱" id="newMail">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendNewMail()" id="sendNewMail">获取</button>
+										<input class="uk-input" type="text" placeholder="邮箱验证码" id="newMailCode">
+									</div>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: phone"></span>
+									        <input class="uk-input" type="text" :placeholder="user.phone" :value="user.phone" disabled uk-tooltip="修改邮箱需要短信验证">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendPhone()" id="sendPhone">获取</button>
+										<input class="uk-input" type="text" placeholder="手机验证码" id="phoneCode">
+									</div>
+									<div class="uk-margin"><button class="uk-button uk-button-primary uk-align-center" @click="updateMail()">修改邮箱地址</button></div>
+								</li>
+							    <li>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon" uk-icon="icon: phone"></span>
+									        <input class="uk-input" type="text" placeholder="输入新手机号" id="newPhone">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendNewPhone()" id="sendNewPhone">获取</button>
+										<input class="uk-input" type="text" placeholder="短信验证码" id="newPhoneCode">
+									</div>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+									        <input class="uk-input" type="text" :placeholder="user.email" :value="user.email" disabled uk-tooltip="修改手机号需要邮箱验证">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendMail()" id="sendMail">获取</button>
+										<input class="uk-input" type="text" placeholder="邮箱验证码" id="mailCode">
+									</div>
+									<div class="uk-margin"><button class="uk-button uk-button-primary uk-align-center" @click="updatePhone()">修改手机号</button></div>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top">
+								修改账号密码
+								<p class="uk-text-meta">
+									账号密码是您登录的凭证，请妥善保管
+								</p>
+							</div>
+							<ul uk-tab="animation: uk-animation-fade">
+							    <li><a href="javascript:;">邮件验证</a></li>
+							    <li><a href="javascript:;">短信验证</a></li>
+							</ul>
+							<div class="uk-margin">
+							    <div class="uk-inline">
+							        <span class="uk-form-icon" uk-icon="icon: unlock"></span>
+							        <input class="uk-input" type="password" placeholder="输入新密码">
+							    </div>
+							</div>
+							<div class="uk-margin uk-margin-remove-top">
+							    <div class="uk-inline">
+								    <span class="uk-form-icon" uk-icon="icon: lock"></span>
+								    <input class="uk-input" type="password" placeholder="确认新密码" id="newPassword">
+								</div>
+							</div>
+							<ul class="uk-switcher uk-margin uk-margin-remove-top">
+								<li>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+									        <input class="uk-input" type="text" :placeholder="user.email" :value="user.email" disabled uk-tooltip="修改密码需要密保邮箱验证">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendMail()" id="sendMail">获取</button>
+										<input class="uk-input" type="text" placeholder="邮箱验证码" id="mailCodeByPassword">
+									</div>
+									<div class="uk-margin"><button class="uk-button uk-button-primary uk-align-center" @click="changePasswordByMail()">修改密码</button></div>
+								</li>
+							    <li>
+									<div class="uk-margin">
+									    <div class="uk-inline">
+									        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: phone"></span>
+									        <input class="uk-input" type="text" :placeholder="user.phone" :value="user.phone" disabled uk-tooltip="修改邮箱需要密保短信验证">
+									    </div>
+									</div>
+									<div uk-form-custom>
+										<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" @click="sendPhone()" id="sendPhone">获取</button>
+										<input class="uk-input" type="text" placeholder="手机验证码" id="phoneCodeByPassword">
+									</div>
+									<div class="uk-margin"><button class="uk-button uk-button-primary uk-align-center" @click="changePasswordByPhone()">修改密码</button></div>
+								</li>
+							</ul>
+						</div>
+					</li>
+				    <li  class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top uk-width-3-5">
+								文章管理
+								<p class="uk-text-meta">
+									您发布的文章将在这里呈现，欣赏自己的才华叭！
+								</p>
+							</div>
+							<article class="uk-comment uk-width-3-5 uk-card uk-card-default uk-card-body uk-align-center uk-width-xlarge" v-for="(item, index) in currentPageData" :key="index" id="articles" v-if="total!=0">
+								<div class="uk-card-badge uk-label" v-if="item.auditingState">审核通过</div>
+								<div class="uk-card-badge uk-label uk-label-warning" v-if="!item.auditingState">审核中</div>
+							    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+
+							        <div class="uk-width-expand">
+							            <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{ item.title }}</a></h4>
+							            <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+							                <li><a href="#">{{ item.createTime }}</a></li>
+							                <li class="uk-padding-remove uk-margin-small"><span class="uk-align-left uk-margin-remove">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye " viewBox="0 0 18 18">
+												  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+												  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+												</svg>
+												<span v-cloak>{{ item.view }}</span>
+											</span></li>
+											<li class="uk-padding-remove uk-margin-small"><span class="uk-align-left uk-margin-remove">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 18 18">
+												  <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+												</svg>
+												<span v-cloak>{{ item.likes }}</span>
+											</span></li>
+							            </ul>
+							        </div>
+							    </header>
+							    <div class="uk-comment-body">
+							        <p v-html="markdownToHtml(item.content)" class="info-article"></p>
+							    </div>
+								<div class="uk-margin">
+									<button class="uk-button uk-button-default uk-align-left uk-margin-remove" @click="handle('/plaintext.html?id='+item.articleId)">查看</button>
+									<button class="uk-button uk-button-danger uk-align-right uk-margin-remove" :uk-toggle="getToggleTarget(item.articleId)">删除</button>
+								</div>
+								<!-- 拟态对话框 -->
+								<div :id="'modal-example'+item.articleId" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+										<button class="uk-modal-close-default" uk-close></button>
+								        <h2 class="uk-modal-title">操作确认</h2>
+								        <p>
+											这篇文章包括所有相关的内容和元数据都将会被<span class="uk-text-danger uk-text-bolder">永久移除且无法恢复</span>。
+											请确认这是您的意图，并且您已经做好了备份数据或采取了其他必要的预防措施。
+											如果您有任何疑问或需要帮助，请立即联系支持团队。<br><br>
+											您即将删除一篇名为<span class="uk-text-secondary">《{{ item.title }}》</span>的文章。<br>
+											<span class="uk-text-primary">
+												请按下按钮“确认删除”以继续，或者按其他按钮删除操作。
+											</span>
+										</p>
+								        <p class="uk-text-right">
+											<button class="uk-button uk-button-danger uk-modal-close uk-margin-right" @click="deleteArticle(item.articleId)">确认删除</button>
+								            <button class="uk-button uk-button-default uk-modal-close uk-margin-left">取消</button>
+								        </p>
+								    </div>
+								</div>
+								<!-- 拟态对话框结束 -->
+							</article>
+							<ul class="pagination uk-flex-center  uk-margin-large" v-if="total!=0">
+							    <li><button @click="gotoTop();goToPage(currentPage - 1)" :disabled="currentPage === 1" class="uk-button uk-button-primary"><span class="uk-margin-small-right" uk-pagination-previous></span> 上一页</button></li>
+								<span class="uk-margin-large-right uk-margin-large-left">{{ currentPage }} / {{ totalPages }}</span>
+							    <li><button @click="gotoTop();goToPage(currentPage + 1)" :disabled="currentPage === totalPages" class="uk-button uk-button-primary">下一页<span class="uk-margin-small-left" uk-pagination-next></span></button></li>
+							</ul>
+							<div class="uk-alert-primary uk-margin-large" uk-alert v-if="total==0">
+								<h3>啊哦！</h3>
+							    <p>你还没有发布文章噢，快去开始漫步旅行叭~</p>
+							</div>
+						</div>
+					</li>
+				    <li  class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top uk-width-3-5">
+								评论管理
+								<p class="uk-text-meta">
+									您发布的评论将在这里呈现，在文章下的足迹你我共赏！
+								</p>
+							</div>
+							<div class="uk-card uk-card-hover uk-card-body uk-width-3-5 uk-margin-top" v-for="(item, index) in commentCurrentPageData" :key="index" id="commentss" v-if="commentTotal!=0">
+								<div class="uk-card-badge uk-label" v-if="item.auditingState">审核通过</div>
+								<div class="uk-card-badge uk-label uk-label-warning" v-if="!item.auditingState">审核中</div>
+							    <h3 class="uk-card-title uk-margin-remove">评论《{{ articleTitles[index] }}》</h3>
+								<p class="uk-text-meta uk-margin-small">{{ item.createTime.replace('T', ' ') }}</p>
+							    <p class="uk-margin-remove">{{ item.content }}</p>
+								<div class="uk-margin">
+									<button class="uk-button uk-button-default uk-align-left uk-margin-remove" @click="handle('/plaintext.html?id='+item.articleId)">查看</button>
+									<button class="uk-button uk-button-danger uk-align-right uk-margin-remove" :uk-toggle="getCommentToggleTarget(item.commentatorId)">删除</button>
+								</div>
+								<!-- 拟态对话框 -->
+								<div :id="'modal-'+item.commentatorId" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+										<button class="uk-modal-close-default" uk-close></button>
+								        <h2 class="uk-modal-title">操作确认</h2>
+								        <p>
+											这篇文章包括所有相关的内容和元数据都将会被<span class="uk-text-danger uk-text-bolder">永久移除且无法恢复</span>。
+											请确认这是您的意图，并且您已经做好了备份数据或采取了其他必要的预防措施。
+											如果您有任何疑问或需要帮助，请立即联系支持团队。<br><br>
+											您即将删除一篇名为<span class="uk-text-secondary">《{{ articleTitles[index] }}》</span>的文章下的评论。<br>
+											<span class="uk-text-muted">“  {{ item.content }}  ”</span><br>
+											<span class="uk-text-primary">
+												请按下按钮“确认删除”以继续，或者按其他按钮删除操作。
+											</span>
+										</p>
+								        <p class="uk-text-right">
+											<button class="uk-button uk-button-danger uk-modal-close uk-margin-right" @click="deleteComment(item.commentatorId)">确认删除</button>
+								            <button class="uk-button uk-button-default uk-modal-close uk-margin-left">取消</button>
+								        </p>
+								    </div>
+								</div>
+								<!-- 拟态对话框结束 -->
+							</div>
+							<ul class="pagination uk-flex-center  uk-margin-large" v-if="commentTotal!=0">
+							    <li><button @click="gotoTop();commentGoToPage(commentCurrentPage - 1)" :disabled="commentCurrentPage === 1" class="uk-button uk-button-primary"><span class="uk-margin-small-right" uk-pagination-previous></span> 上一页</button></li>
+								<span class="uk-margin-large-right uk-margin-large-left">{{ commentCurrentPage }} / {{ commentTotalPages }}</span>
+							    <li><button @click="gotoTop();commentGoToPage(commentCurrentPage + 1)" :disabled="commentCurrentPage === commentTotalPages" class="uk-button uk-button-primary">下一页<span class="uk-margin-small-left" uk-pagination-next></span></button></li>
+							</ul>
+							<div class="uk-alert-primary uk-margin-large" uk-alert v-if="commentTotal==0">
+								<h3>Oh！</h3>
+							    <p>你还没有发布评论噢，快去文章下留下足迹叭~</p>
+							</div>
+						</div>
+					</li>
+				    <li  class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top uk-width-1-1">
+								数据统计
+								<p class="uk-text-meta">
+									内容表现是漫漫路上的好伙伴
+								</p>
+							</div>
+							<div class="uk-width-1-1 uk-section uk-section-default">
+							    <div class="uk-container">
+							
+							        <h4>互动数据</h4>
+							
+							        <div class="uk-grid-match uk-child-width-1-3" uk-grid>
+							            <div>
+							                <div>
+												<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+													<p class="">文章阅览量<p>
+													<p class="uk-text-lead uk-text-primary">{{ allViewByArt }}</p>
+												</div>
+											</div>
+							            </div>
+							            <div>
+							                <div>
+							                	<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+							                		<p class="">文章点赞量</p>
+							                		<p class="uk-text-lead uk-text-primary">{{ allLikeByArt }}</p>
+							                	</div>
+							                </div>
+							            </div>
+							            <div>
+							                <div>
+							                	<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+							                		<p class="">评论点赞量</p>
+							                		<p class="uk-text-lead uk-text-primary">{{ allLikeByCom }}</p>
+							                	</div>
+							                </div>
+							            </div>
+							        </div>
+									<div class="uk-grid-match uk-child-width-1-3" uk-grid>
+									    <div>
+									        <div>
+												<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+													<p class="">发布文章数量<p>
+													<p class="uk-text-lead uk-text-primary">{{ allArt }}</p>
+												</div>
+											</div>
+									    </div>
+									    <div>
+									        <div>
+									        	<div class="uk-card uk-card-default uk-card-hover uk-card-body">
+									        		<p class="">发布评论数量</p>
+									        		<p class="uk-text-lead uk-text-primary">{{ allCom }}</p>
+									        	</div>
+									        </div>
+									    </div>
+									</div>
+							    </div>
+							</div>
+							
+							<div class="uk-width-1-1 uk-section uk-section-default">
+							    <div class="uk-container">
+							        <h4 class="uk-margin-remove">最赞文章</h4>
+									<p class="uk-text-meta uk-margin-remove-top">
+										下面的文章是你被点赞量最高的文章！
+									</p>
+							        <div class="uk-card uk-card-hover uk-card-body likes-article">
+										<div class="uk-width-3-4">
+											<h3 class="uk-card-title">{{ maxLikeArt.title }}</h3>
+											<p v-html="markdownToHtml(maxLikeArt.content)"></p>
+										</div>
+										<div>
+											<p href="" class="likes uk-icon-button uk-margin-remove">
+												<svg t="1715193185863" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1481" data-spm-anchor-id="a313x.search_index.0.i0.73603a81mY2Frk" width="70" height="70"><path d="M939.358251 423.424662c-23.01825-37.252439-62.924121-60.779272-107.019409-63.209624-2.755764-0.38681-5.510504-0.579191-8.347109-0.579191l-152.202471-0.121773c6.649444-28.975938 10.015098-58.653865 10.015098-88.657202 0-28.223808-3.213181-57.139372-9.556657-85.952604-0.447185-2.043542-1.098008-4.006244-1.932002-5.866614-15.820314-57.302077-67.37755-96.841605-127.282918-96.841605-72.827679 0-132.081201 59.254545-132.081201 132.081201 0 3.334955 0.132006 6.66991 0.406253 10.015098-2.196015 57.211003-32.108279 109.947088-80.269162 141.363611-14.447037 9.42465-18.524912 28.773324-9.099239 43.220361 9.414417 14.437827 28.752858 18.535145 43.220361 9.099239 65.811892-42.925648 106.429984-115.325585 108.656699-193.684234 0.030699-1.332345-0.010233-2.663666-0.14224-3.996011-0.203638-2.012843-0.304945-4.016477-0.304945-6.019087 0-38.381146 31.233352-69.614497 69.614497-69.614497 32.57593 0 60.474326 22.204721 67.824735 53.997821 0.356111 1.534959 0.823761 3.019777 1.402953 4.453429 4.696975 22.814612 7.076162 45.579081 7.076162 67.743894 0 37.485753-6.222725 74.352405-18.494213 109.592001-3.324722 9.546424-1.819438 20.111037 4.02671 28.345582 5.856381 8.245801 15.332197 13.146415 25.448602 13.156648l193.226816 0.101307c1.423419 0.264013 2.857071 0.426719 4.300956 0.477884 24.116257 0.9967 45.935192 13.614066 58.603723 34.090423 7.838525 12.31242 11.438517 26.800389 10.431583 41.939181-0.080841 0.945535-0.121773 1.911536-0.11154 2.877537 0 0.854461 0.040932 1.697665 0.11154 2.53166 0.010233 0.335644-0.030699 0.661056-0.11154 0.976234-0.101307 0.376577-0.193405 0.772596-0.284479 1.159406l-74.972529 330.391802c-0.914836 1.281179-1.738597 2.6432-2.449795 4.046153-5.937223 11.762905-14.660908 21.48329-25.346271 28.172643-10.746762 6.812149-23.059182 10.614755-35.757388 11.06194-0.854461-0.061398-513.766226-0.224104-513.766226-0.224104-0.467651-0.020466-0.935302-0.030699-1.402953-0.030699 0 0-111.01542 0.172939-112.718201 0.457418-1.932002 0-3.446495-1.50426-3.446495-3.415796l0.299829-416.334173c0-1.901303 1.545192-3.446495 3.01466-3.456728l1.245364 0.121773c1.174756 0.132006 2.653433 0.284479 3.52836 0.193405l83.82822-0.222057 0 339.367221c0 17.253966 13.979386 31.233352 31.233352 31.233352s31.233352-13.979386 31.233352-31.233352L281.009092 435.350273c0-1.778506 0-8.631588 0-10.411117 0-17.253966-13.979386-30.928407-31.233352-30.928407-1.50426 0-117.547183 0.304945-119.402437 0.304945-36.34272 0-65.913199 29.566386-65.913199 65.893756l-0.299829 416.334173c0 36.337603 29.571503 65.902966 65.913199 65.902966 2.541893 0 111.406323-0.457418 111.406323-0.457418 0.457418 0.020466 0.925069 0.030699 1.382487 0.030699 0 0 511.458671 0.274246 512.505513 0.274246 25.469068 0 50.296523-7.197936 71.647807-20.73116 19.612687-12.281721 35.777855-29.881564 46.839795-50.967812 3.660366-5.622044 6.435573-11.875468 8.256034-18.615986 0.11154-0.416486 0.213871-0.823761 0.304945-1.240247l74.881454-330.340637c1.596358-6.212492 2.257413-12.586666 2.00261-18.992563C960.892707 473.366098 953.948551 446.331371 939.358251 423.424662z" fill="#8a8a8a" p-id="1482" data-spm-anchor-id="a313x.search_index.0.i1.73603a81mY2Frk"></path><path d="M450.027553 518.650467c-17.253966 0-31.233352 13.979386-31.233352 31.233352l0 30.470989c0 17.253966 13.979386 31.233352 31.233352 31.233352 17.253966 0 31.233352-13.979386 31.233352-31.233352l0-30.470989C481.260905 532.629853 467.281519 518.650467 450.027553 518.650467z" fill="#8a8a8a" p-id="1483"></path><path d="M693.805696 518.650467c-17.253966 0-31.233352 13.979386-31.233352 31.233352l0 30.470989c0 17.253966 13.979386 31.233352 31.233352 31.233352 17.253966 0 31.233352-13.979386 31.233352-31.233352l0-30.470989C725.039048 532.629853 711.058638 518.650467 693.805696 518.650467z" fill="#8a8a8a" p-id="1484"></path><path d="M648.940882 660.09492c-14.304797-9.393951-33.592073-5.398964-43.159986 8.763594-0.132006 0.193405-13.614066 19.754926-34.171264 19.754926-19.98824 0-32.423457-18.09717-33.266661-19.368116-9.17087-14.427594-28.254507-18.809391-42.834574-9.770528-14.650675 9.109472-19.155269 28.366048-10.055007 43.016723 11.214413 18.047028 41.96988 48.588625 86.156242 48.588625 43.962258 0 75.104535-30.318516 86.572728-48.222281C667.404396 688.461991 663.216004 669.500127 648.940882 660.09492z" fill="#8a8a8a" p-id="1485"></path></svg>
+											</p>
+											<p>文章获赞: <span class="uk-text-primary uk-text-large" v-html="maxLikeArt.likes!=null ? maxLikeArt.likes : '0'"></span></p>
+										</div>
+									</div>
+							    </div>
+							</div>
+							
+							<div class="uk-margin-remove uk-width-1-1 uk-section uk-section-default">
+							    <div class="uk-container">
+							        <h4 class="uk-margin-remove">最多人看</h4>
+									<p class="uk-text-meta uk-margin-remove-top">
+										下面的文章是你被阅览量最高的文章！
+									</p>
+							        <div class="uk-card uk-card-hover uk-card-body likes-article">
+										<div class="uk-width-3-4">
+											<h3 class="uk-card-title">{{ maxViewArt.title }}</h3>
+											<p v-html="markdownToHtml(maxViewArt.content)"></p>
+										</div>
+										<div>
+											<p href="" class="likes uk-icon-button uk-margin-remove" >
+												<svg t="1715196993431" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3241" width="70" height="70"><path d="M512 416a96 96 0 1 1-96 96 96 96 0 0 1 96-96m0-64a160 160 0 1 0 160 160 160 160 0 0 0-160-160z" fill="#8a8a8a" p-id="3242"></path><path d="M512 298.88c188.64 0 288 113.92 366.72 213.12C800 611.36 700.64 725.12 512 725.12S224 611.36 145.28 512C224 412.64 323.36 298.88 512 298.88m0-64C264.64 234.88 147.52 406.56 64 512c83.52 105.44 200.64 277.12 448 277.12S876.48 617.44 960 512c-83.52-105.44-200.64-277.12-448-277.12z" fill="#8a8a8a" p-id="3243"></path></svg>
+											</p>
+											<p>浏览量: <span class="uk-text-primary uk-text-large" v-html="maxViewArt.view!=null ? maxViewArt.view : '0'"></span></p>
+										</div>
+									</div>
+							    </div>
+							</div>
+							
+							<div class="uk-margin-remove uk-width-1-1 uk-section uk-section-default">
+							    <div class="uk-container">
+							        <h4 class="uk-margin-remove">热门评论</h4>
+									<p class="uk-text-meta uk-margin-remove-top">
+										下面的评论是你被赞同量最高的评论！
+									</p>
+							        <div class="uk-card uk-card-hover uk-card-body likes-article">
+										<div class="uk-width-3-4">
+											<p>{{ maxLikeCom.content }}</p>
+										</div>
+										<div>
+											<p href="" class="likes uk-icon-button uk-margin-remove" >
+												<span uk-icon="icon: triangle-up; ratio: 3"></span>
+											</p>
+											<p>赞同数: <span class="uk-text-primary uk-text-large" v-html="maxLikeCom.likes!=null ? maxLikeCom.likes : '0'"></span></p>
+										</div>
+									</div>
+							    </div>
+							</div>
+							
+						</div>
+					</li>
+					<li v-if="user.identity=='Admin'" class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top uk-width-3-5">
+								文章审核
+								<p class="uk-text-meta">
+									管理员权利和责任的体现！
+								</p>
+							</div>
+							<article class="uk-comment uk-width-3-5 uk-card uk-card-default uk-card-body uk-align-center uk-width-xlarge" v-for="(item, index) in currentPageDataAdmin" :key="index" id="articlesAdmin" v-if="totalAdmin!=0">
+								<div class="uk-card-badge uk-label" v-if="item.auditingState">审核通过</div>
+								<div class="uk-card-badge uk-label uk-label-warning" v-if="!item.auditingState">审核中</div>
+							    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+							
+							        <div class="uk-width-expand">
+							            <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{ item.title }}</a></h4>
+							            <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+							                <li><a href="#">{{ item.createTime }}</a></li>
+							                <li class="uk-padding-remove uk-margin-small"><span class="uk-align-left uk-margin-remove">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-eye " viewBox="0 0 18 18">
+												  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+												  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+												</svg>
+												<span v-cloak>{{ item.view }}</span>
+											</span></li>
+											<li class="uk-padding-remove uk-margin-small"><span class="uk-align-left uk-margin-remove">
+												<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 18 18">
+												  <path d="M8.864.046C7.908-.193 7.02.53 6.956 1.466c-.072 1.051-.23 2.016-.428 2.59-.125.36-.479 1.013-1.04 1.639-.557.623-1.282 1.178-2.131 1.41C2.685 7.288 2 7.87 2 8.72v4.001c0 .845.682 1.464 1.448 1.545 1.07.114 1.564.415 2.068.723l.048.03c.272.165.578.348.97.484.397.136.861.217 1.466.217h3.5c.937 0 1.599-.477 1.934-1.064a1.86 1.86 0 0 0 .254-.912c0-.152-.023-.312-.077-.464.201-.263.38-.578.488-.901.11-.33.172-.762.004-1.149.069-.13.12-.269.159-.403.077-.27.113-.568.113-.857 0-.288-.036-.585-.113-.856a2.144 2.144 0 0 0-.138-.362 1.9 1.9 0 0 0 .234-1.734c-.206-.592-.682-1.1-1.2-1.272-.847-.282-1.803-.276-2.516-.211a9.84 9.84 0 0 0-.443.05 9.365 9.365 0 0 0-.062-4.509A1.38 1.38 0 0 0 9.125.111L8.864.046zM11.5 14.721H8c-.51 0-.863-.069-1.14-.164-.281-.097-.506-.228-.776-.393l-.04-.024c-.555-.339-1.198-.731-2.49-.868-.333-.036-.554-.29-.554-.55V8.72c0-.254.226-.543.62-.65 1.095-.3 1.977-.996 2.614-1.708.635-.71 1.064-1.475 1.238-1.978.243-.7.407-1.768.482-2.85.025-.362.36-.594.667-.518l.262.066c.16.04.258.143.288.255a8.34 8.34 0 0 1-.145 4.725.5.5 0 0 0 .595.644l.003-.001.014-.003.058-.014a8.908 8.908 0 0 1 1.036-.157c.663-.06 1.457-.054 2.11.164.175.058.45.3.57.65.107.308.087.67-.266 1.022l-.353.353.353.354c.043.043.105.141.154.315.048.167.075.37.075.581 0 .212-.027.414-.075.582-.05.174-.111.272-.154.315l-.353.353.353.354c.047.047.109.177.005.488a2.224 2.224 0 0 1-.505.805l-.353.353.353.354c.006.005.041.05.041.17a.866.866 0 0 1-.121.416c-.165.288-.503.56-1.066.56z"/>
+												</svg>
+												<span v-cloak>{{ item.likes }}</span>
+											</span></li>
+							            </ul>
+							        </div>
+							    </header>
+							    <div class="uk-comment-body">
+							        <p v-html="markdownToHtml(item.content)" class="info-article"></p>
+							    </div>
+								<div class="uk-margin">
+									<button class="uk-button uk-button-default uk-align-left uk-margin-remove" @click="adminArticle(item.articleId)">通过</button>
+									<button class="uk-button uk-button-danger uk-align-right uk-margin-remove" :uk-toggle="getToggleTargetAdmin(item.articleId)">删除</button>
+								</div>
+								<!-- 拟态对话框 -->
+								<div :id="'modal-example-Admin'+item.articleId" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+										<button class="uk-modal-close-default" uk-close></button>
+								        <h2 class="uk-modal-title">操作确认</h2>
+								        <p>
+											这篇文章包括所有相关的内容和元数据都将会被<span class="uk-text-danger uk-text-bolder">永久移除且无法恢复</span>。
+											<br><br>
+											您即将删除一篇名为<span class="uk-text-secondary">《{{ item.title }}》</span>的文章。<br>
+											<span class="uk-text-primary">
+												请按下按钮“确认删除”以继续，或者按其他按钮删除操作。
+											</span>
+										</p>
+								        <p class="uk-text-right">
+											<button class="uk-button uk-button-danger uk-modal-close uk-margin-right" @click="deleteArticle(item.articleId)">确认删除</button>
+								            <button class="uk-button uk-button-default uk-modal-close uk-margin-left">取消</button>
+								        </p>
+								    </div>
+								</div>
+								<!-- 拟态对话框结束 -->
+							</article>
+							<ul class="pagination uk-flex-center  uk-margin-large" v-if="totalAdmin!=0">
+							    <li><button @click="gotoTop();goToPageAdmin(currentPageAdmin - 1)" :disabled="currentPageAdmin === 1" class="uk-button uk-button-primary"><span class="uk-margin-small-right" uk-pagination-previous></span> 上一页</button></li>
+								<span class="uk-margin-large-right uk-margin-large-left">{{ currentPageAdmin }} / {{ totalPagesAdmin }}</span>
+							    <li><button @click="gotoTop();goToPageAdmin(currentPageAdmin + 1)" :disabled="currentPageAdmin === totalPagesAdmin" class="uk-button uk-button-primary">下一页<span class="uk-margin-small-left" uk-pagination-next></span></button></li>
+							</ul>
+							<div class="uk-alert-success uk-margin-large" uk-alert v-if="totalAdmin==0">
+								<h3>完成!</h3>
+							    <p>没有待审核的文章</p>
+							</div>
+						</div>
+					</li>
+					<li v-if="user.identity=='Admin'" class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						<div class="info-framework uk-margin uk-flex-center uk-flex-middle">
+							<div class="uk-text-large uk-margin-large-top uk-width-3-5">
+								评论审核
+								<p class="uk-text-meta">
+									管理员权利和责任的体现！
+								</p>
+							</div>
+							<div class="uk-card uk-card-hover uk-card-body uk-width-3-5 uk-margin-top" v-for="(item, index) in commentAdminCurrentPageData" :key="index" id="commentsAdmin" v-if="commentAdminTotal!=0">
+								<div class="uk-card-badge uk-label" v-if="item.auditingState">审核通过</div>
+								<div class="uk-card-badge uk-label uk-label-warning" v-if="!item.auditingState">审核中</div>
+							    <h3 class="uk-card-title uk-margin-remove">评论《{{ articleTitles[index] }}》</h3>
+								<p class="uk-text-meta uk-margin-small">{{ item.createTime.replace('T', ' ') }}</p>
+							    <p class="uk-margin-remove">{{ item.content }}</p>
+								<div class="uk-margin">
+									<button class="uk-button uk-button-primary uk-align-left uk-margin-remove" @click="adminComment(item.commentatorId)">通过</button>
+									<button class="uk-button uk-button-danger uk-align-right uk-margin-remove" :uk-toggle="getCommentAdminToggleTarget(item.commentatorId)">删除</button>
+								</div>
+								<!-- 拟态对话框 -->
+								<div :id="'modal-Admin'+item.commentatorId" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+										<button class="uk-modal-close-default" uk-close></button>
+								        <h2 class="uk-modal-title">管理员操作确认</h2>
+								        <p>
+											这篇文章包括所有相关的内容和元数据都将会被<span class="uk-text-danger uk-text-bolder">永久移除且无法恢复</span>。<br><br>
+											您即将删除一篇名为<span class="uk-text-secondary">《{{ articleAdminTitles[index] }}》</span>的文章下的评论。<br>
+											<span class="uk-text-muted">“  {{ item.content }}  ”</span><br>
+											<span class="uk-text-primary">
+												请按下按钮“确认删除”以继续，或者按其他按钮删除操作。
+											</span>
+										</p>
+								        <p class="uk-text-right">
+											<button class="uk-button uk-button-danger uk-modal-close uk-margin-right" @click="deleteComment(item.commentatorId)">确认删除</button>
+								            <button class="uk-button uk-button-default uk-modal-close uk-margin-left">取消</button>
+								        </p>
+								    </div>
+								</div>
+								<!-- 拟态对话框结束 -->
+							</div>
+							<ul class="pagination uk-flex-center  uk-margin-large" v-if="commentAdminTotal!=0">
+							    <li><button @click="gotoTop();commentAdminGoToPage(commentAdminCurrentPage - 1)" :disabled="commentAdminCurrentPage === 1" class="uk-button uk-button-primary"><span class="uk-margin-small-right" uk-pagination-previous></span> 上一页</button></li>
+								<span class="uk-margin-large-right uk-margin-large-left">{{ commentAdminCurrentPage }} / {{ commentAdminTotalPages }}</span>
+							    <li><button @click="gotoTop();commentAdminGoToPage(commentAdminCurrentPage + 1)" :disabled="commentAdminCurrentPage === commentTotalPages" class="uk-button uk-button-primary">下一页<span class="uk-margin-small-left" uk-pagination-next></span></button></li>
+							</ul>
+							<div class="uk-alert-success uk-margin-large" uk-alert v-if="commentAdminTotal==0">
+								<h3>完成!</h3>
+							    <p>没有待审核的评论</p>
+							</div>
+						</div>
+					</li>
+				    <li  class="info uk-flex uk-flex-center uk-flex-middle" style="flex-direction: column">
+						注销
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<hr class="uk-divider-icon uk-margin">
+		<footer class="foot">
+			<div class="foot-up">
+				<div class="foot-link">
+					<div class="foot-link-item">
+						<div class="foot-link-item-title">
+							关于我们
+						</div>
+						<ul>
+							<li><a href="#">公司介绍</a></li>
+							<li><a href="#">联系我们</a></li>
+							<li><a href="#">诚聘英才</a></li>
+						</ul>
+					</div>
+					<div class="foot-link-item">
+						<div class="foot-link-item-title">
+							产品服务
+						</div>
+						<ul>
+							<li><a href="#">个人中心</a></li>
+							<li><a href="#">企业招聘</a></li>
+							<li><a href="#">报价咨询</a></li>
+							<li><a href="#">岗位信息</a></li>
+							<li><a href="#">客服中心</a></li>
+						</ul>
+					</div>
+					<div class="foot-link-item">
+						<div class="foot-link-item-title" style="margin-top: 1rem;margin-bottom: 1rem;">
+							联系方式
+						</div>
+						<div class="foot-link-item-text-info">
+							<p>feedback@bilicute.com</p>
+							<p>13145215384</p>
+						</div>
+					</div>
+					<div class="foot-link-item">
+						<div class="foot-link-item-title">
+							友情链接
+						</div>
+						<ul>
+							<li><a href="//netssecurity.com">网安博客</a></li>
+							<li><a href="//acbug.cn">网安ACbug</a></li>
+							<li><a href="https://i-nmb.cn">i囡漫笔</a></li>
+							<li><a href="https://bt.cn">宝塔面板</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="exemption foot-link-item"  style="width: 50%;margin: 0 auto;">
+				<div class="foot-link-item-title" >
+					免责声明
+				</div>
+				<div class="foot-link-item-text" style="display: contents;">
+					<span>如果您认为本站的内容有侵犯到您的权利，请及时与我们联系。</span>
+					<span>我们将会在第一时间删除！</span>
+				</div>
+			</div>
+			<div class="hr-horizontal"></div>
+			<div class="foot-down">
+				<p>未经同意，不得转载本网站之所有文章信息及作品 时光漫步网版权所有</p>
+				<p><a href="#">网上有害信息举报专区</a>  违法不良信息举报电话:+86-13145215384 关爱未成年举报热线:+86-13145215384</p>
+				<p><a href="#">隐私声明</a> <a href="#">服务协议</a> <a href="#">COOKIES</a> Copyright © 2023-2024 时光漫步网 版权所有</p>
+			</div>
+		</footer>
+
+		<script src="../js/heard.js"></script>
+		<script src="../js/login_state.js"></script>
+		<script src="../js/userInfo/userInfo.js"></script>
+		<script>
+		
+		    var bar = document.getElementById('js-progressbar');
+			
+		    UIkit.upload('.js-upload', {
+				name: 'file',
+		        url: '/api/upload',
+		        multiple: true,
+		        beforeSend: function () {
+		            console.log('beforeSend', arguments);
+		        },
+		        beforeAll: function () {
+		            console.log('beforeAll', arguments);
+		        },
+		        load: function () {
+		            console.log('load', arguments);
+		        },
+		        error: function () {
+		            console.log('error', arguments);
+					console.error("上传过程中有些许错误：",arguments[0].stack);
+		        },
+		        complete: function () {
+		            console.log('complete', arguments);
+		        },
+		
+		        loadStart: function (e) {
+		            console.log('loadStart', arguments);
+		            bar.removeAttribute('hidden');
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        progress: function (e) {
+		            console.log('progress', arguments);
+		
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        loadEnd: function (e) {
+		            console.log('loadEnd', arguments);
+					
+		            bar.max = e.total;
+		            bar.value = e.loaded;
+		        },
+		
+		        completeAll: function () {
+		            console.log('completeAll', arguments);
+		            setTimeout(function () {
+		                bar.setAttribute('hidden', 'hidden');
+		            }, 1000);
+					// if(arguments.target.response)
+					var responseString = arguments[0].response; // 假设这是字符串类型的响应
+					var responseObject;
+					try {
+					    responseObject = JSON.parse(responseString);
+					    console.warn(responseObject.code); // 现在应该能够访问 code 属性了
+						if (responseObject.code==1) {
+							showPop("上传失败："+responseObject.message,"error");
+							return;
+						} else if(responseObject.code=="不符合文件头部，文件类型校验失败！"){
+							showPop("上传失败：文件类型不正确"+responseObject.message,"error");
+							return;
+						}
+						showPop("文件上传成功","success");
+						showPop("正在更新头像","success");
+						updataAvatar(responseObject.data);
+					} catch (e) {
+					    console.error('错误的json答复Error parsing JSON response:', e);
+					}
+					
+		        }
+		
+		    });
+		
+		</script>
+	</body>
+</html>

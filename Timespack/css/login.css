@@ -1,0 +1,64 @@
+.code{
+	    width: 7rem;
+	    height: 1.875rem;
+	    /* line-height: 40px; */
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+		margin-right: .5rem;
+		background-image: url("http://127.0.0.1:6066/api/getCode/img");
+}
+.banner{
+	width: 100%;
+	height: 49rem;
+	position: relative;
+	align-items: center;
+}
+
+.center-banner{
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	background-image: url('../img/login_html/login_background.webp');
+	background-size: cover;
+	object-fit:cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.login-framework{
+	width: 40%;
+	height: 45rem;
+	min-width: 41rem;
+	background-color: rgba(0, 12, 26, 0.65);
+	display: flex;
+	justify-content: center;
+    align-items: center;
+	transition: all .5s; 
+}
+.login-hr{
+	width: 0.125rem;
+    height: 15rem;
+    background-image: linear-gradient(180deg,rgba(246, 249, 255, 0),#8a8b90,rgba(246, 249, 255, 0));
+    margin: 0 2rem;
+}
+.login-framework:hover{
+	background-color: rgba(0, 12, 26, .8);
+}
+.edge{
+	width: 25rem;
+	height: 15rem;
+	align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	background-image: url('../img/login_html/login_edge.webp');
+	background-size: cover;
+	object-fit:cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.edge-text{
+	color: rgba(255, 255, 255, 0.8) !important;
+}
+.edge-text:hover{
+	color: #fff !important;
+}

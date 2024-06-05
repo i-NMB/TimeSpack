@@ -1,0 +1,59 @@
+{
+	"code": 0,
+	"message": "操作成功",
+	"data": {
+		"total": 15,
+		"items": [
+			{
+				"commentatorId": 19,
+				"content": "美国人使用洗衣机的方式非常随意。\n我曾在泽西市租房时，看到房东将鞋子和内衣一起放进洗衣机清洗。洗衣机似乎是“万能”的！脚垫都能往里扔。",
+				"state": "已发布",
+				"articleId": 2,
+				"createUser": 4,
+				"createTime": "2024-05-05T11:02:29",
+				"auditingState": true,
+				"likes": 0
+			},
+			{
+				"commentatorId": 18,
+				"content": "美国人家庭观念和我们不同。\n老人通常不帮忙照顾孩子，子女很少会赡养父母。老人们要么相互照顾，要么住在养老院，主要是靠养老金维持生活。子女的话，一般是每周或每月去探望老人。",
+				"state": "已发布",
+				"articleId": 2,
+				"createUser": 4,
+				"createTime": "2024-05-05T11:02:17",
+				"auditingState": true,
+				"likes": 0
+			},
+			{
+				"commentatorId": 17,
+				"content": "由于美国的地理面积巨大，他们在长途出行时更倾向于选择搭乘飞机，飞机运输网发达，全国大大小小飞机网上万个，机票价格也不高。",
+				"state": "已发布",
+				"articleId": 2,
+				"createUser": 4,
+				"createTime": "2024-05-05T11:01:34",
+				"auditingState": true,
+				"likes": 0
+			},
+			{
+				"commentatorId": 16,
+				"content": "在美国，如果开车遇到警车要求你停车，不管什么原因都要照做。停车后，千万不要主动下车，而是应该摇下车窗，双手放在方向盘上，如果手乱动，画面可能会变得非常尴尬。",
+				"state": "已发布",
+				"articleId": 2,
+				"createUser": 4,
+				"createTime": "2024-05-05T11:01:19",
+				"auditingState": true,
+				"likes": 0
+			},
+			{
+				"commentatorId": 15,
+				"content": "纽约人骑自行车很快，且路权意识特别强，若是你不小心占用了自行车道，多数骑车人会很不耐烦的大声说你，甚至会飙脏话，因为他们认为被侵犯了路权。",
+				"state": "已发布",
+				"articleId": 2,
+				"createUser": 4,
+				"createTime": "2024-05-05T11:01:08",
+				"auditingState": true,
+				"likes": 0
+			}
+		]
+	}
+}

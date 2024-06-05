@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>登录 - 时光漫步</title>
+		<link rel="stylesheet" href="./css/index.css"/>
+		<!-- UIkit JS -->
+		<link rel="stylesheet" href="./css/uikit.min.css" />
+		<link rel="stylesheet" href="./css/login.css"/>
+		<script src="./js/uikit.min.js"></script>
+		<script src="./js/uikit-icons.min.js"></script>
+		<!-- jquery相关依赖 -->
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/jquery.pjax.min.js"></script>
+		<!-- Toastify依赖 -->
+		<script src="./Toastify/toastify-js.js"></script>
+		<script src="./Toastify/diyPopStyle.js"></script>
+		<link rel="stylesheet" href="./Toastify/toastify.min.css"/>
+		<!-- Vue3依赖 -->
+		<script src="js/vue.global.prod.js"></script>
+	</head>
+	<body>
+		
+		<nav class="uk-navbar-container nav">
+		    <div class="uk-container">
+		        <div uk-navbar>
+			            <div class="uk-navbar-left">
+		                <ul class="uk-navbar-nav">
+							<li>
+								<div class="logo">
+								</div>
+							</li>
+		                    <li class="uk-active"><a href="/">首页</a></li>
+		                    <li>
+		                        <a href="/article/publish.html">文章发布</a>
+		                    </li>
+		                    <li><a href="#">问题反馈</a></li>
+		                </ul>
+		            </div>
+		            <div class="uk-navbar-right">
+		                <ul class="uk-navbar-nav" id="login">
+		                    <li class="uk-active">
+		                        <a href="/user/userInfo.html" v-cloak>{{ login_info.nickname }}<span uk-navbar-parent-icon></span></a>
+		                        <div class="uk-navbar-dropdown">
+		                            <ul class="uk-nav uk-navbar-dropdown-nav">
+		                                <li class="uk-nav-header">文章</li>
+										<li><a href="/user/userInfo.html">文章管理</a></li>
+										<li class="uk-nav-header">个人中心</li>
+										<li><a href="/user/userInfo.html">修改信息</a></li>
+										<li><a href="/user/userInfo.html">修改密码</a></li>
+										<li class="uk-nav-divider"></li>
+										<li><a onclick="clearAllCookie()">退出登陆</a></li>
+		                            </ul>
+		                        </div>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		</nav>
+		<div class="banner center-banner">
+			<div class="login-framework uk-card uk-card-default uk-card-body uk-card-secondary">
+				<div>
+					<div class="edge"></div>
+					<p class="uk-text-light uk-text-small uk-text-center">* 注册与登录即代表同意<a class="edge-text">《用户协议》</a>与<a class="edge-text">《隐私保护指引》</a></p>
+				</div>
+				<div class="login-hr"></div>
+				<div class="toggle-animation-queued">
+				    <div class="uk-margin">
+				        <div class="uk-inline">
+				            <span class="uk-form-icon" uk-icon="icon: user"></span>
+				            <input class="uk-input" type="text" placeholder="登陆用户名" id="username">
+				        </div>
+				    </div>
+				
+				    <div class="uk-margin">
+				        <div class="uk-inline">
+				            <span class="uk-form-icon uk-form-icon-flip lock" uk-icon="icon: lock"></span>
+				            <input class="uk-input" type="password" placeholder="输入密码" id="password">
+				        </div>
+				    </div>
+				
+					<div class="uk-margin">
+					    <div class="uk-inline">
+					        <span class="uk-form-icon uk-form-icon-flip lock" uk-icon="icon: lock"></span>
+					        <input class="uk-input" type="password" placeholder="确认密码" id="repassword">
+					    </div>
+					</div>
+					
+					<div class="uk-margin">
+					    <div class="uk-inline">
+					        <span class="uk-form-icon" uk-icon="icon: mail"></span>
+					        <input class="uk-input" type="text" placeholder="邮箱" id="mail">
+					    </div>
+					</div>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+							<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" onclick="sendMailCode(this)">获取</button>
+					        <input class="uk-input" type="text" placeholder="邮箱验证码" id="emailCode">
+					    </div>
+					</div>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+					        <span class="uk-form-icon" uk-icon="icon: receiver"></span>
+					        <input class="uk-input" type="text" placeholder="手机号" id="phone">
+					    </div>
+					</div>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+							<button class="uk-button uk-button-default uk-button-small uk-form-icon uk-form-icon-flip" style="width: 5rem;" onclick="sendPhoneCode(this)" >获取</button>
+					        <input class="uk-input" type="text" placeholder="手机验证码" id="phoneCode">
+					    </div>
+					</div>
+				
+					<div class="uk-margin">
+					    <div class="uk-inline">
+							<button class="code uk-form-icon uk-form-icon-flip" onclick="this.style.backgroundImage='url(\/\/127.0.0.1:6066\/api\/getCode\/img?'+Math.random()+')'"></button>
+					        <input class="uk-input" type="text" placeholder="验证码" id="code">
+					    </div>
+					</div>
+					<p class="uk-text-small">已有账号？<a uk-toggle="target: .toggle-animation-queued; animation: uk-animation-fade; queued: true; duration: 300">前往登录</a></p>
+					<div class="uk-button uk-button-default" onclick="reg()">注册</div>
+				</div>
+				
+				<div class="toggle-animation-queued" hidden>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+					        <span class="uk-form-icon" uk-icon="icon: user"></span>
+					        <input class="uk-input" type="text" placeholder="用户名" id="login_name">
+					    </div>
+					</div>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+					        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+					        <input class="uk-input" type="password" placeholder="密码" id="login_password">
+					    </div>
+					</div>
+					<div class="uk-margin">
+					    <div class="uk-inline">
+							<button class="code uk-form-icon uk-form-icon-flip" style="z-index: 1;" onclick="this.style.backgroundImage='url(\/\/127.0.0.1:6066\/api\/getCode\/img?'+Math.random()+')'"></button>
+					        <input class="uk-input" type="text" placeholder="验证码" id="login_code">
+					    </div>
+					</div>
+					<p class="uk-text-small">没有账号？<a uk-toggle="target: .toggle-animation-queued; animation: uk-animation-fade; queued: true; duration: 300">前往注册</a></p>
+					<div class="uk-button uk-button-default" onclick="login()" uk-tooltip="title: 开启漫步之旅; pos: bottom">登录</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		<footer class="foot">
+			<div class="foot-down">
+				<p>未经同意，不得转载本网站之所有文章信息及作品 时光漫步网版权所有</p>
+				<p><a href="#">网上有害信息举报专区</a>  违法不良信息举报电话:+86-13145215384 关爱未成年举报热线:+86-13145215384</p>
+				<p><a href="#">隐私声明</a> <a href="#">服务协议</a> <a href="#">COOKIES</a> Copyright © 2023-2024 时光漫步网 版权所有</p>
+			</div>
+		</footer>
+		<script src="./js/login_state.js"></script>
+		<script src="./js/login.js"></script>
+		<script src="./js/heard.js"></script>
+	</body>
+</html>
