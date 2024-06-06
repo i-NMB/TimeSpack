@@ -7,7 +7,7 @@ function login(){
 	console.log(data);
 	$.ajax({
 	    type: "POST",
-	    url: Login_link,
+	    url: Login_Link,
 	    contentType: "application/x-www-form-urlencoded", // 设置contentType
 	    data: $.param(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {
