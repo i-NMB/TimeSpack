@@ -244,7 +244,7 @@ async function userinfo() {
 				            this.commentTotal = data.data.total;
 				            this.commentCurrentPageData = data.data.items; // 直接更新当前页面的数据
 							for (const [index, comment] of data.data.items.entries()) {
-								  const articleResponse = await fetch(Comment_All_Myself_Link+`?id=${comment.articleId}`);
+								  const articleResponse = await fetch(Article_Detail_Link+`?id=${comment.articleId}`);
 								  if (articleResponse.ok) {
 									const articleData = await articleResponse.json();
 									if (articleData.code === 0) {

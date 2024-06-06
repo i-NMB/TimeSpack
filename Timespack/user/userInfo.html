@@ -311,7 +311,7 @@
 							        </div>
 							    </header>
 							    <div class="uk-comment-body">
-							        <p v-html="markdownToHtml(item.content)" class="info-article"></p>
+							        <p v-if="item.content" v-html="markdownToHtml(item.content)" class="info-article"></p>
 							    </div>
 								<div class="uk-margin">
 									<button class="uk-button uk-button-default uk-align-left uk-margin-remove" @click="handle('/plaintext.html?id='+item.articleId)">查看</button>
@@ -471,7 +471,7 @@
 							        <div class="uk-card uk-card-hover uk-card-body likes-article">
 										<div class="uk-width-3-4">
 											<h3 class="uk-card-title">{{ maxLikeArt.title }}</h3>
-											<p v-html="markdownToHtml(maxLikeArt.content)"></p>
+											<p v-if="maxLikeArt.content" v-html="markdownToHtml(maxLikeArt.content)"></p>
 										</div>
 										<div>
 											<p href="" class="likes uk-icon-button uk-margin-remove">
@@ -492,7 +492,7 @@
 							        <div class="uk-card uk-card-hover uk-card-body likes-article">
 										<div class="uk-width-3-4">
 											<h3 class="uk-card-title">{{ maxViewArt.title }}</h3>
-											<p v-html="markdownToHtml(maxViewArt.content)"></p>
+											<p v-if="maxViewArt.content" v-html="markdownToHtml(maxViewArt.content)"></p>
 										</div>
 										<div>
 											<p href="" class="likes uk-icon-button uk-margin-remove" >
@@ -560,7 +560,7 @@
 							        </div>
 							    </header>
 							    <div class="uk-comment-body">
-							        <p v-html="markdownToHtml(item.content)" class="info-article"></p>
+							        <p v-if="item.content" v-html="markdownToHtml(item.content)" class="info-article"></p>
 							    </div>
 								<div class="uk-margin">
 									<button class="uk-button uk-button-default uk-align-left uk-margin-remove" @click="adminArticle(item.articleId)">通过</button>
