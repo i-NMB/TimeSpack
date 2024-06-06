@@ -235,7 +235,7 @@ async function userinfo() {
 				},
 				async commentFetchData(page) {
 				    try {
-				        const response = await fetch(Article_All_Myself_Link+`?pageNum=${page}&pageSize=${this.commentPageSize}`);//http://127.0.0.1:6066/api/comment/oneself?pageNum=${page}&pageSize=${this.commentPageSize}
+				        const response = await fetch(Comment_All_Myself_Link+`?pageNum=${page}&pageSize=${this.commentPageSize}`);//http://127.0.0.1:6066/api/comment/oneself?pageNum=${page}&pageSize=${this.commentPageSize}
 				        if (!response.ok) {
 				            throw new Error(`网络请求失败: ${response.status}`);
 				        }
