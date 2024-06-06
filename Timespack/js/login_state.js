@@ -18,7 +18,7 @@ function fetchData(urls) {
     });
 }
 
-fetchData('./user.json').then(res => {//http://127.0.0.1:6066/api/user/userInfo
+fetchData(User_Information_Link).then(res => {
     const app = {
       data() {
         return {
@@ -37,7 +37,7 @@ function goto_login(){
 }
 
 function clearAllCookie() {
-	fetchData('http://127.0.0.1:6066/api/user/out').then(res => {
+	fetchData(Login_Out_Link).then(res => {
 	    if(res.code==0){
 			showPop(res.message+"，即将刷新","success");
 		}

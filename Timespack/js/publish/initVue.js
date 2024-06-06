@@ -7,7 +7,7 @@ const article = Vue.createApp({
         }
     },
 	async created() {
-		this.categoryData = await get_info('../article.json');
+		this.categoryData = await get_info(Category_All_Link);
 		this.val = this.categoryData.data[0].categoryId;
 	},
 	methods: {

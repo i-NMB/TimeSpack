@@ -12,12 +12,12 @@ const editorConfig = {
 }
 
 editorConfig.MENU_CONF['uploadImage'] = {
-	server: 'http://127.0.0.1:6066/api/upImg',
+	server: Img_Up_Link,
     // form-data fieldName ，默认值 'wangeditor-uploaded-image'
     fieldName: 'file',
 
     // 单个文件的最大体积限制，默认为 2M
-    maxFileSize: 5 * 1024 * 1024, // 1M
+    maxFileSize: 5 * 1024 * 1024, // 5M
 
     // 最多可上传几个文件，默认为 100
     maxNumberOfFiles: 10,
@@ -77,7 +77,7 @@ function writeArticle(){
 	console.log(JSON.stringify(data));
 	$.ajax({
 	    type: "POST",
-	    url: "http://127.0.0.1:6066/api/article/add",
+	    url: Article_Add_Link,
 	    contentType: "application/json", // 设置contentType
 	    data: JSON.stringify(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {

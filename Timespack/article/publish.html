@@ -112,6 +112,7 @@
 			</div>
 			<button class="uk-button uk-button-primary" onclick="writeArticle()">提交</button>
 		</div>
+		<script src="../js/API_Configuration.js"></script>
 		<script src="../wangEditor/index.js"></script>
 		<script src="../js/login_state.js"></script>
 		<script src="../js/publish/initVue.js"></script>
@@ -128,7 +129,7 @@
 		    var bar = document.getElementById('js-progressbar');
 		    UIkit.upload('.js-upload', {
 				name: 'file',
-		        url: '/api/upload',
+		        url: Update_Link,
 		        multiple: true,
 		        beforeSend: function () {
 		            console.log('beforeSend', arguments);

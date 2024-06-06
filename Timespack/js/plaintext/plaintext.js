@@ -8,7 +8,7 @@ if(searchParams.get('id')==null||searchParams.get('id')==""){
 	</div>`);
 			$(".uk-hidden").removeClass("uk-hidden");
 }
-fetchData('http://127.0.0.1:6066/api/article/detail?id='+searchParams.get('id')).then(res => {
+fetchData(Article_Detail_Link+'?id='+searchParams.get('id')).then(res => {
     if(res.data.title == "查询的文章数据为空"){
 		$('main').remove();
 		$(".uk-hidden").html(`<div class="uk-alert-danger" uk-alert>
@@ -23,8 +23,8 @@ fetchData('http://127.0.0.1:6066/api/article/detail?id='+searchParams.get('id'))
 });
 async function initplaintext() {
     // try {
-        var getPlaintext = await get_article('http://127.0.0.1:6066/api/article/detail?id='+searchParams.get('id'));///article/detail?id=1
-		var commentNumber = await get_article('http://127.0.0.1:6066/api/comment/num?articleId='+searchParams.get('id'));
+        var getPlaintext = await get_article(Article_Detail_Link+'?id='+searchParams.get('id'));///article/detail?id=1
+		var commentNumber = await get_article(Comment_Number_Link+'?articleId='+searchParams.get('id'));
         const app = Vue.createApp({
             data() {
                 return {
@@ -45,16 +45,16 @@ async function initplaintext() {
 					return marked.parse(markdown);
 			    },
 				async getUserName() {
-					var user = await get_article('http://127.0.0.1:6066/api/user/getUser?userId=' + getPlaintext.data.createUser);//getUser
+					var user = await get_article(User_Get_Link+'?userId=' + getPlaintext.data.createUser);//获取文章发布者的昵称
 					return user.data.nickname;
 				},
 				async getCategoryName() {
-					var category = await get_article('http://127.0.0.1:6066/api/category/detail?id=' + getPlaintext.data.categoryId);
+					var category = await get_article(Category_Detail_Link+'?id=' + getPlaintext.data.categoryId);
 					return category.data.categoryName;
 				},
 				async like(likeID){
 					try {
-						const response = await fetch(`http://127.0.0.1:6066/api/article/like?id=${likeID}`);
+						const response = await fetch(Article_Like_Link+`?id=${likeID}`);
 						if (response.status==401) {
 							showPop(`点赞失败，未登录`, "error");
 							this.like_state = false;
@@ -120,9 +120,9 @@ async function initcomment(){
 	        methods: {
 	            async fetchData(page) {
 	                try {
-	                    const response = await fetch(`http://127.0.0.1:6066/api/comment/get?auditingState=true&pageNum=${page}&pageSize=${this.pageSize}&articleId=${searchParams.get('id')}`);
+	                    const response = await fetch(Comment_Get_By_Paging_Link+`?auditingState=true&pageNum=${page}&pageSize=${this.pageSize}&articleId=${searchParams.get('id')}`);
 	                    if (!response.ok) {
-	                        throw new Error(`HTTP error! status: ${response.status}`);
+	                        throw new Error(`网络请求错误! status: ${response.status}`);
 	                    }
 	                    const data = await response.json();
 	
@@ -135,27 +135,31 @@ async function initcomment(){
 							// 等待所有用户信息请求完成
 							this.usersInfo = await Promise.all(userPromises);
 	                    } else {
-	                        console.error(data.message);
+							showPop(`评论分页失败，服务器返回：${data.message}`, "error");
+	                        console.error("从服务器获取评论分页失败："+data.message);
 	                    }
 	                } catch (error) {
-	                    console.error('There was a problem with the fetch operation:', error);
+						showPop(`评论分页连接时出现问题：${error}`, "error");
+	                    console.error('评论分页连接时出现问题：', error);
 	                }
 	            },
 				async getUserInfo(userId) {
 					try {
-						const response = await fetch(`http://127.0.0.1:6066/api/user/getUser?userId=${userId}`);
+						const response = await fetch(User_Get_Link+`?userId=${userId}`);
 						if (!response.ok) {
-							throw new Error(`HTTP error! status: ${response.status}`);
+							throw new Error(`网络请求错误! status: ${response.status}`);
 						}
 						const data = await response.json();
 
 						if (data.code === 0) {
 							return data.data;
 						} else {
+							showPop(`获取评论用户信息失败，服务器返回：${data.message}`, "error");
 							console.error(data.message);
 						}
 					} catch (error) {
-						console.error('There was a problem with the fetch operation:', error);
+						showPop(`获取评论用户信息链接时出现问题：${error}`, "error");
+	                    console.error('获取评论用户信息连接时出现问题：', error);
 					}
 				},
 	            goToPage(page) {
@@ -170,27 +174,27 @@ async function initcomment(){
 				},
 				async like(likeID){
 					try {
-						const response = await fetch(`http://127.0.0.1:6066/api/comment/like?id=${likeID}`);
+						const response = await fetch(Comment_Like_Link+`?id=${likeID}`);
 						if (response.status==401) {
-							showPop(`点赞失败，未登录`, "error");
+							showPop(`评论点赞失败，未登录`, "error");
 							this.like_state = false;
 							throw new Error(`未登录`);
 						}else if(!response.ok){
-							showPop(`点赞失败 ${response.status}`, "error");
+							showPop(`评论点赞失败 ${response.status}`, "error");
 							this.like_state = false;
-							throw new Error(`HTTP error! status: ${response.status}`);
+							throw new Error(`评论点赞网络请求错误! status: ${response.status}`);
 						}
 						const data = await response.json();
 						if (data.code === 0) {
-							showPop("点赞成功","success");
+							showPop("评论点赞成功","success");
 							this.fetchData(this.currentPage);
 						} else {
-							showPop(`点赞失败，${data.message}`, "error");
+							showPop(`评论点赞失败，${data.message}`, "error");
 							console.error(data.message);
 							this.like_state = false;
 						}
 					} catch (error) {
-						console.error('There was a problem with the fetch operation:', error);
+						console.error('评论点赞操作连接时出现问题:', error);
 					}
 				}
 	        },
@@ -209,7 +213,7 @@ function beComment(){
 	};
 	$.ajax({
 	    type: "POST",
-	    url: "http://127.0.0.1:6066/api/comment/add",
+	    url: Comment_Add_Link,
 	    contentType: "application/x-www-form-urlencoded", // 设置contentType
 	    data: $.param(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {
