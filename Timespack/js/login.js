@@ -4,7 +4,7 @@ function login(){
 		password: $("#login_password").val(),
 		code: $("#login_code").val()
 	};
-	console.log(data);
+	// console.log(data);
 	$.ajax({
 	    type: "POST",
 	    url: Login_Link,
