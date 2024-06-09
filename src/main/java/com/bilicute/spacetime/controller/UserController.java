@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
@@ -167,6 +168,39 @@ public class UserController {
         }
         return Result.success(user);
     }
+
+    /**
+     * 关注功能
+     * @param passiveId
+     * @return
+     */
+    @GetMapping("/concern")
+    public Result concern(Integer passiveId){
+        if(passiveId==null){
+            return Result.error("关键数据缺失");
+        }
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        userService.concern(loggedInUserId,passiveId);
+        return Result.success();
+    }
+    @GetMapping("/disConcern")
+    public Result disConcern(Integer passiveId){
+        if(passiveId==null){
+            return Result.error("关键数据缺失");
+        }
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        userService.disConcern(loggedInUserId,passiveId);
+        return Result.success();
+    }
+    @GetMapping("/getConcern")
+    public Result getConcern(){
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        userService.getConcern(loggedInUserId);
+        List<Integer> getConcern = userService.getConcern(loggedInUserId);
+        return Result.success(getConcern);
+    }
+
+
 
     /**
      * @param avatarUrl: 头像链接

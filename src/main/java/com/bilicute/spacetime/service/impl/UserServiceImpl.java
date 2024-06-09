@@ -2,6 +2,7 @@ package com.bilicute.spacetime.service.impl;
 
 import com.bilicute.spacetime.annotate.Identity;
 import com.bilicute.spacetime.mapper.UserMapper;
+import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Map;
@@ -98,5 +100,27 @@ public class UserServiceImpl implements UserService {
     public boolean updatePwd(String mail, String newPassword) {
         return false;
     }
+
+    @Override
+    public void concern(Integer loggedInUserId, Integer passiveId) {
+        userMapper.concern(loggedInUserId,passiveId);
+    }
+
+    @Override
+    public void disConcern(Integer loggedInUserId, Integer passiveId) {
+        userMapper.disConcern(loggedInUserId,passiveId);
+    }
+
+    @Override
+    public List<Integer> getConcern(Integer loggedInUserId) {
+
+       return userMapper.getConcern(loggedInUserId);
+
+
+
+        }
+
+
+
 
 }
