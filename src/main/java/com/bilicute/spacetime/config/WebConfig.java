@@ -3,7 +3,6 @@ package com.bilicute.spacetime.config;
 import com.bilicute.spacetime.interceptors.LoginInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -14,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 
 @Configuration
-public class Webconfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
     private LoginInterceptors loginInterceptors;
@@ -45,21 +44,4 @@ public class Webconfig implements WebMvcConfigurer {
                 .excludePathPatterns("/error");
 
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//
-//        //允许跨域访问资源定义
-//        registry.addMapping("/**")
-//                //(只允许本地的指定端口访问)允许所有
-//                .allowedOrigins("http://127.0.0.1:8848")
-//                // 允许发送凭证: 前端如果配置改属性为true之后，则必须同步配置
-//                .allowCredentials(true)
-//                // 允许所有方法
-//                .allowedMethods("*")
-//
-//                .allowedHeaders("*");
-//    }
-
-
 }

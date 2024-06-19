@@ -120,7 +120,7 @@ public class UserController {
             // 判断图形验证码code是否正确
 
             // 登录成功
-            // DONE 待完成获取JWT的令牌返回到cookie
+            // DONE 完成获取JWT的令牌返回到cookie
             Map<String,Object> claims = new HashMap<>();
             claims.put("id",loginUser.getCreateUser());
             claims.put("username",loginUser.getUsername());
