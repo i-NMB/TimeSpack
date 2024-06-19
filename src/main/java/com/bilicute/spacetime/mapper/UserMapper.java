@@ -1,10 +1,10 @@
 package com.bilicute.spacetime.mapper;
 
+import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -37,5 +37,11 @@ public interface UserMapper {
     @Update("update user set phone=#{phone},update_time=now() where create_user=#{loggedInUserId}")
     void updatePhone(String phone, Integer loggedInUserId);
 
+    @Insert("insert into attention(active_user, passive, operation_time) values(#{loggedInUserId},#{passiveId},now())")
+    void concern(Integer loggedInUserId, Integer passiveId);
+    @Delete("delete from attention  where passive=#{passiveId} and active_user=#{loggedInUserId}")
+    void disConcern(Integer loggedInUserId, Integer passiveId);
 
+    @Select(" select passive from attention where active_user = #{loggedInUserId}")
+    List<Integer> getConcern(Integer loggedInUserId);
 }
