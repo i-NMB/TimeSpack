@@ -4,7 +4,7 @@ import com.bilicute.spacetime.pojo.Result;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * @所属包名: com.bilicute.spacetime.utils
+ * @所属包名: com.bilicute.spacetime.quickMethods
  * @类名: VerifyCode
  * @作者: i囡漫笔
  * @描述: 验证各类验证码的便捷实现类

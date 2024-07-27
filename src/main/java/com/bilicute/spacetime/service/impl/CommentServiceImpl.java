@@ -55,9 +55,6 @@ public class CommentServiceImpl implements CommentService {
         PageBean<Comment> articlePageBean = new PageBean<>();
         //开启分页查询(借助pageHelper)
         PageHelper.startPage(pageNum,pageSize);
-        //获取userID
-//        Map<String,Object> userMap = ThreadLocalUtil.get();
-//        Integer userId = (Integer) userMap.get("id");
         //调用Mapper完成查询
         List<Comment> as = commentMapper.list(articleId,auditingState);
         //Page中提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数镉
