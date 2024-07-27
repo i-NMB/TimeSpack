@@ -17,7 +17,7 @@ public class Md5Util {
     /**
      * 默认的密码字符串组合，用来将字节转换成 16 进制表示的字符,apache校验下载的文件的正确性用的就是默认的这个组合
      */
-    protected static char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    protected static char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     protected static MessageDigest messagedigest = null;
 
@@ -33,9 +33,6 @@ public class Md5Util {
 
     /**
      * 生成字符串的md5校验值
-     *
-     * @param s
-     * @return
      */
     public static String getMD5String(String s) {
         return getMD5String(s.getBytes());
@@ -46,7 +43,7 @@ public class Md5Util {
      *
      * @param password  要校验的字符串
      * @param md5PwdStr 已知的md5校验码
-     * @return
+     * @return boolean
      */
     public static boolean checkPassword(String password, String md5PwdStr) {
         String s = getMD5String(password);
@@ -59,14 +56,13 @@ public class Md5Util {
         return bufferToHex(messagedigest.digest());
     }
 
-    private static String bufferToHex(byte bytes[]) {
-        return bufferToHex(bytes, 0, bytes.length);
+    private static String bufferToHex(byte[] bytes) {
+        return bufferToHex(bytes, bytes.length);
     }
 
-    private static String bufferToHex(byte bytes[], int m, int n) {
+    private static String bufferToHex(byte[] bytes, int n) {
         StringBuffer stringbuffer = new StringBuffer(2 * n);
-        int k = m + n;
-        for (int l = m; l < k; l++) {
+        for (int l = 0; l < n; l++) {
             appendHexPair(bytes[l], stringbuffer);
         }
         return stringbuffer.toString();
