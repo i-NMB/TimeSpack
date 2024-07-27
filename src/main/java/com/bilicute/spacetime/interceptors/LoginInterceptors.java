@@ -8,13 +8,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author i囡漫笔
@@ -44,7 +41,7 @@ public class LoginInterceptors implements HandlerInterceptor {
      */
     @Override
 //    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //令牌认证
 //        String token = request.getHeader("Authorization");
         String token = "";
@@ -86,7 +83,7 @@ public class LoginInterceptors implements HandlerInterceptor {
      * ----------
     */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         //清空数据
         ThreadLocalUtil.remove();
     }

@@ -1,9 +1,9 @@
 // Comment.java
 package com.bilicute.spacetime.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 

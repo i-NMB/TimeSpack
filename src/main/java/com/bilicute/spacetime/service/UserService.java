@@ -26,9 +26,6 @@ public interface UserService {
 
     void updatePhone(String phone);
 
-    void changePasswordByPhone(String newPassword);
-    boolean updatePwd(String mail, String newPassword);
-
     void concern(Integer loggedInUserId, Integer passiveId);
 
     void disConcern(Integer loggedInUserId, Integer passiveId);

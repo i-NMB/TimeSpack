@@ -1,10 +1,6 @@
 package com.bilicute.spacetime.service;
 
-import com.bilicute.spacetime.pojo.Attention;
-import com.bilicute.spacetime.quickMethods.QuickMethods;
-
 public interface AttentionService {
-    com.bilicute.spacetime.quickMethods.QuickMethods quickMethodsInstance = new com.bilicute.spacetime.quickMethods.QuickMethods();
 
     void addAttention(Integer passiveUserId);
     // 假设这是获取当前登录用户ID的方法

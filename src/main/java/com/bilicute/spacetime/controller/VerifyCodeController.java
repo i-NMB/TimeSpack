@@ -1,30 +1,26 @@
 package com.bilicute.spacetime.controller;
 
 import com.bilicute.spacetime.pojo.Result;
-import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.pojo.VerifyCode;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.IVerifyCodeGen;
 import com.bilicute.spacetime.service.MailService;
-import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.service.impl.SimpleCharVerifyCodeGenImpl;
 import com.bilicute.spacetime.utils.PhoneCodeTool;
-import com.bilicute.spacetime.utils.StringUtilsFromTime;
-import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.sms4j.api.SmsBlend;
-import org.dromara.sms4j.api.entity.SmsResponse;
 import org.dromara.sms4j.core.factory.SmsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Map;
 
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
 import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
@@ -34,7 +30,7 @@ import static com.bilicute.spacetime.utils.StringUtilsFromTime.isEmptyString;
  * @类名: VerifyCodeController
  * @作者: i囡漫笔
  * @描述: 发送验证码(处理获取验证码请求)的VerifyCodeController
- * @创建时间间: 2024-04-16 16:28
+ * @创建时间: 2024-04-16 16:28
  */
 
 //@CrossOrigin(origins = "*")
@@ -76,8 +72,13 @@ public class VerifyCodeController {
         }
     }
 
-    @Autowired
+
     private MailService mailService;
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
     /**
      * @param request: 网络请求,用于Session存放
      * @param response: 网络响应，用于设置响应头
@@ -88,7 +89,7 @@ public class VerifyCodeController {
      * @date 2024/4/18
      */
     @PostMapping  ("/mail")
-    public Result MailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
+    public Result<String> MailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
         IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
         String code;
         //设置响应头
@@ -130,7 +131,7 @@ public class VerifyCodeController {
      * @date 2024/4/24
      */
     @PostMapping  ("/mailByUser")
-    public Result UserMailVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+    public Result<String> UserMailVerifyCode(HttpServletRequest request, HttpServletResponse response) {
         IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
         String code;
         //设置响应头
@@ -169,7 +170,7 @@ public class VerifyCodeController {
      * @date 2024/4/18
      */
     @PostMapping("/phone")
-    public Result sendPhoneCode(HttpServletRequest request,HttpServletResponse response, String phone){
+    public Result<String> sendPhoneCode(HttpServletRequest request,HttpServletResponse response, String phone){
         //设置响应头
         response.setHeader("Pragma", "no-cache");
         //设置响应头
@@ -195,7 +196,7 @@ public class VerifyCodeController {
     }
 
     @PostMapping("/phoneByUser")
-    public Result sendPhoneCodeByUser(HttpServletRequest request,HttpServletResponse response){
+    public Result<String> sendPhoneCodeByUser(HttpServletRequest request,HttpServletResponse response){
         //设置响应头
         response.setHeader("Pragma", "no-cache");
         //设置响应头

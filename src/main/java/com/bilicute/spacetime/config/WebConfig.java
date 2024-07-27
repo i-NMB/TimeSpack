@@ -15,8 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
     private LoginInterceptors loginInterceptors;
+    @Autowired
+    public void setLoginInterceptors(LoginInterceptors loginInterceptors) {
+        this.loginInterceptors = loginInterceptors;
+    }
 
     /**
      * @param registry:  [registry]

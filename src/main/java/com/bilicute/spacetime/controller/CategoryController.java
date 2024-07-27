@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @所属包名: com.bilicute.spacetime.controller
@@ -37,7 +35,7 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @PostMapping
-    public Result add(@RequestBody @Validated(Category.Add.class) Category category){
+    public Result<String> add(@RequestBody @Validated(Category.Add.class) Category category){
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }
@@ -76,7 +74,7 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @GetMapping("/detail")
-    public Result<Category> detail(Integer id){
+    public Result<?> detail(Integer id){
         Category category = categoryService.findById(id);
         if (category == null) {
             return Result.error("未找到id为 "+id+" 的分类详细");
@@ -92,7 +90,7 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @PutMapping
-    public Result update(@RequestBody @Validated(Category.Update.class) Category category){
+    public Result<String> update(@RequestBody @Validated(Category.Update.class) Category category){
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }
@@ -122,7 +120,7 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @DeleteMapping
-    public Result delete(@Validated(Category.Delete.class) Integer id){
+    public Result<String> delete(@Validated(Category.Delete.class) Integer id){
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }

@@ -5,7 +5,10 @@ import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.service.AttentionService;
 import com.bilicute.spacetime.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 //@CrossOrigin(origins = "*")
 @RestController
@@ -25,7 +28,7 @@ public class AttentionController {
     }
     //用户关注
     @PostMapping("/follow")
-    public Result follow(@RequestParam("followedUserId") Integer followedUserId) {
+    public Result<String> follow(@RequestParam("followedUserId") Integer followedUserId) {
         User passiveUser=userService.findByUserId(followedUserId);
         // 判断该用户是否存在
         if(passiveUser==null){
@@ -35,7 +38,7 @@ public class AttentionController {
         return Result.success();
     }
     @PostMapping("/unfollow")
-    public Result unfollowUser(@RequestParam Integer passiveUserIdToUnfollow) {
+    public Result<String> unfollowUser(@RequestParam Integer passiveUserIdToUnfollow) {
         User passiveUser=userService.findByUserId(passiveUserIdToUnfollow);
         // 判断该用户是否存在
         if(passiveUser==null){

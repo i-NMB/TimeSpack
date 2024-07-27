@@ -3,7 +3,7 @@ package com.bilicute.spacetime.exception;
 import com.bilicute.spacetime.pojo.Result;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind. annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @author ytt
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
      * @date 2024/4/16
      */
     @ExceptionHandler (Exception.class )
-    public Result handleException(Exception e){
+    public Result<String> handleException(Exception e){
         e.printStackTrace();
         return Result.error(StringUtils.hasLength(e.getMessage())? e.getMessage():"操作失败");
     }

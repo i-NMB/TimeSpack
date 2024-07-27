@@ -3,10 +3,10 @@ package com.bilicute.spacetime.controller;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
+import com.bilicute.spacetime.quickMethods.VerifyCode;
 import com.bilicute.spacetime.service.UserService;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
-import com.bilicute.spacetime.quickMethods.VerifyCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +32,12 @@ import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
 
 
 public class UserController {
-    @Autowired
+
     private UserService userService;
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * @param request:  获取的网络请求
@@ -47,9 +50,9 @@ public class UserController {
      * @date 2024/4/17
      */
     @PostMapping("/register")
-    public Result register(HttpServletRequest request,
+    public Result<String> register(HttpServletRequest request,
                            @Pattern(regexp ="^\\S{5,16}$" ,message = "请输入5-16位用户名") String username,
-                           @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[A-Za-z0-9]{6,20}$", message = "密码必须要有一个小写字母，一个大写字母和一个数字")
+                           @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,20}$", message = "密码必须要有一个小写字母，一个大写字母和一个数字")
                                @NotNull(message = "密码不能为空")
                                String password,
                            @Pattern(regexp = "^[\\da-zA-Z_-]+@[\\da-zA-Z_-]+\\.(com|cn|email)$",message = "邮箱输入错误或为不支持的邮箱")
@@ -58,11 +61,7 @@ public class UserController {
                            String code,
                            String phoneCode,
                            String emailCode) {
-//        判断参数是否为空
-//        String[] stringsArray = new String[]{username, password, email,phone,code,phoneCode,emailCode};
-//        if(isEmptyString(stringsArray)){
-//            return Result.error("缺少关键参数");
-//        }
+
         if(!isPhone(phone)){
             return Result.error("请输入正确的手机号");
         }
@@ -102,7 +101,7 @@ public class UserController {
      * @date 2024/4/19
      */
     @PostMapping("/login")
-    public Result login(@Pattern(regexp ="^\\S{5,16}$" , message = "用户名长度不符合规则5-16\n") @NotNull(message = "用户名为空") String username,
+    public Result<String> login(@Pattern(regexp ="^\\S{5,16}$" , message = "用户名长度不符合规则5-16\n") @NotNull(message = "用户名为空") String username,
                         @Pattern(regexp ="^\\S{5,16}$" , message = "密码长度不符合规则5-16\n") @NotNull(message = "密码为空") String password,
                         @Pattern(regexp ="^\\S{6}$" , message = "图形验证码长度不正确\n") @NotNull(message = "验证码为空") String code,// 添加这一行
                         HttpServletResponse response,
@@ -150,7 +149,7 @@ public class UserController {
      * @date 2024/4/19
      */
     @GetMapping("/userInfo")
-    public Result userInfo(){
+    public Result<?> userInfo(){
         //根据用户名查询用户
         User user = QuickMethods.getLoggedUser();
         if (user == null) {
@@ -160,7 +159,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public Result getUser(Integer userId){
+    public Result<?> getUser(Integer userId){
         //根据用户名查询用户
         User user = userService.findByUserId(userId);
         if (user == null) {
@@ -171,11 +170,11 @@ public class UserController {
 
     /**
      * 关注功能
-     * @param passiveId
-     * @return
+     * @param passiveId 被关注用户的id
+     * @return Result<String>
      */
     @GetMapping("/concern")
-    public Result concern(Integer passiveId){
+    public Result<String> concern(Integer passiveId){
         if(passiveId==null){
             return Result.error("关键数据缺失");
         }
@@ -184,7 +183,7 @@ public class UserController {
         return Result.success();
     }
     @GetMapping("/disConcern")
-    public Result disConcern(Integer passiveId){
+    public Result<String> disConcern(Integer passiveId){
         if(passiveId==null){
             return Result.error("关键数据缺失");
         }
@@ -192,10 +191,15 @@ public class UserController {
         userService.disConcern(loggedInUserId,passiveId);
         return Result.success();
     }
+    /**
+     * @return Result<?>
+     * @author i囡漫笔
+     * @description 用户获得已关注用户的列表
+     * @date 2024/7/27
+     */
     @GetMapping("/getConcern")
-    public Result getConcern(){
+    public Result<?> getConcern(){
         Integer loggedInUserId = QuickMethods.getLoggedInUserId();
-        userService.getConcern(loggedInUserId);
         List<Integer> getConcern = userService.getConcern(loggedInUserId);
         return Result.success(getConcern);
     }
@@ -210,32 +214,11 @@ public class UserController {
      * @date 2024/4/19
      */
     @PatchMapping("/updateAvatar")
-    public Result updateAvatar(@RequestParam @URL String avatarUrl){
+    public Result<String> updateAvatar(@RequestParam @URL String avatarUrl){
         //TODO 头像上传接口，更新时检测是否为指定域名
         userService.updateAvatar(avatarUrl);
         return Result.success();
     }
-//@PatchMapping("/updatePwd")
-//    public Result updatePwd(@RequestBody Map<String, String> params) {
-//
-//        String oldPwd = params.get("old_pwd");
-//        String newPwd = params.get("new_pwd");
-//        String rePwd = params.get("re_pwd");
-//        if (!StringUtils.hasLength(oldPwd) || !StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd)) {
-//            return Result.error("缺少必要的参数");
-//        }
-//        Map<String, Object> map = ThreadLocalUtil.get();
-//        String username = (String) map.get("username");
-//        User loginUser = userService.findByUserName(username);
-//        if (!loginUser.getPassword().equals(Sha256.addSalt(oldPwd))) {
-//            return Result.error("原密码填写不正确");
-//        }
-//        if (!rePwd.equals(newPwd)) {
-//            return Result.error("两次填写的新密码不一样");
-//        }
-//        userService.updatePwd(newPwd);
-//        return Result.success();
-//    }
 
 
     /**
@@ -249,7 +232,7 @@ public class UserController {
      * @date 2024/4/19
      */
     @PatchMapping("/updateMail")
-    public Result updateMail(HttpServletRequest request,String phoneCode,
+    public Result<String> updateMail(HttpServletRequest request,String phoneCode,
                              String mail,String mailCode){
         String phone = QuickMethods.getLoggedInPhone();
         if(!VerifyCode.verifyByPhoneInLoggedUser(request,phone,phoneCode)){
@@ -264,7 +247,7 @@ public class UserController {
     }
 
     @PatchMapping("/updateNickname")
-    public Result updateNickname(String nickname){
+    public Result<String> updateNickname(String nickname){
         if (nickname == null) {
             return Result.error("输入的昵称为空");
         }
@@ -273,7 +256,7 @@ public class UserController {
         return Result.success();
     }
     @PatchMapping("/changePasswordByMail")
-    public Result changePasswordByMail(HttpServletRequest request,
+    public Result<String> changePasswordByMail(HttpServletRequest request,
                                        @RequestParam String mailCode,
                                        @RequestParam String newPassword) {
         if (mailCode==null || newPassword==null) {
@@ -292,7 +275,7 @@ public class UserController {
     }
 
     @PatchMapping("/updatePhone")
-    public Result updatePhone(HttpServletRequest request,String mailCode,
+    public Result<String> updatePhone(HttpServletRequest request,String mailCode,
                              String phone,String phoneCode){
         String mail = QuickMethods.getLoggedInEmail();
         if(!VerifyCode.verifyByMailInLoggedUser(request,mail,mailCode)){
@@ -310,7 +293,7 @@ public class UserController {
     }
 
     @PatchMapping("/changePasswordByPhone")
-    public Result changePasswordByPhone(HttpServletRequest request, String phoneCode, String newPassword) {
+    public Result<String> changePasswordByPhone(HttpServletRequest request, String phoneCode, String newPassword) {
         String phone = QuickMethods.getLoggedInPhone();
         if (!VerifyCode.verifyByPhoneInLoggedUser(request, phone, phoneCode)) {
             return Result.error("手机验证码错误");
@@ -322,7 +305,7 @@ public class UserController {
 
 
     @GetMapping("/out")
-    public Result deleteAllUserCookies(HttpServletRequest request, HttpServletResponse response) {
+    public Result<String> deleteAllUserCookies(HttpServletRequest request, HttpServletResponse response) {
         // 获取用户传回的所有cookies
         Cookie cookie = new Cookie("jwt", null);
         cookie.setMaxAge(0); // expires in 7 days

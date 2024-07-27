@@ -17,7 +17,6 @@ import java.util.Random;
 
 
 /**
- * @项目: everlast
  * @描述: 验证码实现类
  * @作者: i囡漫笔
  * @创建时间: 2023-12-02 09:17
@@ -33,11 +32,10 @@ public class SimpleCharVerifyCodeGenImpl implements IVerifyCodeGen {
 
 
     /**
-    * @描述: 设置背景颜色及大小，干扰线
-    * @Param: [graphics, width, height]
-    * @返回: void
-    * @作者: i囡漫笔
-    * @日期: 2023/12/2
+     * @描述: 设置背景颜色及大小，干扰线
+     * @param graphics :图形image.getGraphics()
+     * @param height : 图像高度
+     * @param width : 图像宽度
     */
     private static void fillBackground(Graphics graphics, int width, int height) {
 // 填充背景
@@ -58,13 +56,15 @@ public class SimpleCharVerifyCodeGenImpl implements IVerifyCodeGen {
         }
     }
 
-    /** 
-    * @描述: 生成随机字符
-    * @Param: [width, height, os]
-    * @返回: java.lang.String
-    * @作者: i囡漫笔
-    * @日期: 2023/12/2
-    */
+    /**
+     * @param width: 宽度
+     * @param height: 高度
+     * @param os: 二进制流
+     * @return String
+     * @author i囡漫笔
+     * @description 生成随机字符
+     * @date 2023/12/2
+     */
     @Override
     public String generate(int width, int height, OutputStream os) throws IOException {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -78,19 +78,20 @@ public class SimpleCharVerifyCodeGenImpl implements IVerifyCodeGen {
         return randomStr;
     }
 
-    /** 
-    * @描述: 验证码生成
-    * @Param: [width, height]
-    * @返回: VerifyCode
-    * @作者: i囡漫笔
-    * @日期: 2023/12/2
-    */
+    /**
+     * @param width: 验证码宽度
+     * @param height: 验证码高度
+     * @return VerifyCode
+     * @author i囡漫笔
+     * @description 验证码生成
+     * @date 2023/12/2
+     */
     @Override
     public VerifyCode generate(int width, int height) {
         VerifyCode verifyCode;
         try (
 //将流的初始化放到这里就不需要手动关闭流
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream()
         ) {
             String code = generate(width, height, baos);
             verifyCode = new VerifyCode();
@@ -105,13 +106,13 @@ public class SimpleCharVerifyCodeGenImpl implements IVerifyCodeGen {
 
 
 
-    /** 
-    * @描述: 设置字符颜色大小
-    * @Param: [g, randomStr]
-    * @返回: void
-    * @作者: i囡漫笔
-    * @日期: 2023/12/2
-    */
+    /**
+     * @param g: Graphics图像
+     * @param randomStr: 随机字符
+     * @author i囡漫笔
+     * @description 设置字符颜色大小
+     * @date 2023/12/2
+     */
     private void createCharacter(Graphics g, String randomStr) {
         char[] charArray = randomStr.toCharArray();
         for (int i = 0; i < charArray.length; i++) {

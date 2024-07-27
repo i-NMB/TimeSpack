@@ -4,13 +4,11 @@ import com.bilicute.spacetime.mapper.CategoryMapper;
 import com.bilicute.spacetime.pojo.Category;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.CategoryService;
-import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @所属包名: com.bilicute.spacetime.service.impl
@@ -22,8 +20,12 @@ import java.util.Map;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    @Autowired
+
     private CategoryMapper categoryMapper;
+    @Autowired
+    public void setCategoryMapper(CategoryMapper categoryMapper) {
+        this.categoryMapper = categoryMapper;
+    }
 
     @Override
     public Category findByName(String categoryName) {

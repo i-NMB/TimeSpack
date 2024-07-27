@@ -8,7 +8,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 /**
- * @项目: everlast
  * @描述: 配置邮箱信息，重新注入
  * @作者: i囡漫笔
  * @创建时间: 2023-12-02 19:39

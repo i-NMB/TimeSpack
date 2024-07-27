@@ -1,8 +1,6 @@
 package com.bilicute.spacetime.service.impl;
 
-import com.bilicute.spacetime.annotate.Identity;
 import com.bilicute.spacetime.mapper.UserMapper;
-import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.User;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.UserService;
@@ -13,14 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+
     private UserMapper userMapper;
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
     @Override
     public User findByUserName(String username) {
         return userMapper.findByUserName(username);
@@ -35,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public void register(String username,String password,String email,String phone) {
         //加密
         String sha256String = Sha256.addSalt(password);
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        String emailRegex = "^[a-zA-Z\\d_+&*-]+(?:\\.[a-zA-Z\\d_+&*-]+)*@(?:[a-zA-Z\\d-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
         if (matcher.matches()) {
@@ -91,15 +94,6 @@ public class UserServiceImpl implements UserService {
         userMapper.updatePhone(phone,QuickMethods.getLoggedInUserId());
     }
 
-    @Override
-    public void changePasswordByPhone(String newPassword) {
-
-    }
-
-    @Override
-    public boolean updatePwd(String mail, String newPassword) {
-        return false;
-    }
 
     @Override
     public void concern(Integer loggedInUserId, Integer passiveId) {

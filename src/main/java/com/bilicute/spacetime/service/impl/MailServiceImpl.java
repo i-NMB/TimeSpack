@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @项目: everlast
  * @描述: 发送邮箱的实现方法类
  * @作者: i囡漫笔
  * @创建时间: 2023-12-02 21:14
@@ -24,8 +23,12 @@ import java.util.Date;
 @Service
 public class MailServiceImpl implements MailService {
 
-    @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    public void setJavaMailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
     @Value("${TimeMail.username}")
     private String adminAddress;
 

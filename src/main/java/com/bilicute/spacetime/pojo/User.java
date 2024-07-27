@@ -4,19 +4,18 @@ package com.bilicute.spacetime.pojo;
 import com.bilicute.spacetime.annotate.Identity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
-
-import java.time.LocalDateTime;
 
 @Data
 public class User {
     @NotNull(message = "createUser不能为空")
     private Integer createUser;//主键ID
 
-    @Pattern(regexp = "\\S{3,10}$" + "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|"
-            + "(\\b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|drop|execute)\\b)"
+    @Pattern(regexp = "\\S{3,10}(?:'|--|/\\*(?:.|[\\n\\r])*?\\*/|\\b(select|update|and|or|delete|insert|truncate|char|into|substr|ascii|declare|exec|count|master|drop|execute)\\b)"
             , message = "用户名非法")
     private String username;//用户名
     @JsonIgnore//让springmvc把当前对象转换为json字符串的时候，忽略password

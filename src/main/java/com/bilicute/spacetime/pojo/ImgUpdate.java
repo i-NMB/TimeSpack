@@ -25,17 +25,14 @@ public class ImgUpdate<T> {
     public static <E> ImgUpdate<E> success(E data) {
         return new ImgUpdate<>(0,"操作成功" ,data);
     }
-    public static <E> ImgUpdate<E> errorData(E data) {
-        return new ImgUpdate<>(1, "操作失败", data);
-    }
 
     //快速返回操作成功响应结果
-    public static ImgUpdate success() {
-        return new ImgUpdate(0, "操作成功", null);
+    public static ImgUpdate<String> success() {
+        return new ImgUpdate<>(0, "操作成功", null);
     }
 
-    public static ImgUpdate error(String message) {
-        return new ImgUpdate(1, message, null);
+    public static ImgUpdate<String> error(String message) {
+        return new ImgUpdate<>(1, message, null);
     }
 
 }

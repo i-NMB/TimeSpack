@@ -1,6 +1,5 @@
 package com.bilicute.spacetime.service.impl;
 
-import com.bilicute.spacetime.controller.InfoController;
 import com.bilicute.spacetime.mapper.InfoMapper;
 import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.pojo.Comment;

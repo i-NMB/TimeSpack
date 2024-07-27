@@ -5,12 +5,9 @@ import com.bilicute.spacetime.pojo.PageBean;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.ArticleService;
-import com.bilicute.spacetime.utils.StringUtilsFromTime;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +45,7 @@ public class ArticleController {
      * @date 2024/4/25
      */
     @PostMapping("/add")
-    public Result add(@RequestBody @Validated Article article){
+    public Result<String> add(@RequestBody @Validated Article article){
         if (article == null) {
             return Result.error("文章上传错误");
         }
@@ -95,7 +92,7 @@ public class ArticleController {
         if (auditingState!=null&&!auditingState){
             //如果不是管理员
             if (!QuickMethods.isAdmin()){
-                PageBean<Article> pageBean = new PageBean<Article>();
+                PageBean<Article> pageBean = new PageBean<>();
                 Article article = new Article();
                 article.setTitle("您不是管理员");
                 List<Article> list = List.of(new Article[]{article});
@@ -165,7 +162,7 @@ public class ArticleController {
 
     @GetMapping("/like")
     @PatchMapping("/like")
-    public Result like(@Validated @Min(1) @NotNull(message = "请指定点赞文章") Integer id){
+    public Result<String> like(@Validated @Min(1) @NotNull(message = "请指定点赞文章") Integer id){
 //        TODO 修改赞只能赞一次
         articleService.like(id);
         return Result.success();
@@ -180,7 +177,7 @@ public class ArticleController {
 
 
     @PatchMapping("/checked")
-    public Result checked(@Min(1) @NotNull(message = "请指定审核文章") Integer id){
+    public Result<String> checked(@Min(1) @NotNull(message = "请指定审核文章") Integer id){
         if (!QuickMethods.isAdmin()){
             return Result.error("权限不足");
         }
@@ -199,7 +196,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/delete")
-    public Result delete(@Min(1) @NotNull(message = "请指定审核文章") Integer id){
+    public Result<String> delete(@Min(1) @NotNull(message = "请指定审核文章") Integer id){
         Article article = articleService.findById(id);
         if (article == null) {
             return Result.error("指定对象不存在");
@@ -218,7 +215,7 @@ public class ArticleController {
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody @Validated Article article){
+    public Result<String> update(@RequestBody @Validated Article article){
         System.out.println(article);
         if (article.getArticleId()==null) {
             return Result.error("文章ID为空");

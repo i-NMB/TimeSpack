@@ -8,7 +8,6 @@ import java.util.Base64;
 import java.util.Random;
 
 /**
- * @项目: mAA
  * @描述: 加密类
  * @作者: i囡漫笔
  * @创建时间: 2024-03-23 16:13

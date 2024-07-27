@@ -8,7 +8,6 @@ import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.service.ArticleService;
 import com.bilicute.spacetime.service.CommentService;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -37,7 +35,7 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/add")
-    public Result addComment(String content,Integer articleId) {
+    public Result<String> addComment(String content,Integer articleId) {
         Article article = articleService.findById(articleId);
         if (article == null) {
             return Result.error("所属文章不存在");
@@ -47,7 +45,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete")
-    public Result deleteComment(@NotNull(message = "请输入待删除的评论") Integer commentId) {
+    public Result<String> deleteComment(@NotNull(message = "请输入待删除的评论") Integer commentId) {
         Comment theComment = commentService.findById(commentId);
         if (theComment == null) {
             return Result.error("该评论不存在");
@@ -62,7 +60,7 @@ public class CommentController {
     }
 
     @GetMapping("/num")
-    public Result commentNumber(@Min(1) @NotNull(message = "请指定文章") Integer articleId){
+    public Result<?> commentNumber(@Min(1) @NotNull(message = "请指定文章") Integer articleId){
         Article article = articleService.findById(articleId);
         if (article == null) {
             return Result.error("指定对象不存在");
@@ -82,19 +80,11 @@ public class CommentController {
             //审核状态（可选）
             @RequestParam(required = false) Boolean auditingState
     ){
-//        if (!(articleId != null&&articleService.findById(articleId)!=null)) {
-//            PageBean<Comment> pageBean = new PageBean<Comment>();
-//            Comment comment = new Comment();
-//            comment.setContent("指定文章不存在");
-//            List<Comment> list = List.of(new Comment[]{comment});
-//            pageBean.setItems(list);
-//            return Result.errorData(pageBean);
-//        }
         //如果获取审核的列表
         if (auditingState!=null&&!auditingState){
             //如果不是管理员
             if (!QuickMethods.isAdmin()){
-                PageBean<Comment> pageBean = new PageBean<Comment>();
+                PageBean<Comment> pageBean = new PageBean<>();
                 List<Comment> list = null;
                 Comment comment = new Comment();
                 comment.setContent("您不是管理员");

@@ -1,10 +1,7 @@
 package com.bilicute.spacetime.mapper;
 
 import com.bilicute.spacetime.pojo.Article;
-import com.bilicute.spacetime.pojo.Comment;
 import org.apache.ibatis.annotations.*;
-
-import java.util.List;
 
 import java.util.List;
 

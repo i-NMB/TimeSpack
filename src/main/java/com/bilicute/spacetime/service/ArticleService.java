@@ -22,8 +22,6 @@ public interface ArticleService {
 
     void check(Integer id);
 
-    void queryAllInfo();
-
     void delete(Integer id);
 
     void update(Article article);
