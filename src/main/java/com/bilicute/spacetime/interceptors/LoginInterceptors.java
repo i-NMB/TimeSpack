@@ -3,13 +3,12 @@ package com.bilicute.spacetime.interceptors;
 
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.ThreadLocalUtil;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.lang.NonNull;
 
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import java.util.Map;
 @Component
 public class LoginInterceptors implements HandlerInterceptor {
 
-    @Resource
-    private StringRedisTemplate stringRedisTemplate;
     /**
      * @param request: 
      * @param response: 
@@ -40,10 +37,8 @@ public class LoginInterceptors implements HandlerInterceptor {
      * ----------
      */
     @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler) {
         //令牌认证
-//        String token = request.getHeader("Authorization");
         String token = "";
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -53,16 +48,7 @@ public class LoginInterceptors implements HandlerInterceptor {
                 }
             }
         }
-
-
         try {
-            //从redis中获取token
-//            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-//            String redisToken = operations.get(token);
-//            if (redisToken == null) {
-//                //redisToken失效
-//                throw new RuntimeException();
-//            }
             Map<String, Object> claims = JwtUtil.parseToken(token);
             ThreadLocalUtil.set(claims);//把业务数据放入ThreadLocal中
             return true;//放行
@@ -83,8 +69,11 @@ public class LoginInterceptors implements HandlerInterceptor {
      * ----------
     */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        //清空数据
+    public void afterCompletion(@NonNull HttpServletRequest request,
+                                @NonNull HttpServletResponse response,
+                                @NonNull Object handler,
+                                Exception ex) {
+        // 清空数据
         ThreadLocalUtil.remove();
     }
 }

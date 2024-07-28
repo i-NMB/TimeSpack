@@ -34,7 +34,7 @@ public class  FileUploadController {
         InputStream fileStream = file.getInputStream();
         InputStream fileStreamCopy = file.getInputStream();
         String url = TencentUploadUtil.cosUpload("img",uuidFileName,fileStream,fileStreamCopy);
-        log.info("用户"+ QuickMethods.getLoggedInUserName() +"\t上传文件："+url);
+        log.info("用户{}\t上传文件：{}", QuickMethods.getLoggedInUserName(), url);
         if (url.equals("不符合文件头部，文件类型校验失败！")) return Result.errorData(url);
         return Result.success(url);
     }
@@ -53,7 +53,7 @@ public class  FileUploadController {
         InputStream fileStream = file.getInputStream();
         InputStream fileStreamCopy = file.getInputStream();
         String url = TencentUploadUtil.cosUpload("img",uuidFileName,fileStream,fileStreamCopy);
-        log.info("用户"+ QuickMethods.getLoggedInUserName() +"\t上传文件："+url);
+        log.info("用户{}\t上传文件：{}至文章中", QuickMethods.getLoggedInUserName(), url);
         if (url.equals("不符合文件头部，文件类型校验失败！")) return ImgUpdate.error(url);
         Map<String, String> myMap = new HashMap<>();
         myMap.put("url", url);

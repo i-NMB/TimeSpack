@@ -68,7 +68,7 @@ public class VerifyCodeController {
             response.getOutputStream().write(verifyCode.getImgBytes());
             response.getOutputStream().flush();
         } catch (IOException e) {
-            log.warn("错误"+e);
+            log.warn("错误", e); // log.warn方法可以接受异常对象作为第二个参数
         }
     }
 
@@ -118,7 +118,7 @@ public class VerifyCodeController {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
         }
             mailService.sendEmail(email, code, "用户");
-        log.info("新用户发送邮件验证码："+email);
+        log.info("新用户发送邮件验证码：{}", email);
         return Result.success();
     }
 
@@ -156,7 +156,7 @@ public class VerifyCodeController {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
         }
         mailService.sendEmail(loggedInEmail, code, QuickMethods.getLoggedInNickname());
-        log.info("新用户发送邮件验证码："+loggedInEmail);
+        log.info("老用户发送邮件验证码，邮箱：{}", loggedInEmail);
         return Result.success();
     }
 

@@ -5,8 +5,11 @@ import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.PageBean;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
+import com.bilicute.spacetime.quickMethods.VerifyCode;
 import com.bilicute.spacetime.service.ArticleService;
 import com.bilicute.spacetime.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +34,20 @@ public class CommentController {
         CommentController.articleService = articleService;
     }
 
-    @Autowired
     private CommentService commentService;
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping("/add")
-    public Result<String> addComment(String content,Integer articleId) {
+    public Result<String> addComment(String content, Integer articleId,
+                                     HttpServletRequest request, HttpServletResponse response) {
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         Article article = articleService.findById(articleId);
         if (article == null) {
             return Result.error("所属文章不存在");
@@ -45,7 +57,13 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete")
-    public Result<String> deleteComment(@NotNull(message = "请输入待删除的评论") Integer commentId) {
+    public Result<String> deleteComment(@NotNull(message = "请输入待删除的评论") Integer commentId,
+                                        HttpServletRequest request, HttpServletResponse response) {
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         Comment theComment = commentService.findById(commentId);
         if (theComment == null) {
             return Result.error("该评论不存在");
@@ -99,7 +117,13 @@ public class CommentController {
     }
 
     @PatchMapping("/checked")
-    public Result<?> checked(@NotNull(message = "未指定评论id") Integer id){
+    public Result<?> checked(@NotNull(message = "未指定评论id") Integer id,
+                             HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         Comment comment = commentService.findById(id);
         if (comment == null) {
             return Result.error("指定评论不存在");
@@ -115,7 +139,13 @@ public class CommentController {
     }
 
     @GetMapping("/like")
-    public Result<?> likes(@NotNull(message = "未指定评论id") Integer id){
+    public Result<?> likes(@NotNull(message = "未指定评论id") Integer id,
+                           HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         Comment comment = commentService.findById(id);
         if (comment == null) {
             return Result.error("指定评论不存在");

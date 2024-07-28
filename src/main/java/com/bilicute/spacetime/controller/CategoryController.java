@@ -3,7 +3,10 @@ package com.bilicute.spacetime.controller;
 import com.bilicute.spacetime.pojo.Category;
 import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
+import com.bilicute.spacetime.quickMethods.VerifyCode;
 import com.bilicute.spacetime.service.CategoryService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,18 +27,28 @@ import java.util.List;
 @RequestMapping("/category")
 @Slf4j
 public class CategoryController {
-    @Autowired
+
     private CategoryService categoryService;
+    @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     /**
      * @param category:  接收category的所有数据
      * @return Result
      * @author i囡漫笔
-     * @description 通过接收前端传来的category的所有数据并添加到数据库中
+     * @description 添加分类
      * @date 2024/4/24
      */
     @PostMapping
-    public Result<String> add(@RequestBody @Validated(Category.Add.class) Category category){
+    public Result<String> add(@RequestBody @Validated(Category.Add.class) Category category,
+                              HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }
@@ -49,7 +62,7 @@ public class CategoryController {
             return Result.error("该分类别称已经存在");
         }
         categoryService.add(category);
-        log.info("新增分类："+categoryName+"\t操作用户"+ QuickMethods.getLoggedInUserName());
+        log.info("新增分类：{}\t操作用户{}", categoryName, QuickMethods.getLoggedInUserName());
         return Result.success();
     }
 
@@ -62,7 +75,7 @@ public class CategoryController {
     @GetMapping
     public Result<List<Category>> list(){
         List<Category> cs = categoryService.list();
-        log.info(QuickMethods.getLoggedInUserName()+"查看所有分类");
+        log.info("{}查看所有分类", QuickMethods.getLoggedInUserName());
         return Result.success(cs);
     }
 
@@ -90,7 +103,13 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @PutMapping
-    public Result<String> update(@RequestBody @Validated(Category.Update.class) Category category){
+    public Result<String> update(@RequestBody @Validated(Category.Update.class) Category category,
+                                 HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }
@@ -107,7 +126,7 @@ public class CategoryController {
         if (hasCategory != null) {
             return Result.error("该分类名已经存在");
         }
-        log.info("更新文章分类："+ID+"\t操作用户"+QuickMethods.getLoggedInUserName());
+        log.info("更新文章分类：{}\t操作用户{}", ID, QuickMethods.getLoggedInUserName());
         categoryService.update(category);
         return Result.success();
     }
@@ -120,7 +139,13 @@ public class CategoryController {
      * @date 2024/4/24
      */
     @DeleteMapping
-    public Result<String> delete(@Validated(Category.Delete.class) Integer id){
+    public Result<String> delete(@Validated(Category.Delete.class) Integer id,
+                                 HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if(QuickMethods.isUpdatedPassword()){
+            VerifyCode.clearCachedUsers(request,response);
+            return Result.error("账号过期，请重新登录");
+        }
         if(!QuickMethods.isAdmin()){
             return Result.error("此操作只有管理员可执行");
         }
@@ -129,7 +154,7 @@ public class CategoryController {
         if (byId == null) {
             return Result.error("找不到指定分类");
         }
-        log.info("删除文章分类："+byId.getCategoryName()+"\t操作用户"+QuickMethods.getLoggedInUserName());
+        log.info("删除文章分类：{}\t操作用户{}", byId.getCategoryName(), QuickMethods.getLoggedInUserName());
         categoryService.delete(id);
         return Result.success();
     }
