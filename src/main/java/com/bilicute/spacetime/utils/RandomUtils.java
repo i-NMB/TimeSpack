@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.Random;
 
 /**
- * @项目: everlast
  * @描述: 验证码工具类
  * @作者: i囡漫笔
  * @创建时间: 2023-12-02 09:20
@@ -18,7 +17,7 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
 
     private static final char[] NUMBER_ARRAY = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     /**
      * @param length:  随机生成的字符长度
@@ -30,7 +29,7 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
     public static String randomString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            sb.append(String.valueOf(CODE_SEQ[random.nextInt(CODE_SEQ.length)]));
+            sb.append(CODE_SEQ[random.nextInt(CODE_SEQ.length)]);
         }
         return sb.toString();
     }
@@ -45,7 +44,7 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
     public static String randomNumberString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            sb.append(String.valueOf(NUMBER_ARRAY[random.nextInt(NUMBER_ARRAY.length)]));
+            sb.append(NUMBER_ARRAY[random.nextInt(NUMBER_ARRAY.length)]);
         }
         return sb.toString();
     }

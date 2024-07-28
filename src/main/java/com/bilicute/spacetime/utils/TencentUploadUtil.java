@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @项目: springRegister
  * @描述: 腾讯云对象存储（COS）文件上传工具
  * @作者: i囡漫笔
  * @创建时间: 2023-12-14 13:28
@@ -55,7 +54,7 @@ public class TencentUploadUtil {
         TencentUploadUtil.regionAddress=regionAddress;
     }
 
-    public final static Map<String, String> FILE_TYPE_MAP = new HashMap<String, String>();
+    public final static Map<String, String> FILE_TYPE_MAP = new HashMap<>();
     public TencentUploadUtil(){}
     static{
         getAllFileType(); // 初始化文件类型信息
@@ -138,10 +137,7 @@ public class TencentUploadUtil {
         if(src == null || src.length <= 0){
             return null;
         }
-        int tempLength=100;
-        if(src.length<100){
-            tempLength=src.length;
-        }
+        int tempLength = Math.min(src.length, 100);
         for(int i = 0; i < tempLength; i++){
             int v = src[i] & 0xFF;
             String hv = Integer.toHexString(v);
