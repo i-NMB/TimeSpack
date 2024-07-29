@@ -111,6 +111,9 @@ https://time.bilicute.com
 - [@i囡漫笔](https://gitee.com/inmb)
 - [@mjlyb](https://gitee.com/mjlyb)
 - [@yu-tingtingt](https://gitee.com/yu-tingtingt)
+- [@王雅妮sinnie](https://gitee.com/wang-yani-sinie)
+- [@sjzm](https://gitee.com/sjzm)
+- [@myd](https://gitee.com/myd1145)
 
 ## 反馈
 
