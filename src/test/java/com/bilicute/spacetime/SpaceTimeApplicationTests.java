@@ -15,8 +15,7 @@ class SpaceTimeApplicationTests {
     public static String stringEncryptor(String secretKey, String message, boolean isEncrypt) {
         PooledPBEStringEncryptor pooledPBEStringEncryptor = new PooledPBEStringEncryptor();
         pooledPBEStringEncryptor.setConfig(getSimpleStringPBEConfig(secretKey));
-        String result = isEncrypt ? pooledPBEStringEncryptor.encrypt(message) : pooledPBEStringEncryptor.decrypt(message);
-        return result;
+        return isEncrypt ? pooledPBEStringEncryptor.encrypt(message) : pooledPBEStringEncryptor.decrypt(message);
     }
 
     private static SimpleStringPBEConfig getSimpleStringPBEConfig(String secretKey) {
