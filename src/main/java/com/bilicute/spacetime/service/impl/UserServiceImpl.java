@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,10 +62,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatar(String avatarUrl) {
-        Map<String,Object> map= ThreadLocalUtil.get();
-        Integer createUser=(Integer) map.get("id");
-        userMapper.updateAvatar(avatarUrl,createUser);
+    public void updateAvatar(String avatarUrl, Integer loggedInUserId) {
+        userMapper.updateAvatar(avatarUrl, loggedInUserId);
     }
 
     @Override
@@ -93,28 +90,6 @@ public class UserServiceImpl implements UserService {
     public void updatePhone(String phone) {
         userMapper.updatePhone(phone,QuickMethods.getLoggedInUserId());
     }
-
-
-    @Override
-    public void concern(Integer loggedInUserId, Integer passiveId) {
-        userMapper.concern(loggedInUserId,passiveId);
-    }
-
-    @Override
-    public void disConcern(Integer loggedInUserId, Integer passiveId) {
-        userMapper.disConcern(loggedInUserId,passiveId);
-    }
-
-    @Override
-    public List<Integer> getConcern(Integer loggedInUserId) {
-
-       return userMapper.getConcern(loggedInUserId);
-
-
-
-        }
-
-
 
 
 }

@@ -19,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
@@ -126,7 +125,6 @@ public class UserController {
         // 判断密码是否正确loginUser对象中的password是密文
         if (Sha256.addSalt(password).equals(loginUser.getPassword()) ){
 
-
             // 登录成功
             // DONE 完成获取JWT的令牌返回到cookie
             Map<String,Object> claims = new HashMap<>();
@@ -167,9 +165,6 @@ public class UserController {
         }
         //根据用户名查询用户
         User user = QuickMethods.getLoggedUser();
-        if (user == null) {
-            return Result.error("查询信息错误");
-        }
         return Result.success(user);
     }
 
@@ -191,52 +186,6 @@ public class UserController {
     }
 
     /**
-     * @description 关注功能
-     * @param passiveId 被关注用户的id
-     * @return Result<String>
-     * @author myd
-     */
-    @GetMapping("/concern")
-    public Result<String> concern(Integer passiveId){
-        if(passiveId==null){
-            return Result.error("关键数据缺失");
-        }
-        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
-        userService.concern(loggedInUserId,passiveId);
-        return Result.success();
-    }
-
-    /**
-     * @description 取消关注功能
-     * @param passiveId 被取消关注用户的id
-     * @return Result<String>
-     * @author myd
-     */
-    @GetMapping("/disConcern")
-    public Result<String> disConcern(Integer passiveId){
-        if(passiveId==null){
-            return Result.error("关键数据缺失");
-        }
-        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
-        userService.disConcern(loggedInUserId,passiveId);
-        return Result.success();
-    }
-    /**
-     * @description 用户获得已关注用户的列表
-     * @return Result<?>
-     * @author i囡漫笔,myd
-     * @date 2024/7/27
-     */
-    @GetMapping("/getConcern")
-    public Result<?> getConcern(){
-        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
-        List<Integer> getConcern = userService.getConcern(loggedInUserId);
-        return Result.success(getConcern);
-    }
-
-
-
-    /**
      * @param avatarUrl 头像链接
      * @param request 请求头，使Session失效
      * @param response 响应头，清除cookie
@@ -253,7 +202,8 @@ public class UserController {
             return Result.error("账号过期，请重新登录");
         }
         //TODO 头像上传接口，更新时检测是否为指定域名
-        userService.updateAvatar(avatarUrl);
+        Integer loggedInUserId = QuickMethods.getLoggedInUserId();
+        userService.updateAvatar(avatarUrl, loggedInUserId);
         return Result.success();
     }
 
@@ -276,9 +226,7 @@ public class UserController {
                                      String mail,
                                      String mailCode){
         String phone = QuickMethods.getLoggedInPhone();
-        if (phone == null) {
-            return Result.error("你还没有绑定手机号");
-        }
+//        if (phone == null) {return Result.error("你还没有绑定手机号");}
         if(!VerifyCode.verifyByPhoneInLoggedUser(request,phone,phoneCode)){
             return Result.error("手机验证码错误");
         }

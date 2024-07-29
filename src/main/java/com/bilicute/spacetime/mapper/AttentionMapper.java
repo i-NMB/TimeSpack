@@ -1,15 +1,20 @@
 package com.bilicute.spacetime.mapper;
 
-import com.bilicute.spacetime.pojo.Attention;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface AttentionMapper {
-    @Insert("insert into attention(active_user, passive_user, attention_time)" +
-            "values(#{activeUserId}, #{passiveUserId}, #{attentionTime})")
-    void add(Attention attention);
-    @Delete("DELETE FROM attention WHERE active_user = #{currentUserId} and passive = #{passiveUserIdToUnfollow}")
-    void delete(Integer currentUserId, Integer passiveUserIdToUnfollow);
+    @Insert("insert into attention(active_user, passive, operation_time) values(#{loggedInUserId},#{passiveId},now())")
+    void concern(Integer loggedInUserId, Integer passiveId);
+
+    @Delete("delete from attention  where passive=#{passiveId} and active_user=#{loggedInUserId}")
+    void disConcern(Integer loggedInUserId, Integer passiveId);
+
+    @Select(" select passive from attention where active_user = #{loggedInUserId}")
+    List<Integer> getConcern(Integer loggedInUserId);
 }
