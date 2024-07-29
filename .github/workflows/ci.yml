@@ -33,4 +33,5 @@ jobs:
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/site/jacoco-ut/jacoco.xml # 指定报告文件位置
 
