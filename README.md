@@ -1,5 +1,8 @@
-
 # TimeSpack时光漫步
+
+![Maintainer](https://img.shields.io/badge/maintainer-i%E5%9B%A1%E6%BC%AB%E7%AC%94-%23f38181?style=flat&link=https%3A%2F%2Fi-nmb.cn)![GitHub commit activity](https://img.shields.io/github/commit-activity/m/i-NMB/TimeSpack)![GitHub last commit](https://img.shields.io/github/last-commit/i-NMB/TimeSpack)
+
+[![AGPL License](https://badgen.net/github/license/i-NMB/TimeSpack)](http://www.gnu.org/licenses/agpl-3.0)[![Demo](https://img.shields.io/badge/Demo-time.bilicute.com-%2311999e?style=flat)](https://time.bilicute.com)
 
 《时光漫步》是一个创新的博客/个人空间平台，旨在为用户提供一个自由、开放、互动的网络空间。本项目基于先进的Web技术构建，使用户能够轻松创建、发布和管理自己的内容，同时与其他用户互动和分享。
 
@@ -87,6 +90,10 @@ java -jar -Djasypt.encryptor.password=xbmu2024 SpaceTime-1.104.102-SNAPSHOT.jar
 
 ## 示例
 
+### Demo在线演示
+
+在线演示：[时光漫步在线演示](https://time.bilicute.com)
+
 ### 文章界面
 
 ![文章界面](https://img1.i-nmb.cn/img/image-20240729115134345.png)
@@ -99,7 +106,7 @@ java -jar -Djasypt.encryptor.password=xbmu2024 SpaceTime-1.104.102-SNAPSHOT.jar
 
 ![数据统计](https://img1.i-nmb.cn/img/image-20240729114955229.png)
 
-https://time.bilicute.com
+
 
 ## 开源许可
 
