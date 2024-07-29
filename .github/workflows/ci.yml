@@ -36,4 +36,4 @@ jobs:
           files: ./target/site/jacoco-ut/jacoco.xml # 指定报告文件位置
 
       - name: List files in target directory
-        run: ls -R ./target/site/
+        run: ls -R ./
