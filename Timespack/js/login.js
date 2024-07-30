@@ -7,7 +7,7 @@ function login(){
 	// console.log(data);
 	$.ajax({
 	    type: "POST",
-	    url: Login_Link,
+        url: apiLinks.Login_Link,
 	    contentType: "application/x-www-form-urlencoded", // 设置contentType
 	    data: $.param(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {
@@ -34,7 +34,7 @@ function login(){
 	});
 }
 
-fetchData(User_Information_Link).then(res => {
+fetchData(apiLinks.User_Information_Link).then(res => {
     console.log(res);
     showPop("已登录");
 	window.location.replace("/");
@@ -42,7 +42,7 @@ fetchData(User_Information_Link).then(res => {
 });
 
 function sendMailCode(e){
-	$.post(Email_Sending_API_Link,{ email: $("#mail").val()}, function(data) {
+    $.post(apiLinks.Email_Sending_API_Link, {email: $("#mail").val()}, function (data) {
 		if(data.message!=="操作成功") showPop(data.message,"error");
 		if(data.message==="操作成功") {
 			showPop(data.message+"：邮件发送成功","success");
@@ -62,7 +62,7 @@ function sendMailCode(e){
 }
 
 function sendPhoneCode(e){
-	$.post(Phone_Sending_API_Link,{ phone: $("#phone").val()}, function(data) {
+    $.post(apiLinks.Phone_Sending_API_Link, {phone: $("#phone").val()}, function (data) {
 		if(data.message!=="操作成功") showPop(data.message,"error");
 		if(data.message==="操作成功"){ 
 			showPop(data.message+"：短信发送成功","success");
@@ -104,7 +104,7 @@ function reg(){
 	};
 	$.ajax({
 	    type: "POST",
-	    url: Registration_Link,
+        url: apiLinks.Registration_Link,
 	    contentType: "application/x-www-form-urlencoded", // 设置contentType
 	    data: $.param(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {

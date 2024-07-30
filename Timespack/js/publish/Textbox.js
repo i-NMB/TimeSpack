@@ -12,7 +12,7 @@ const editorConfig = {
 }
 
 editorConfig.MENU_CONF['uploadImage'] = {
-	server: Img_Up_Link,
+    server: apiLinks.Img_Up_Link,
     // form-data fieldName ，默认值 'wangeditor-uploaded-image'
     fieldName: 'file',
 
@@ -77,7 +77,7 @@ function writeArticle(){
 	console.log(JSON.stringify(data));
 	$.ajax({
 	    type: "POST",
-	    url: Article_Add_Link,
+        url: apiLinks.Article_Add_Link,
 	    contentType: "application/json", // 设置contentType
 	    data: JSON.stringify(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {

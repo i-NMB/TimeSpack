@@ -18,7 +18,7 @@ function fetchData(urls) {
     });
 }
 
-fetchData(User_Information_Link).then(res => {
+fetchData(apiLinks.User_Information_Link).then(res => {
     const app = {
       data() {
         return {
@@ -37,7 +37,7 @@ function goto_login(){
 }
 
 function clearAllCookie() {
-	fetchData(Login_Out_Link).then(res => {
+    fetchData(apiLinks.Login_Out_Link).then(res => {
 	    if(res.code==0){
 			showPop(res.message+"，即将刷新","success");
 		}

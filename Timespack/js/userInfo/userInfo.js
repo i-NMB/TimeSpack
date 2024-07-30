@@ -50,11 +50,11 @@ async function userinfo() {
 			},
 			methods: {
 				async getUserName() {
-					var user = await get_info(User_Information_Link);//http://127.0.0.1:6066/api/user/userInfo、../user.json
+                    var user = await get_info(apiLinks.User_Information_Link);//http://127.0.0.1:6066/api/user/userInfo、../user.json
 					return user.data;
 				},
 				async getyiyan() {
-					var yiyan = await get_info(yiyan_Link);
+                    var yiyan = await get_info(apiLinks.yiyan_Link);
 					return yiyan.data;
 				},
 				async patchNickname() {
@@ -63,7 +63,7 @@ async function userinfo() {
 						showPop("信息未修改","warning");
 						return;
 					}
-					var backinfo = await patch_info(Update_User_Nickname_Link,{"nickname" : $("#nickname").val()});
+                    var backinfo = await patch_info(apiLinks.Update_User_Nickname_Link, {"nickname": $("#nickname").val()});
 					if(backinfo.code==0){
 						showPop("信息修改成功","success");
 						this.user = await this.getUserName();
@@ -79,7 +79,7 @@ async function userinfo() {
 						return;
 					}
 					showPop("邮箱发送中","success");
-					var backinfo = await post_info(Email_Sending_API_Link,{"email" : $("#newMail").val()});
+                    var backinfo = await post_info(apiLinks.Email_Sending_API_Link, {"email": $("#newMail").val()});
 					if(backinfo.code==0){
 						showPop(backinfo.message+"：邮件发送成功","success");
 						mail_t = setInterval(function () {
@@ -98,7 +98,7 @@ async function userinfo() {
 						return;
 					}
 					showPop("短信发送中","success");
-					var backinfo = await post_info(Phone_Sending_API_Link,{"phone" : $("#newPhone").val()});
+                    var backinfo = await post_info(apiLinks.Phone_Sending_API_Link, {"phone": $("#newPhone").val()});
 					if(backinfo.code==0){
 						showPop(backinfo.message+"：短信发送成功","success");
 						phone_t = setInterval(function () {
@@ -112,7 +112,7 @@ async function userinfo() {
 				},
 				async sendMail() {
 					showPop("邮件发送中","success");
-					var backinfo = await post_info(Logined_Email_Sending_Link,{});
+                    var backinfo = await post_info(apiLinks.Logined_Email_Sending_Link, {});
 					if(backinfo.code==0){
 						showPop(backinfo.message+"：邮件发送成功","success");
 						mail_old_t = setInterval(function () {
@@ -126,7 +126,7 @@ async function userinfo() {
 				},
 				async sendPhone() {
 					showPop("短信发送中","success");
-					var backinfo = await post_info(Logined_Phone_Sending_Link,{});
+                    var backinfo = await post_info(apiLinks.Logined_Phone_Sending_Link, {});
 					if(backinfo.code==0){
 						showPop(backinfo.message+"：短信发送成功","success");
 						phone_old_t = setInterval(function () {
@@ -140,7 +140,11 @@ async function userinfo() {
 				},
 				async updateMail(){
 					showPop("更新邮箱地址中","success");
-					var backinfo = await patch_info(Update_User_Mail_Link,{"mail":$("#newMail").val(),"mailCode":$("#newMailCode").val(),"phoneCode":$("#phoneCode").val()});
+                    var backinfo = await patch_info(apiLinks.Update_User_Mail_Link, {
+                        "mail": $("#newMail").val(),
+                        "mailCode": $("#newMailCode").val(),
+                        "phoneCode": $("#phoneCode").val()
+                    });
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						this.user = await this.getUserName();
@@ -151,7 +155,11 @@ async function userinfo() {
 				},
 				async updatePhone(){
 					showPop("更新手机号中","success");
-					var backinfo = await patch_info(Update_User_Phone_Link,{"phone":$("#newPhone").val(),"phoneCode":$("#newPhoneCode").val(),"mailCode":$("#mailCode").val()});
+                    var backinfo = await patch_info(apiLinks.Update_User_Phone_Link, {
+                        "phone": $("#newPhone").val(),
+                        "phoneCode": $("#newPhoneCode").val(),
+                        "mailCode": $("#mailCode").val()
+                    });
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						this.user = await this.getUserName();
@@ -162,7 +170,10 @@ async function userinfo() {
 				},
 				async changePasswordByMail(){
 					showPop("密码修改中","success");
-					var backinfo = await patch_info(Update_User_Password_By_Mail_API_Link,{"newPassword":$("#newPassword").val(),"mailCode":$("#mailCodeByPassword").val()});
+                    var backinfo = await patch_info(apiLinks.Update_User_Password_By_Mail_API_Link, {
+                        "newPassword": $("#newPassword").val(),
+                        "mailCode": $("#mailCodeByPassword").val()
+                    });
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						location.reload();
@@ -173,7 +184,10 @@ async function userinfo() {
 				},
 				async changePasswordByPhone(){
 					showPop("密码修改中","success");
-					var backinfo = await patch_info(Update_User_Password_By_Phone_API_Link,{"newPassword":$("#newPassword").val(),"phoneCode":$("#phoneCodeByPassword").val()});
+                    var backinfo = await patch_info(apiLinks.Update_User_Password_By_Phone_API_Link, {
+                        "newPassword": $("#newPassword").val(),
+                        "phoneCode": $("#phoneCodeByPassword").val()
+                    });
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						location.reload();
@@ -184,7 +198,7 @@ async function userinfo() {
 				},
 				async fetchData(page) {
 				    try {
-				        const response = await fetch(Article_All_Myself_Link+`?pageNum=${page}&pageSize=${this.pageSize}`);//http://127.0.0.1:6066/api/article/oneself?pageNum=${page}&pageSize=${this.pageSize}
+                        const response = await fetch(apiLinks.Article_All_Myself_Link + `?pageNum=${page}&pageSize=${this.pageSize}`);//http://127.0.0.1:6066/api/article/oneself?pageNum=${page}&pageSize=${this.pageSize}
 				        if (!response.ok) {
 				            throw new Error(`HTTP error! status: ${response.status}`);
 				        }
@@ -216,7 +230,7 @@ async function userinfo() {
 				},
 				async deleteArticle(articleID){
 					showPop("文章删除中","success");
-					var backinfo = await delete_info(Article_Delete_Link,{ "id": articleID });
+                    var backinfo = await delete_info(apiLinks.Article_Delete_Link, {"id": articleID});
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						this.fetchData(this.currentPage);
@@ -235,7 +249,7 @@ async function userinfo() {
 				},
 				async commentFetchData(page) {
 				    try {
-				        const response = await fetch(Comment_All_Myself_Link+`?pageNum=${page}&pageSize=${this.commentPageSize}`);//http://127.0.0.1:6066/api/comment/oneself?pageNum=${page}&pageSize=${this.commentPageSize}
+                        const response = await fetch(apiLinks.Comment_All_Myself_Link + `?pageNum=${page}&pageSize=${this.commentPageSize}`);//http://127.0.0.1:6066/api/comment/oneself?pageNum=${page}&pageSize=${this.commentPageSize}
 				        if (!response.ok) {
 				            throw new Error(`网络请求失败: ${response.status}`);
 				        }
@@ -244,7 +258,7 @@ async function userinfo() {
 				            this.commentTotal = data.data.total;
 				            this.commentCurrentPageData = data.data.items; // 直接更新当前页面的数据
 							for (const [index, comment] of data.data.items.entries()) {
-								  const articleResponse = await fetch(Article_Detail_Link+`?id=${comment.articleId}`);
+                                const articleResponse = await fetch(apiLinks.Article_Detail_Link + `?id=${comment.articleId}`);
 								  if (articleResponse.ok) {
 									const articleData = await articleResponse.json();
 									if (articleData.code === 0) {
@@ -273,7 +287,7 @@ async function userinfo() {
 				getCommentAdminToggleTarget(commentatorId) {return `target: #modal-Admin${commentatorId}`;},
 				async commentAdminFetchData(page) {
 				    try {
-				        const response = await fetch(Comment_Admin_Link+`?auditingState=false&pageNum=${page}&pageSize=${this.commentAdminPageSize}`);//http://127.0.0.1:6066/api/comment/admin?auditingState=false&pageNum=${page}&pageSize=${this.commentAdminPageSize}
+                        const response = await fetch(apiLinks.Comment_Admin_Link + `?auditingState=false&pageNum=${page}&pageSize=${this.commentAdminPageSize}`);//http://127.0.0.1:6066/api/comment/admin?auditingState=false&pageNum=${page}&pageSize=${this.commentAdminPageSize}
 				        if (!response.ok) {
 				            throw new Error(`网络请求失败: ${response.status}`);
 				        }
@@ -282,7 +296,7 @@ async function userinfo() {
 				            this.commentAdminTotal = data.data.total;
 				            this.commentAdminCurrentPageData = data.data.items; // 直接更新当前页面的数据
 							for (const [index, comment] of data.data.items.entries()) {
-								  const articleResponse = await fetch(Article_Detail_Link+`?id=${comment.articleId}`);
+                                const articleResponse = await fetch(apiLinks.Article_Detail_Link + `?id=${comment.articleId}`);
 								  if (articleResponse.ok) {
 									const articleData = await articleResponse.json();
 									if (articleData.code === 0) {
@@ -309,7 +323,7 @@ async function userinfo() {
 				    }
 				},
 				async adminComment(commentID){
-					var backinfo = await patch_info(Comment_Pass_Link+`?id=${commentID}`,{});
+                    var backinfo = await patch_info(apiLinks.Comment_Pass_Link + `?id=${commentID}`, {});
 					if(backinfo.code==0){
 						showPop("审核通过!","success");
 						this.commentFetchData(this.commentCurrentPage);
@@ -320,7 +334,7 @@ async function userinfo() {
 					}
 				},
 				async adminArticle(id){
-					var backinfo = await patch_info(Article_Pass_Link+`?id=${id}`,{});
+                    var backinfo = await patch_info(apiLinks.Article_Pass_Link + `?id=${id}`, {});
 					if(backinfo.code==0){
 						showPop("审核通过!","success");
 						this.fetchDataAdmin(this.currentPageAdmin);
@@ -331,7 +345,7 @@ async function userinfo() {
 				},
 				async fetchDataAdmin(page) {
 				    try {
-				        const response = await fetch(Article_Admin_Link+`?auditingState=false&pageNum=${page}&pageSize=${this.pageSizeAdmin}`);//http://127.0.0.1:6066/api/article/admin?auditingState=false&pageNum=${page}&pageSize=${this.pageSizeAdmin}
+                        const response = await fetch(apiLinks.Article_Admin_Link + `?auditingState=false&pageNum=${page}&pageSize=${this.pageSizeAdmin}`);//http://127.0.0.1:6066/api/article/admin?auditingState=false&pageNum=${page}&pageSize=${this.pageSizeAdmin}
 				        if (!response.ok) {
 				            throw new Error(`HTTP error! status: ${response.status}`);
 				        }
@@ -355,7 +369,7 @@ async function userinfo() {
 				},
 				
 				async getArticle(articleID){
-					var backinfo = await get_info(Article_Detail_Link+`?id=${articleID}`);
+                    var backinfo = await get_info(apiLinks.Article_Detail_Link + `?id=${articleID}`);
 					if(backinfo.code==0){
 						return backinfo.data.title;
 					}else{
@@ -365,7 +379,7 @@ async function userinfo() {
 				},
 				async deleteComment(commentId){
 					showPop("评论删除中","success");
-					var backinfo = await delete_info(Comment_Delete_Link,{ "commentId": commentId });
+                    var backinfo = await delete_info(apiLinks.Comment_Delete_Link, {"commentId": commentId});
 					if(backinfo.code==0){
 						showPop(backinfo.message,"success");
 						this.commentFetchData(this.commentCurrentPage);
@@ -377,7 +391,7 @@ async function userinfo() {
 					}
 				},
 				async getViewByArt(){
-					var backinfo = await get_info(User_All_View_From_Article_Link);
+                    var backinfo = await get_info(apiLinks.User_All_View_From_Article_Link);
 					if(backinfo.code==0){
 						this.allViewByArt = backinfo.data;
 					}else{
@@ -386,7 +400,7 @@ async function userinfo() {
 					}
 				},
 				async getLikeByArt(){
-					var backinfo = await get_info(User_All_Like_From_Article_Link);
+                    var backinfo = await get_info(apiLinks.User_All_Like_From_Article_Link);
 					if(backinfo.code==0){
 						this.allLikeByArt = backinfo.data;
 					}else{
@@ -395,7 +409,7 @@ async function userinfo() {
 					}
 				},
 				async getLikeByCom(){
-					var backinfo = await get_info(User_All_Like_From_Comment_Link);
+                    var backinfo = await get_info(apiLinks.User_All_Like_From_Comment_Link);
 					if(backinfo.code==0){
 						this.allLikeByCom = backinfo.data;
 					}else{
@@ -404,7 +418,7 @@ async function userinfo() {
 					}
 				},
 				async getAllArt(){
-					var backinfo = await get_info(User_All_Number_From_Article_Link);
+                    var backinfo = await get_info(apiLinks.User_All_Number_From_Article_Link);
 					if(backinfo.code==0){
 						this.allArt = backinfo.data;
 					}else{
@@ -413,7 +427,7 @@ async function userinfo() {
 					}
 				},
 				async getAllCom(){
-					var backinfo = await get_info(User_All_Number_From_Comment_Link);
+                    var backinfo = await get_info(apiLinks.User_All_Number_From_Comment_Link);
 					if(backinfo.code==0){
 						this.allCom = backinfo.data;
 					}else{
@@ -422,7 +436,7 @@ async function userinfo() {
 					}
 				},
 				async getMaxLikeArt(){
-					var backinfo = await get_info(User_Max_Like_From_Article_Link);
+                    var backinfo = await get_info(apiLinks.User_Max_Like_From_Article_Link);
 					if(backinfo.code==0){
 						this.maxLikeArt = backinfo.data;
 					}else{
@@ -431,7 +445,7 @@ async function userinfo() {
 					}
 				},
 				async getMaxViewArt(){
-					var backinfo = await get_info(User_Max_View_From_Article_Link);
+                    var backinfo = await get_info(apiLinks.User_Max_View_From_Article_Link);
 					if(backinfo.code==0){
 						this.maxViewArt = backinfo.data;
 					}else{
@@ -440,7 +454,7 @@ async function userinfo() {
 					}
 				},
 				async getMaxLikeCom(){
-					var backinfo = await get_info(User_Max_Like_From_Comment_Link);
+                    var backinfo = await get_info(apiLinks.User_Max_Like_From_Comment_Link);
 					if(backinfo.code==0){
 						this.maxLikeCom = backinfo.data;
 					}else{
@@ -593,7 +607,7 @@ function phone_old_countdown(){
 }
 
 async function updataAvatar(urlAvatar){
-	var backinfo = await patch_info(Update_User_Pic_Link,{"avatarUrl": urlAvatar});
+    var backinfo = await patch_info(apiLinks.Update_User_Pic_Link, {"avatarUrl": urlAvatar});
 	if(backinfo.code==0){
 		showPop(backinfo.message+"：头像更新成功","success");
 		$("#avatar").html(`<button class="uk-button uk-button-primary uk-button-small" onclick="javascript:location.reload();">刷新数据</button>`);

@@ -8,7 +8,7 @@ if(searchParams.get('id')==null||searchParams.get('id')==""){
 	</div>`);
 			$(".uk-hidden").removeClass("uk-hidden");
 }
-fetchData(Article_Detail_Link+'?id='+searchParams.get('id')).then(res => {
+fetchData(apiLinks.Article_Detail_Link + '?id=' + searchParams.get('id')).then(res => {
     if(res.data.title == "查询的文章数据为空"){
 		$('main').remove();
 		$(".uk-hidden").html(`<div class="uk-alert-danger" uk-alert>
@@ -23,8 +23,8 @@ fetchData(Article_Detail_Link+'?id='+searchParams.get('id')).then(res => {
 });
 async function initplaintext() {
     // try {
-        var getPlaintext = await get_article(Article_Detail_Link+'?id='+searchParams.get('id'));///article/detail?id=1
-		var commentNumber = await get_article(Comment_Number_Link+'?articleId='+searchParams.get('id'));
+    var getPlaintext = await get_article(apiLinks.Article_Detail_Link + '?id=' + searchParams.get('id'));///article/detail?id=1
+    var commentNumber = await get_article(apiLinks.Comment_Number_Link + '?articleId=' + searchParams.get('id'));
         const app = Vue.createApp({
             data() {
                 return {
@@ -45,16 +45,16 @@ async function initplaintext() {
 					return marked.parse(markdown);
 			    },
 				async getUserName() {
-					var user = await get_article(User_Get_Link+'?userId=' + getPlaintext.data.createUser);//获取文章发布者的昵称
+                    var user = await get_article(apiLinks.User_Get_Link + '?userId=' + getPlaintext.data.createUser);//获取文章发布者的昵称
 					return user.data.nickname;
 				},
 				async getCategoryName() {
-					var category = await get_article(Category_Detail_Link+'?id=' + getPlaintext.data.categoryId);
+                    var category = await get_article(apiLinks.Category_Detail_Link + '?id=' + getPlaintext.data.categoryId);
 					return category.data.categoryName;
 				},
 				async like(likeID){
 					try {
-						const response = await fetch(Article_Like_Link+`?id=${likeID}`);
+                        const response = await fetch(apiLinks.Article_Like_Link + `?id=${likeID}`);
 						if (response.status==401) {
 							showPop(`点赞失败，未登录`, "error");
 							this.like_state = false;
@@ -120,7 +120,7 @@ async function initcomment(){
 	        methods: {
 	            async fetchData(page) {
 	                try {
-	                    const response = await fetch(Comment_Get_By_Paging_Link+`?auditingState=true&pageNum=${page}&pageSize=${this.pageSize}&articleId=${searchParams.get('id')}`);
+                        const response = await fetch(apiLinks.Comment_Get_By_Paging_Link + `?auditingState=true&pageNum=${page}&pageSize=${this.pageSize}&articleId=${searchParams.get('id')}`);
 	                    if (!response.ok) {
 	                        throw new Error(`网络请求错误! status: ${response.status}`);
 	                    }
@@ -145,7 +145,7 @@ async function initcomment(){
 	            },
 				async getUserInfo(userId) {
 					try {
-						const response = await fetch(User_Get_Link+`?userId=${userId}`);
+                        const response = await fetch(apiLinks.User_Get_Link + `?userId=${userId}`);
 						if (!response.ok) {
 							throw new Error(`网络请求错误! status: ${response.status}`);
 						}
@@ -174,7 +174,7 @@ async function initcomment(){
 				},
 				async like(likeID){
 					try {
-						const response = await fetch(Comment_Like_Link+`?id=${likeID}`);
+                        const response = await fetch(apiLinks.Comment_Like_Link + `?id=${likeID}`);
 						if (response.status==401) {
 							showPop(`评论点赞失败，未登录`, "error");
 							this.like_state = false;
@@ -213,7 +213,7 @@ function beComment(){
 	};
 	$.ajax({
 	    type: "POST",
-	    url: Comment_Add_Link,
+        url: apiLinks.Comment_Add_Link,
 	    contentType: "application/x-www-form-urlencoded", // 设置contentType
 	    data: $.param(data), // 使用$.param方法将数据转换为键值对字符串
 	    success: function(response) {

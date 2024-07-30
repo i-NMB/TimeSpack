@@ -18,9 +18,9 @@ async function get_article(urls) {
 
 async function initApp() {
     try {
-        var getText = await get_article(Article_API_Link+'?categoryId=2&pageNum=1&pageSize=15');
-		var getPic = await get_article(Article_API_Link+'?categoryId=3&pageNum=1&pageSize=10');
-		var getPicAndText = await get_article(Article_API_Link+'?categoryId=4&pageNum=1&pageSize=10')
+        var getText = await get_article(apiLinks.Article_API_Link + '?categoryId=2&pageNum=1&pageSize=15');
+        var getPic = await get_article(apiLinks.Article_API_Link + '?categoryId=3&pageNum=1&pageSize=10');
+        var getPicAndText = await get_article(apiLinks.Article_API_Link + '?categoryId=4&pageNum=1&pageSize=10')
         const app = Vue.createApp({
             data() {
                 return {
@@ -38,7 +38,7 @@ async function initApp() {
 				async getUserAvatar(){
 					var itemss = this.plain_text.entries();
 					for (const [index, item] of itemss) {
-						  const userAvatarResponse = await fetch(User_Get_Link+`?userId=${item.createUser}`);
+                        const userAvatarResponse = await fetch(apiLinks.User_Get_Link + `?userId=${item.createUser}`);
 						  if (userAvatarResponse.ok) {
 							const userAvatarData = await userAvatarResponse.json();
 							if (userAvatarData.code === 0) {
