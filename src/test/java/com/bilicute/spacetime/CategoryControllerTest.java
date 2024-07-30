@@ -5,7 +5,9 @@ import com.bilicute.spacetime.pojo.Category;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -21,6 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 @SpringBootTest
 @Slf4j
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class CategoryControllerTest {
 
     private final HttpServletRequest request = new MockHttpServletRequest();

@@ -11,7 +11,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +33,7 @@ import java.util.Map;
  */
 @SpringBootTest
 @Slf4j
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class UserControllerTest {
 
     private final HttpServletRequest request = new MockHttpServletRequest();
@@ -43,67 +46,6 @@ public class UserControllerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
-
-    /**
-     * @author i囡漫笔
-     * @description 测试UserController中的注册方法
-     * @date 2024/7/29
-     */
-
-    @Test
-    public void userControllerRegister() {
-
-        String username = "validUser";
-        String password = "ValidPass1";
-        String email = "test@example.com";
-        String phone = "18806080702";
-
-        verifyCodeController.verifyCode(request, response);
-        verifyCodeController.MailVerifyCode(request, response, email);
-        verifyCodeController.sendPhoneCode(request, response, phone);
-
-        String code = (String) request.getSession().getAttribute("VerifyCode");
-        String phoneCode = (String) request.getSession().getAttribute("PhoneCode");
-        String emailCode = (String) request.getSession().getAttribute("MailCode");
-        //手机号错误
-        userController.register(request, username, password, email, "0", code, phoneCode, emailCode);
-        //手机验证码错误
-        userController.register(request, username, password, email, phone, code, "000000", emailCode);
-        //图形验证码错误
-        userController.register(request, username, password, email, phone, "000000", phoneCode, emailCode);
-        //邮箱验证码错误
-        userController.register(request, username, password, email, phone, code, phoneCode, "000000");
-        //正确注册
-        userController.register(request, username, password, email, phone, code, phoneCode, emailCode);
-    }
-
-    /**
-     * @author i囡漫笔
-     * @description 测试UserController中的登录方法
-     * @date 2024/7/29
-     */
-    @Test
-    public void userControllerLogin() {
-        String username = "validUser";
-        String password = "ValidPass1";
-        verifyCodeController.verifyCode(request, response);
-        String code = (String) request.getSession().getAttribute("VerifyCode");
-        //用户名为空
-        userController.login("testNeed", password, code, response, request);
-        //验证码错误
-        userController.login(username, password, "000000", response, request);
-        //密码错误
-        userController.login(username, "password", code, response, request);
-        //正确登录
-        userController.login(username, password, code, response, request);
-    }
-
-
-    @Test
-    public void userControllerGetUser() {
-        userController.getUser(null);
-        userController.getUser(2);
     }
 
     public static void loginTestUser(HttpServletResponse response) {
@@ -145,8 +87,68 @@ public class UserControllerTest {
         response.addCookie(cookie);
     }
 
+    /**
+     * @author i囡漫笔
+     * @description 测试UserController中的注册方法
+     * @date 2024/7/29
+     */
+
     @Test
-    public void userControllerUserInfo() {
+    public void a() {
+
+        String username = "validUser";
+        String password = "ValidPass1";
+        String email = "test@example.com";
+        String phone = "18806080702";
+
+        verifyCodeController.verifyCode(request, response);
+        verifyCodeController.MailVerifyCode(request, response, email);
+        verifyCodeController.sendPhoneCode(request, response, phone);
+
+        String code = (String) request.getSession().getAttribute("VerifyCode");
+        String phoneCode = (String) request.getSession().getAttribute("PhoneCode");
+        String emailCode = (String) request.getSession().getAttribute("MailCode");
+        //手机号错误
+        userController.register(request, username, password, email, "0", code, phoneCode, emailCode);
+        //手机验证码错误
+        userController.register(request, username, password, email, phone, code, "000000", emailCode);
+        //图形验证码错误
+        userController.register(request, username, password, email, phone, "000000", phoneCode, emailCode);
+        //邮箱验证码错误
+        userController.register(request, username, password, email, phone, code, phoneCode, "000000");
+        //正确注册
+        userController.register(request, username, password, email, phone, code, phoneCode, emailCode);
+    }
+
+    /**
+     * @author i囡漫笔
+     * @description 测试UserController中的登录方法
+     * @date 2024/7/29
+     */
+    @Test
+    public void b() {
+        String username = "validUser";
+        String password = "ValidPass1";
+        verifyCodeController.verifyCode(request, response);
+        String code = (String) request.getSession().getAttribute("VerifyCode");
+        //用户名为空
+        userController.login("testNeed", password, code, response, request);
+        //验证码错误
+        userController.login(username, password, "000000", response, request);
+        //密码错误
+        userController.login(username, "password", code, response, request);
+        //正确登录
+        userController.login(username, password, code, response, request);
+    }
+
+    @Test
+    public void c() {
+        userController.getUser(null);
+        userController.getUser(2);
+    }
+
+    @Test
+    public void d() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         userController.userInfo(request, response);
@@ -157,7 +159,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerUpdateAvatar() {
+    public void e() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -170,7 +172,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerUpdateMail() {
+    public void f() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -193,7 +195,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerUpdateNickname() {
+    public void g() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         //nickname为空
@@ -208,7 +210,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerChangePasswordByMail() {
+    public void h() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -232,7 +234,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerUpdatePhone() {
+    public void i() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         verifyCodeController.UserMailVerifyCode(request, response);
@@ -259,7 +261,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void userControllerChangePasswordByPhone() {
+    public void j() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -281,5 +283,6 @@ public class UserControllerTest {
 
         userController.deleteAllUserCookies(request, response);
     }
+
 }
 
