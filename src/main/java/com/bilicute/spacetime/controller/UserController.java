@@ -231,9 +231,6 @@ public class UserController {
             return Result.error("账号过期，请重新登录");
         }
         String phone = QuickMethods.getLoggedInPhone();
-        if (phone == null) {
-            return Result.error("你还没有绑定手机号");
-        }
         if(!VerifyCode.verifyByPhoneInLoggedUser(request,phone,phoneCode)){
             return Result.error("手机验证码错误");
         }
@@ -320,9 +317,6 @@ public class UserController {
             return Result.error("账号过期，请重新登录");
         }
         String mail = QuickMethods.getLoggedInEmail();
-        if (mail == null) {
-            return Result.error("你还没有绑定邮箱");
-        }
         if(!VerifyCode.verifyByMailInLoggedUser(request,mail,mailCode)){
             return Result.error("邮箱验证码错误");
         }

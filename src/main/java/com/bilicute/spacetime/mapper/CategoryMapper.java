@@ -19,8 +19,8 @@ public interface CategoryMapper {
     @Select("select * from category where category_name=#{categoryName}")
     Category findByName(String categoryName);
 
-    @Insert("insert into category(category_name,category_alias,create_user,create_time,update_time)" +
-            "values(#{categoryName},#{categoryAlias},#{createUser},#{createTime},#{updateTime})")
+    @Insert("insert into category(category_id,category_name,category_alias,create_user,create_time,update_time)" +
+            "values(#{categoryId},#{categoryName},#{categoryAlias},#{createUser},#{createTime},#{updateTime})")
     void add(Category category);
 
     //查询用户id所创的所有分类

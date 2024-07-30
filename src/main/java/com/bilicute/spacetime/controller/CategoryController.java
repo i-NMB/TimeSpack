@@ -75,7 +75,6 @@ public class CategoryController {
     @GetMapping
     public Result<List<Category>> list(){
         List<Category> cs = categoryService.list();
-        log.info("{}查看所有分类", QuickMethods.getLoggedInUserName());
         return Result.success(cs);
     }
 
@@ -121,10 +120,18 @@ public class CategoryController {
             return Result.error("找不到指定分类");
         }
         //查找是否有重复名字
-        String categoryName = category.getCategoryName();
-        Category hasCategory = categoryService.findByName(categoryName);
-        if (hasCategory != null) {
+        Integer categoryId = category.getCategoryId();
+        String newCategoryName = category.getCategoryName();
+        String oldCategoryName = categoryService.findById(categoryId).getCategoryName();
+        String newCategoryAlias = category.getCategoryAlias();
+        String oldCategoryAlias = categoryService.findById(categoryId).getCategoryAlias();
+        Category hasCategoryByName = categoryService.findByName(newCategoryName);
+        Category hasCategoryByAlias = categoryService.findByAliasName(category.getCategoryAlias());
+        if (hasCategoryByName != null && !newCategoryName.equals(oldCategoryName)) {
             return Result.error("该分类名已经存在");
+        }
+        if (hasCategoryByAlias != null && !newCategoryAlias.equals(oldCategoryAlias)) {
+            return Result.error("该分类别称已经存在");
         }
         log.info("更新文章分类：{}\t操作用户{}", ID, QuickMethods.getLoggedInUserName());
         categoryService.update(category);
