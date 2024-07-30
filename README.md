@@ -1,5 +1,6 @@
 # TimeSpack时光漫步
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1ab9b80806bc4ba2bd49479e4d2e2f4c)](https://app.codacy.com/gh/i-NMB/TimeSpack?utm_source=github.com&utm_medium=referral&utm_content=i-NMB/TimeSpack&utm_campaign=Badge_Grade)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/i-NMB/TimeSpack)    ![GitHub last commit](https://img.shields.io/github/last-commit/i-NMB/TimeSpack)    [![codecov](https://img.shields.io/codecov/c/github/i-NMB/TimeSpack?token=XJO3VTB6WE&logo=codecov&logoColor=%23F01F7A&logoSize=auto&label=Codecov&color=%23ea5455)](https://codecov.io/github/i-NMB/TimeSpack)    ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/i-NMB/TimeSpack/ci.yml)
 
 ![Maintainer](https://img.shields.io/badge/maintainer-i%E5%9B%A1%E6%BC%AB%E7%AC%94-%23f38181?style=flat&link=https%3A%2F%2Fi-nmb.cn)    [![AGPL License](https://badgen.net/github/license/i-NMB/TimeSpack)](http://www.gnu.org/licenses/agpl-3.0)    [![Demo](https://img.shields.io/badge/Demo-time.bilicute.com-%2311999e?style=flat)](https://time.bilicute.com)
