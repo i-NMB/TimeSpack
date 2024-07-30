@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,10 +104,9 @@ public class CommentController {
             //如果不是管理员
             if (!QuickMethods.isAdmin()){
                 PageBean<Comment> pageBean = new PageBean<>();
-                List<Comment> list = null;
+                List<Comment> list = new ArrayList<>();
                 Comment comment = new Comment();
                 comment.setContent("您不是管理员");
-                assert false;
                 list.add(comment);
                 pageBean.setItems(list);
                 return Result.errorData(pageBean);

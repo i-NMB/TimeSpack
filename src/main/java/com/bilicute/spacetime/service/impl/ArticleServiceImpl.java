@@ -118,6 +118,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public void deleteAllComment(Integer id) {
+        articleMapper.deleteAllComment(id);
+    }
+    @Override
     public void delete(Integer id) {
         articleMapper.delete(id);
     }

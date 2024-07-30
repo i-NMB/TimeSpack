@@ -38,6 +38,8 @@ public interface ArticleMapper {
             "WHERE create_user = #{loggedInUserId}")
     Integer queryViewSelfInfo(Integer loggedInUserId);
 
+    @Delete("DELETE FROM comment WHERE article_id = #{id}")
+    void deleteAllComment(Integer id);
     @Delete("DELETE FROM article WHERE article_id = #{id}")
     void delete(Integer id);
 
@@ -55,4 +57,5 @@ public interface ArticleMapper {
 //    void update(Article article);
 
     List<Article> listByOneself(Integer categoryId, String state, Integer userId);
+
 }

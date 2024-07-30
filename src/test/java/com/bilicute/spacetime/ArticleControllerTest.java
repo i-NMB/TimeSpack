@@ -1,6 +1,7 @@
 package com.bilicute.spacetime;
 
 import com.bilicute.spacetime.controller.ArticleController;
+import com.bilicute.spacetime.controller.CommentController;
 import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
@@ -37,6 +38,10 @@ public class ArticleControllerTest {
     private final Article article;
     @Autowired
     private ArticleController articleController;
+    @Autowired
+    private CommentController commentController;
+    @Autowired
+    private TestCommentMapper testCommentMapper;
 
     public ArticleControllerTest() {
         Article article = new Article();
@@ -89,9 +94,19 @@ public class ArticleControllerTest {
         articleController.add(article3, request, response);
         article3.setCategoryId(3);
         articleController.add(article3, request, response);
+//评论测试
+        //文章不存在
+        commentController.addComment("测试评论", null, request, response);
+        //正确评论
+        commentController.addComment("测试评论", 1, request, response);
+
         //修改密码敏感操作测试
         UserControllerTest.changePasswordTestUser();
         articleController.add(article, request, response);
+        commentController.addComment("测试评论", 1, request, response);
+
+        //添加测试评论
+        testCommentMapper.addComment(1, "测试内容", "已发布", 1, 10, false, 0);
     }
 
     @Test
@@ -99,14 +114,24 @@ public class ArticleControllerTest {
         UserControllerTest.loginTestUser(response);
         //非管理正常测试
         articleController.list(1, 1, 2, null, null);
+        commentController.list(1, 1, 1, null);
         //管理测试
         //查询审核的
         articleController.list(1, 1, 2, null, true);
+        commentController.list(1, 1, 1, true);
         //查询未审核的
         articleController.list(1, 1, 2, null, false);
+        commentController.list(1, 1, 1, false);
         //管理员
         UserControllerTest.getAdminTestUser(response);
         articleController.list(1, 1, 2, null, false);
+        commentController.list(1, 1, 1, false);
+
+//获取评论数
+        //正常获取id为 1 文章的评论数
+        commentController.commentNumber(1);
+        //获取未知文章的评论数
+        commentController.commentNumber(3);
     }
 
     @Test
@@ -158,9 +183,14 @@ public class ArticleControllerTest {
     public void f() {
         UserControllerTest.loginTestUser(response);
         //测试正常
+        commentController.likes(1, request, response);
         articleController.like(1, request, response);
+        //点赞不存在的文章/评论
+        commentController.likes(3, request, response);
+        articleController.like(100, request, response);
         //修改密码敏感测试
         UserControllerTest.changePasswordTestUser();
+        commentController.likes(1, request, response);
         articleController.like(1, request, response);
     }
 
@@ -168,6 +198,7 @@ public class ArticleControllerTest {
     public void g() {
         UserControllerTest.loginTestUser(response);
         //测试正常
+        commentController.listBySelf(1, 1, 1);
         articleController.querySelfInfo();
     }
 
@@ -176,15 +207,19 @@ public class ArticleControllerTest {
         UserControllerTest.loginTestUser(response);
         //审核自己发布的文章
         articleController.checked(1, request, response);
+        commentController.checked(1, request, response);
         //撤销审核自己发布的文章
         articleController.unchecked(1, request, response);
-        //文章不存在
+        testCommentMapper.uncheck(1, false);
+        //文章/评论不存在
         articleController.checked(3, request, response);
+        commentController.checked(3, request, response);
         //撤销不存在的文章
         articleController.unchecked(3, request, response);
         //修改密码后敏感操作
         UserControllerTest.changePasswordTestUser();
-        articleController.checked(3, request, response);
+        commentController.checked(1, request, response);
+        articleController.checked(1, request, response);
         UserControllerTest.loginTestUser(response);
         UserControllerTest.changePasswordTestUser();
         articleController.unchecked(3, request, response);
@@ -206,8 +241,11 @@ public class ArticleControllerTest {
         articleController.unchecked(1, request, response);
         //管理员审核
         UserControllerTest.getAdminTestUser(response);
+        commentController.checked(1, request, response);
+        commentController.checked(1, request, response);
         articleController.checked(1, request, response);
         articleController.checked(1, request, response);
+        testCommentMapper.uncheck(1, false);
         articleController.unchecked(1, request, response);
         articleController.unchecked(1, request, response);
     }
@@ -222,29 +260,34 @@ public class ArticleControllerTest {
         claims.put("username", "test2");
         claims.put("SHA2password", Sha256.addSalt(Sha256.addSalt("ValidPass1")));
         String token = JwtUtil.genToken(claims);
-        // 假设ThreadLocalUtil.set()是用来设置ThreadLocal的值
         ThreadLocalUtil.set(claims);
         Cookie cookie = new Cookie("jwt", token);
         cookie.setMaxAge(5 * 60);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
+        commentController.deleteComment(1, request, response);
         articleController.delete(1, request, response);
-        //删除不存在文章
+        //删除不存在评论/文章
+        commentController.deleteComment(2, request, response);
         articleController.delete(3, request, response);
 
         //正常删除
         UserControllerTest.loginTestUser(response);
+        commentController.deleteComment(1, request, response);
         articleController.delete(1, request, response);
         //正确添加
         articleController.add(article, request, response);
+        testCommentMapper.addComment(1, "测试内容", "已发布", 1, 10, false, 0);
         //修改密码后敏感操作
         UserControllerTest.changePasswordTestUser();
+        commentController.deleteComment(1, request, response);
         articleController.delete(1, request, response);
 
 
         //管理员删除
         UserControllerTest.getAdminTestUser(response);
+        commentController.deleteComment(1, request, response);
         articleController.delete(1, request, response);
     }
 

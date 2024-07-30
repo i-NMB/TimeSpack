@@ -4,7 +4,9 @@ import com.bilicute.spacetime.pojo.Comment;
 import com.bilicute.spacetime.pojo.PageBean;
 
 public interface CommentService {
+
     void add(String content, Integer articleId);
+
     void delete(Integer commentId);
 
     Integer getCommentNumber(Integer articleId);

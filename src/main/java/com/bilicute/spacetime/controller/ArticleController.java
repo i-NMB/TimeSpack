@@ -262,11 +262,10 @@ public class ArticleController {
         Integer userId=QuickMethods.getLoggedInUserId();
         if (!QuickMethods.isAdmin()){
             if (!userId.equals(article.getCreateUser())){
-                System.out.println(""+!QuickMethods.isAdmin()+!userId.equals(article.getCreateUser()));
-                System.out.println("登陆用户id"+QuickMethods.getLoggedInUserId()+",文章创建者id"+article.getCreateUser()+".");
                 return Result.error("权限不足");
             }
         }
+        articleService.deleteAllComment(id);
         articleService.delete(id);
         return Result.success();
     }

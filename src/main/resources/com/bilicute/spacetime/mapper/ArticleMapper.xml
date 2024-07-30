@@ -56,7 +56,7 @@
 
     <insert id="add" parameterType="com.bilicute.spacetime.pojo.Article">
         INSERT INTO article (
-        <if test="articleId != null">
+        <if test="articleId == 1">
             article_id,
         </if>
         title,
@@ -72,7 +72,7 @@
         view
         )
         VALUES (
-        <if test="articleId != null">
+        <if test="articleId == 1">
             #{articleId},
         </if>
         #{title},

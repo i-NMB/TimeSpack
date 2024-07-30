@@ -30,6 +30,8 @@ public interface ArticleService {
 
     PageBean<Article> listByOneself(Integer pageNum, Integer pageSize, Integer categoryId, String state, Integer userId);
 
+    void deleteAllComment(Integer id);
+
 //    void incrementViewCount(Integer id);
 
 
