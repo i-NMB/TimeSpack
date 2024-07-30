@@ -9,7 +9,6 @@ import com.bilicute.spacetime.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,14 +50,6 @@ public class UserServiceImpl implements UserService {
         }
         //添加
         userMapper.add(username,sha256String,email,phone,"User");
-    }
-
-
-
-    @Override
-    public void update(User user) {
-        user.setUpdateTime(String.valueOf(LocalDateTime.now()));
-        userMapper.update(user);
     }
 
     @Override

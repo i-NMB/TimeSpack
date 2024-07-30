@@ -4,7 +4,6 @@ import com.bilicute.spacetime.pojo.Result;
 import com.bilicute.spacetime.quickMethods.QuickMethods;
 import com.bilicute.spacetime.quickMethods.VerifyCode;
 import com.bilicute.spacetime.service.AttentionService;
-import com.bilicute.spacetime.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,6 @@ public class AttentionController {
     @Autowired
     private void setAttentionService(AttentionService attentionService) {
         AttentionController.attentionService = attentionService;
-    }
-
-    private static UserService userService;
-    @Autowired
-    private void setUserService(UserService userService) {
-        AttentionController.userService = userService;
     }
 
     /**

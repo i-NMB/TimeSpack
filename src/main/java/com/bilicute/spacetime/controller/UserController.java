@@ -225,18 +225,20 @@ public class UserController {
                                      String phoneCode,
                                      String mail,
                                      String mailCode){
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
+        }
         String phone = QuickMethods.getLoggedInPhone();
-//        if (phone == null) {return Result.error("你还没有绑定手机号");}
+        if (phone == null) {
+            return Result.error("你还没有绑定手机号");
+        }
         if(!VerifyCode.verifyByPhoneInLoggedUser(request,phone,phoneCode)){
             return Result.error("手机验证码错误");
         }
         if (!VerifyCode.verifyByMail(request,mail,mailCode)){
             return Result.error("新邮箱验证码错误");
-        }
-        //敏感操作，判断操作之前是否修改过密码
-        if(QuickMethods.isUpdatedPassword()){
-            VerifyCode.clearCachedUsers(request,response);
-            return Result.error("账号过期，请重新登录");
         }
         userService.updateMail(mail);
         request.getSession().invalidate();
@@ -279,13 +281,13 @@ public class UserController {
     public Result<String> changePasswordByMail(HttpServletRequest request, HttpServletResponse response,
                                        @RequestParam String mailCode,
                                        @RequestParam String newPassword) {
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
+        }
         if (mailCode==null || newPassword==null) {
             return Result.error("关键参数为空");
-        }
-        //敏感操作，判断操作之前是否修改过密码
-        if(QuickMethods.isUpdatedPassword()){
-            VerifyCode.clearCachedUsers(request,response);
-            return Result.error("账号过期，请重新登录");
         }
         String loggedInMail = QuickMethods.getLoggedInEmail();
         if (!VerifyCode.verifyByMailInLoggedUser(request,loggedInMail,mailCode)){
@@ -312,6 +314,11 @@ public class UserController {
     @PatchMapping("/updatePhone")
     public Result<String> updatePhone(HttpServletRequest request, HttpServletResponse response, String mailCode,
                              String phone,String phoneCode){
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
+        }
         String mail = QuickMethods.getLoggedInEmail();
         if (mail == null) {
             return Result.error("你还没有绑定邮箱");
@@ -324,11 +331,6 @@ public class UserController {
         }
         if (!VerifyCode.verifyByPhone(request,phone,phoneCode)){
             return Result.error("新手机验证码错误");
-        }
-        //敏感操作，判断操作之前是否修改过密码
-        if(QuickMethods.isUpdatedPassword()){
-            VerifyCode.clearCachedUsers(request,response);
-            return Result.error("账号过期，请重新登录");
         }
         userService.updatePhone(phone);
         request.getSession().invalidate();
@@ -348,14 +350,17 @@ public class UserController {
     @PatchMapping("/changePasswordByPhone")
     public Result<String> changePasswordByPhone(HttpServletRequest request, HttpServletResponse response,
                                                 String phoneCode, String newPassword) {
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
+        }
+        if (newPassword == null) {
+            return Result.error("关键参数为空");
+        }
         String phone = QuickMethods.getLoggedInPhone();
         if (!VerifyCode.verifyByPhoneInLoggedUser(request, phone, phoneCode)) {
             return Result.error("手机验证码错误");
-        }
-        //敏感操作，判断操作之前是否修改过密码
-        if(QuickMethods.isUpdatedPassword()){
-            VerifyCode.clearCachedUsers(request,response);
-            return Result.error("账号过期，请重新登录");
         }
         userService.updatePwd(newPassword);
         request.getSession().invalidate();
