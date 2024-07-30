@@ -45,8 +45,8 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
+          restore-keys: ''
+
       - name: Build with Maven
         run: |
           mvn clean install package -B -'Djasypt.encryptor.password'="${{ secrets.JASYPT_TOKEN }}"
@@ -75,8 +75,7 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-m2
+          restore-keys: ''
       - name: Build with Maven
         run: |
           mvn clean install package -B -'Djasypt.encryptor.password'="${{ secrets.JASYPT_TOKEN }}"
