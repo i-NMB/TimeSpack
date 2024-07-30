@@ -49,6 +49,11 @@ public class ArticleController {
      */
     @PostMapping("/add")
     public Result<String> add(@RequestBody @Validated Article article, HttpServletRequest request, HttpServletResponse response){
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
+        }
         if (article == null) {
             return Result.error("文章上传错误");
         }
@@ -62,14 +67,12 @@ public class ArticleController {
         if (article.getCategoryId()!=3&&(article.getContent() == null||article.getContent().isBlank())) {
             return Result.error("文章内容为空");
         }
-        //敏感操作，判断操作之前是否修改过密码
-        if(QuickMethods.isUpdatedPassword()){
-            VerifyCode.clearCachedUsers(request,response);
-            return Result.error("账号过期，请重新登录");
+        if (articleService.add(article)) {
+            return Result.success();
+        } else {
+            return Result.error("指定id已经存在");
         }
-        articleService.add(article);
-        log.info("创建文章：用户{}\t文章标题：{}", QuickMethods.getLoggedInUserName(), article.getTitle());
-        return Result.success();
+
     }
 
     /**
@@ -180,6 +183,12 @@ public class ArticleController {
         return Result.success();
     }
 
+    /**
+     * @return Result<Map < String, Integer>>
+     * @author i囡漫笔
+     * @description 查询自身所有文章的点赞和阅览
+     * @date 2024/4/26
+     */
     @GetMapping("/my")
     public Result<Map<String,Integer>> querySelfInfo(){
         Integer loggedInUserId = QuickMethods.getLoggedInUserId();
@@ -191,8 +200,10 @@ public class ArticleController {
     @PatchMapping("/checked")
     public Result<String> checked(@Min(1) @NotNull(message = "请指定审核文章") Integer id,
                                   HttpServletRequest request, HttpServletResponse response){
-        if (!QuickMethods.isAdmin()){
-            return Result.error("权限不足");
+        //敏感操作，判断操作之前是否修改过密码
+        if (QuickMethods.isUpdatedPassword()) {
+            VerifyCode.clearCachedUsers(request, response);
+            return Result.error("账号过期，请重新登录");
         }
         Article article = articleService.findById(id);
         if (article == null) {
@@ -201,15 +212,38 @@ public class ArticleController {
         if (Objects.equals(QuickMethods.getLoggedInUserId(), article.getCreateUser())){
             return Result.error("不能审核自己发送的文章");
         }
+        if (!QuickMethods.isAdmin()) {
+            return Result.error("权限不足");
+        }
         if (article.getAuditingState()){
             return Result.error("该文章已经被审核了，无需重复操作");
         }
+        articleService.check(id);
+        return Result.success();
+    }
+
+    @PatchMapping("/unchecked")
+    public Result<String> unchecked(@Min(1) @NotNull(message = "请指定撤销审核文章") Integer id,
+                                    HttpServletRequest request, HttpServletResponse response) {
         //敏感操作，判断操作之前是否修改过密码
+        Article article = articleService.findById(id);
         if(QuickMethods.isUpdatedPassword()){
             VerifyCode.clearCachedUsers(request,response);
             return Result.error("账号过期，请重新登录");
         }
-        articleService.check(id);
+        if (article == null) {
+            return Result.error("指定对象不存在");
+        }
+        if (Objects.equals(QuickMethods.getLoggedInUserId(), article.getCreateUser())) {
+            return Result.error("不能撤销审核自己发送的文章");
+        }
+        if (!QuickMethods.isAdmin()) {
+            return Result.error("权限不足");
+        }
+        if (!article.getAuditingState()) {
+            return Result.error("该文章还未审核，无需重复操作");
+        }
+        articleService.uncheck(id);
         return Result.success();
     }
 
@@ -237,6 +271,7 @@ public class ArticleController {
         return Result.success();
     }
 
+/*
     @PutMapping("/update")
     public Result<String> update(@RequestBody @Validated Article article,
                                  HttpServletRequest request, HttpServletResponse response){
@@ -255,6 +290,7 @@ public class ArticleController {
         articleService.update(article);
         return Result.success();
     }
+*/
 
     @GetMapping("/oneself")
     public Result<PageBean<Article>> listByOneself(

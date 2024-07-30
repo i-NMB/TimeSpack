@@ -31,7 +31,7 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleServiceImpl.articleMapper = articleMapper;
     }
     @Override
-    public void add(Article article) {
+    public Boolean add(Article article) {
         article.setCreateTime(LocalDateTime.now());
         article.setUpdateTime(LocalDateTime.now());
         //获取当前登陆用户的id
@@ -41,9 +41,12 @@ public class ArticleServiceImpl implements ArticleService {
         article.setAuditingState(false);
         article.setLikes(0);
         article.setView(0);
+        Article article1 = articleMapper.findById(article.getArticleId());
+        if (article1 != null) {
+            return false;
+        }
         articleMapper.add(article);
-
-
+        return true;
     }
 
     @Override
@@ -52,9 +55,6 @@ public class ArticleServiceImpl implements ArticleService {
         PageBean<Article> articlePageBean = new PageBean<>();
         //开启分页查询(借助pageHelper)
         PageHelper.startPage(pageNum,pageSize);
-        //获取userID
-//        Map<String,Object> userMap = ThreadLocalUtil.get();
-//        Integer userId = (Integer) userMap.get("id");
         //调用Mapper完成查询
         List<Article> as = articleMapper.list(categoryId,state,auditingState);
         //Page中提供了方法，可以获取PageHelper分页查询后得到的总记录条数和当前页数镉
@@ -83,7 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article findById(Integer id) {
-        return articleMapper.findByUserid(id);
+        return articleMapper.findById(id);
     }
 
     @Override
@@ -113,16 +113,21 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public void uncheck(Integer id) {
+        articleMapper.check(id, false);
+    }
+
+    @Override
     public void delete(Integer id) {
         articleMapper.delete(id);
     }
 
-    @Override
-    public void update(Article article) {
-        LocalDateTime nowTime = LocalDateTime.now();
-        article.setUpdateTime(nowTime);
-        articleMapper.update(article);
-    }
+//*    @Override
+//*    public void update(Article article) {
+//*        LocalDateTime nowTime = LocalDateTime.now();
+//*        article.setUpdateTime(nowTime);
+//*        articleMapper.update(article);
+//*    }
 
     @Override
     public PageBean<Article> listByOneself(Integer pageNum, Integer pageSize, Integer categoryId, String state, Integer userId) {

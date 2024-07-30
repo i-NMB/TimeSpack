@@ -1,8 +1,8 @@
 # TimeSpack时光漫步
 
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/i-NMB/TimeSpack)    ![GitHub last commit](https://img.shields.io/github/last-commit/i-NMB/TimeSpack)    [![codecov](https://img.shields.io/codecov/c/github/i-NMB/TimeSpack?token=XJO3VTB6WE&logo=codecov&logoColor=%23F01F7A&logoSize=auto&label=Codecov&color=%23ea5455)](https://codecov.io/github/i-NMB/TimeSpack)    ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/i-NMB/TimeSpack/ci.yml)
+[![codecov](https://img.shields.io/codecov/c/github/i-NMB/TimeSpack?token=XJO3VTB6WE&logo=codecov&logoColor=%23F01F7A&logoSize=auto&label=Codecov&color=%23ea5455)](https://codecov.io/github/i-NMB/TimeSpack)    [![Codacy Badge](https://img.shields.io/codacy/grade/10721a3009ab4c45a98972bea6f4d833?logo=codacy&label=Backend%20Code%20Quality)](https://app.codacy.com/gh/i-NMB/TimeSpack/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)    [![DeepScan grade](https://deepscan.io/api/teams/24461/projects/27647/branches/886310/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=24461&pid=27647&bid=886310)
 
-![Maintainer](https://img.shields.io/badge/maintainer-i%E5%9B%A1%E6%BC%AB%E7%AC%94-%23f38181?style=flat&link=https%3A%2F%2Fi-nmb.cn)    [![AGPL License](https://badgen.net/github/license/i-NMB/TimeSpack)](http://www.gnu.org/licenses/agpl-3.0)    [![Demo](https://img.shields.io/badge/Demo-time.bilicute.com-%2311999e?style=flat)](https://time.bilicute.com)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/i-NMB/TimeSpack)    ![GitHub last commit](https://img.shields.io/github/last-commit/i-NMB/TimeSpack)    ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/i-NMB/TimeSpack/ci.yml)     [![AGPL License](https://badgen.net/github/license/i-NMB/TimeSpack)](http://www.gnu.org/licenses/agpl-3.0)
 
 《时光漫步》是一个创新的博客/个人空间平台，旨在为用户提供一个自由、开放、互动的网络空间。本项目基于先进的Web技术构建，使用户能够轻松创建、发布和管理自己的内容，同时与其他用户互动和分享。
 

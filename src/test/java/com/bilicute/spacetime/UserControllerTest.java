@@ -99,6 +99,13 @@ public class UserControllerTest {
         userController.login(username, password, code, response, request);
     }
 
+
+    @Test
+    public void userControllerGetUser() {
+        userController.getUser(null);
+        userController.getUser(2);
+    }
+
     public static void loginTestUser(HttpServletResponse response) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", 10);
@@ -114,10 +121,28 @@ public class UserControllerTest {
         response.addCookie(cookie);
     }
 
-    @Test
-    public void userControllerGetUser() {
-        userController.getUser(null);
-        userController.getUser(2);
+    public static void changePasswordTestUser() {
+        //修改密码敏感操作测试
+        Map<String, Object> claims2 = new HashMap<>();
+        claims2.put("id", 10);
+        claims2.put("username", "validUser");
+        claims2.put("SHA2password", "0");
+        ThreadLocalUtil.set(claims2);
+    }
+
+    public static void getAdminTestUser(HttpServletResponse response) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", 1);
+        claims.put("username", "test");
+        claims.put("SHA2password", Sha256.addSalt(Sha256.addSalt("ValidPass1")));
+        String token = JwtUtil.genToken(claims);
+        // 假设ThreadLocalUtil.set()是用来设置ThreadLocal的值
+        ThreadLocalUtil.set(claims);
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setMaxAge(5 * 60);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 
     @Test
@@ -125,12 +150,9 @@ public class UserControllerTest {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         userController.userInfo(request, response);
-        //验证修改密码后“账号过期”
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "");
-        ThreadLocalUtil.set(claims2);
+
+        //修改密码敏感操作测试
+        UserControllerTest.changePasswordTestUser();
         userController.userInfo(request, response);
     }
 
@@ -141,11 +163,8 @@ public class UserControllerTest {
 
         userController.updateAvatar("https://everlast-1310624778.cos.ap-chengdu.myqcloud.com/img/fe4ceda8-33e5-4634-98a2-a3d0b9a6dca1.png",
                 request, response);
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        //修改密码敏感操作测试
+        UserControllerTest.changePasswordTestUser();
         userController.updateAvatar("https://everlast-1310624778.cos.ap-chengdu.myqcloud.com/img/fe4ceda8-33e5-4634-98a2-a3d0b9a6dca1.png",
                 request, response);
     }
@@ -169,11 +188,7 @@ public class UserControllerTest {
         userController.updateMail(request, response, phoneCode, email, mailCode);
 
         //修改密码敏感操作测试
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        UserControllerTest.changePasswordTestUser();
         userController.updateMail(request, response, phoneCode, email, mailCode);
     }
 
@@ -187,11 +202,7 @@ public class UserControllerTest {
         userController.updateNickname("validUser", request, response);
 
         //修改密码敏感操作测试
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        UserControllerTest.changePasswordTestUser();
         //修改密码后敏感操作错误测试
         userController.updateNickname("validUser", request, response);
     }
@@ -214,11 +225,7 @@ public class UserControllerTest {
         userController.changePasswordByMail(request, response, mailCode, newPassword);
 
         //修改密码敏感操作测试
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        UserControllerTest.changePasswordTestUser();
         //修改密码后敏感操作错误测试
         userController.changePasswordByMail(request, response, mailCode, newPassword);
 
@@ -247,11 +254,7 @@ public class UserControllerTest {
         userController.updatePhone(request, response, mailCode, phone, phoneCode);
 
         //修改密码敏感操作测试
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        UserControllerTest.changePasswordTestUser();
         userController.updatePhone(request, response, mailCode, phone, phoneCode);
     }
 
@@ -272,16 +275,11 @@ public class UserControllerTest {
         userController.changePasswordByPhone(request, response, phoneCode, newPassword);
 
         //修改密码敏感操作测试
-        Map<String, Object> claims2 = new HashMap<>();
-        claims2.put("id", 10);
-        claims2.put("username", "validUser");
-        claims2.put("SHA2password", "0");
-        ThreadLocalUtil.set(claims2);
+        UserControllerTest.changePasswordTestUser();
         //修改密码后敏感操作错误测试
         userController.changePasswordByPhone(request, response, phoneCode, newPassword);
 
         userController.deleteAllUserCookies(request, response);
     }
-
 }
 

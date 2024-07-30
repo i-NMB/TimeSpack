@@ -53,4 +53,39 @@
         </where>
         ORDER BY article_id DESC
     </select>
+
+    <insert id="add" parameterType="com.bilicute.spacetime.pojo.Article">
+        INSERT INTO article (
+        <if test="articleId != null">
+            article_id,
+        </if>
+        title,
+        content,
+        cover_img,
+        state,
+        category_id,
+        create_user,
+        create_time,
+        update_time,
+        auditing_state,
+        likes,
+        view
+        )
+        VALUES (
+        <if test="articleId != null">
+            #{articleId},
+        </if>
+        #{title},
+        #{content},
+        #{coverImg},
+        #{state},
+        #{categoryId},
+        #{createUser},
+        #{createTime},
+        #{updateTime},
+        #{auditingState},
+        #{likes},
+        #{view}
+        )
+    </insert>
 </mapper>

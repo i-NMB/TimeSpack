@@ -6,7 +6,7 @@ import com.bilicute.spacetime.pojo.PageBean;
 import java.util.Map;
 
 public interface ArticleService {
-    void add(Article article);
+    Boolean add(Article article);
 
     PageBean<Article> list(Integer pageNum, Integer pageSize, Integer categoryId, String state,Boolean auditingState);
 
@@ -22,9 +22,11 @@ public interface ArticleService {
 
     void check(Integer id);
 
+    void uncheck(Integer id);
+
     void delete(Integer id);
 
-    void update(Article article);
+//    void update(Article article);
 
     PageBean<Article> listByOneself(Integer pageNum, Integer pageSize, Integer categoryId, String state, Integer userId);
 
