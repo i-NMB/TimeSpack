@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.core.factory.SmsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -192,8 +194,8 @@ public class VerifyCodeController {
         request.getSession().setAttribute("phone",phone);
         request.getSession().setAttribute("PhoneCode", phoneCode);
         //发送短信
-//        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
-//        smsBlend.sendMessage(phone,phoneCode);
+        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
+        smsBlend.sendMessage(phone, phoneCode);
         return Result.success();
     }
 
@@ -219,8 +221,8 @@ public class VerifyCodeController {
         request.getSession().setAttribute("loggedInPhone",loggedInPhone);
         request.getSession().setAttribute("PhoneCode", phoneCode);
         //发送短信
-//        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
-//        smsBlend.sendMessage(loggedInPhone,phoneCode);
+        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
+        smsBlend.sendMessage(loggedInPhone, phoneCode);
         return Result.success();
     }
 }
