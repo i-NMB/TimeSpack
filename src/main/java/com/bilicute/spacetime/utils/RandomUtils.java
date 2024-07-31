@@ -58,17 +58,15 @@ public class RandomUtils extends org.apache.commons.lang3.RandomUtils {
      * @date 2024/4/16
      */
     public static Color randomColor(int fc, int bc) {
-        int f = fc;
-        int b = bc;
+        int f = Math.min(fc, 255); // 确保f不大于255
+        int b = Math.min(bc, 255); // 确保b不大于255
+        b = Math.max(b, f); // 确保b不小于f
         Random random = new Random();
-        if (f > 255) {
-            f = 255;
-        }
-        if (b > 255) {
-            b = 255;
-        }
-        return new Color(f + random.nextInt(b - f), f + random.nextInt(b - f), f + random.nextInt(b - f));
+        return new Color(f + random.nextInt(b - f + 1), // +1保证包括边界值
+                f + random.nextInt(b - f + 1),
+                f + random.nextInt(b - f + 1));
     }
+
 
     public static int nextInt(int bound) {
         return random.nextInt(bound);

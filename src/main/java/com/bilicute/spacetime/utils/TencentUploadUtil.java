@@ -111,7 +111,7 @@ public class TencentUploadUtil {
      * @作者: i囡漫笔
      * @日期: 2023/12/14
      */
-    private static String getType(String fileName) {
+    public static String getType(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "";
         }
@@ -142,7 +142,7 @@ public class TencentUploadUtil {
     * @作者: i囡漫笔
     * @日期: 2023/12/14
     */
-    private static String bytesToHexString(byte[] src){
+    public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder();
         if(src == null || src.length <= 0){
             return null;
