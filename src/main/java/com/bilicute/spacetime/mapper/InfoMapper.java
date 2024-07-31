@@ -7,12 +7,13 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface InfoMapper {
-    @Select("SELECT * FROM article WHERE create_user = #{userId} AND view = (SELECT MAX(view) FROM article WHERE create_user = #{userId})")
+    @Select("SELECT * FROM article WHERE create_user = #{userId} AND view = (SELECT MAX(view) FROM article WHERE create_user = #{userId}) ORDER BY create_time DESC LIMIT 1")
     Article getMaxViewArticle(Integer userId);
-    @Select("SELECT * FROM article WHERE create_user = #{userId} AND likes = (SELECT MAX(likes) FROM article WHERE create_user = #{userId})")
+
+    @Select("SELECT * FROM article WHERE create_user = #{userId} AND likes = (SELECT MAX(likes) FROM article WHERE create_user = #{userId}) ORDER BY create_time DESC LIMIT 1")
     Article getLikeViewArticle(Integer userId);
 
-    @Select("SELECT * FROM comment WHERE create_user = #{userId} AND likes = (SELECT MAX(likes) FROM comment WHERE create_user = #{userId})")
+    @Select("SELECT * FROM comment WHERE create_user = #{userId} AND likes = (SELECT MAX(likes) FROM comment WHERE create_user = #{userId}) ORDER BY create_time DESC LIMIT 1")
     Comment getLikeViewComment(Integer userId);
 
     @Select("SELECT COUNT(article_id) AS total_articles FROM article WHERE create_user = #{userId}")

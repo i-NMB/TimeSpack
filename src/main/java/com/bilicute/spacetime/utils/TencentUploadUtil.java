@@ -105,14 +105,23 @@ public class TencentUploadUtil {
     }
 
     /**
-    * @描述: 通过文件名获取HTTP头需要哪个字段
-    * @Param: [fileName]
-    * @返回: java.lang.String
-    * @作者: i囡漫笔
-    * @日期: 2023/12/14
-    */
-    private static String getType(String fileName){
-        String typeSuffix = fileName.substring(fileName.lastIndexOf("."));
+     * @描述: 通过文件名获取HTTP头需要哪个字段
+     * @Param: [fileName]
+     * @返回: java.lang.String
+     * @作者: i囡漫笔
+     * @日期: 2023/12/14
+     */
+    private static String getType(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return "";
+        }
+
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex == -1 || lastDotIndex == fileName.length() - 1) {
+            return "";
+        }
+
+        String typeSuffix = fileName.substring(lastDotIndex).toLowerCase(); // Ensure case-insensitivity
         return switch (typeSuffix) {
             case ".tif", ".tiff" -> "image/tiff";
             case ".jpeg", ".jpg" -> "image/jpeg";
@@ -124,6 +133,7 @@ public class TencentUploadUtil {
             default -> "";
         };
     }
+
 
     /**
     * @描述: 得到上传的文件头（十六进制文件头）
@@ -180,6 +190,9 @@ public class TencentUploadUtil {
         boolean result = false;
         String hz = fileName.substring(fileName.lastIndexOf(".")+1);
         System.out.println("后缀为："+hz);
+        if (fileStream == null) {
+            return result;
+        }
         byte[] byt = new byte[fileStream.available()];
         fileStream.read(byt);
         if(TencentUploadUtil.getFileType(hz,byt)){ //文件头校验

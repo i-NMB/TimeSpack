@@ -2,6 +2,7 @@ package com.bilicute.spacetime;
 
 import com.bilicute.spacetime.controller.ArticleController;
 import com.bilicute.spacetime.controller.CommentController;
+import com.bilicute.spacetime.controller.InfoController;
 import com.bilicute.spacetime.pojo.Article;
 import com.bilicute.spacetime.utils.JwtUtil;
 import com.bilicute.spacetime.utils.Sha256;
@@ -45,6 +46,8 @@ public class ArticleControllerTest {
     private CommentController commentController;
     @Autowired
     private TestCommentMapper testCommentMapper;
+    @Autowired
+    private InfoController infoController;
 
     public ArticleControllerTest() {
         Article article = new Article();
@@ -75,6 +78,8 @@ public class ArticleControllerTest {
         UserControllerTest.loginTestUser(response);
         //正确添加
         articleController.add(article, request, response);
+        infoController.maxViewArticle();
+        infoController.maxLikeArticle();
         //重复添加测试
         articleController.add(article, request, response);
         //空实体测试
@@ -110,6 +115,8 @@ public class ArticleControllerTest {
 
         //添加测试评论
         testCommentMapper.addComment(1, "测试内容", "已发布", 1, 10, false, 0);
+        UserControllerTest.loginTestUser(response);
+        infoController.maxLikeComment();
     }
 
     @Test
