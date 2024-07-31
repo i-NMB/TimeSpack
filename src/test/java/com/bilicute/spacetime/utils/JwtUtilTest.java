@@ -48,9 +48,7 @@ class JwtUtilTest {
     @Test
     void testParseTokenWithInvalidToken() {
         String invalidToken = "invalidToken";
-        assertThrows(JWTDecodeException.class, () -> {
-            JwtUtil.parseToken(invalidToken);
-        });
+        assertThrows(JWTDecodeException.class, () -> JwtUtil.parseToken(invalidToken));
     }
 
     @Test
@@ -62,8 +60,6 @@ class JwtUtilTest {
 
         // 假设我们对token进行了篡改
         String tamperedToken = token + "tampered";
-        assertThrows(JWTVerificationException.class, () -> {
-            JwtUtil.parseToken(tamperedToken);
-        });
+        assertThrows(JWTVerificationException.class, () -> JwtUtil.parseToken(tamperedToken));
     }
 }

@@ -42,9 +42,9 @@ class RandomUtilsTest {
         int bc = 100;
         Color color = RandomUtils.randomColor(fc, bc);
         assertNotNull(color);
-        assertTrue(color.getRed() >= Math.min(fc, 255) && color.getRed() <= Math.max(bc, fc));
-        assertTrue(color.getGreen() >= Math.min(fc, 255) && color.getGreen() <= Math.max(bc, fc));
-        assertTrue(color.getBlue() >= Math.min(fc, 255) && color.getBlue() <= Math.max(bc, fc));
+        assertTrue(color.getRed() >= 255 && color.getRed() <= fc);
+        assertTrue(color.getGreen() >= 255 && color.getGreen() <= fc);
+        assertTrue(color.getBlue() >= 255 && color.getBlue() <= fc);
     }
 
 }
