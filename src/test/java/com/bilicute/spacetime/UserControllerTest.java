@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +95,7 @@ public class UserControllerTest {
      */
 
     @Test
-    public void a() {
+    public void a() throws UnsupportedEncodingException {
 
         String username = "validUser";
         String password = "ValidPass1";
@@ -172,7 +173,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void f() {
+    public void f() throws UnsupportedEncodingException {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -210,7 +211,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void h() {
+    public void h() throws UnsupportedEncodingException {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -234,7 +235,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void i() {
+    public void i() throws UnsupportedEncodingException {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         verifyCodeController.UserMailVerifyCode(request, response);

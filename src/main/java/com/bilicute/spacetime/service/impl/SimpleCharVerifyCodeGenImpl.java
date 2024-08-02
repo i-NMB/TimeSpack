@@ -26,7 +26,7 @@ import java.util.Random;
 public class SimpleCharVerifyCodeGenImpl implements IVerifyCodeGen {
     private static final Logger logger = LoggerFactory.getLogger(SimpleCharVerifyCodeGenImpl.class);
 
-    private static final String[] FONT_TYPES = { "\u5b8b\u4f53", "\u65b0\u5b8b\u4f53", "\u9ed1\u4f53", "\u6977\u4f53", "\u96b6\u4e66" };
+    private static final String[] FONT_TYPES = {"宋体", "新宋体", "黑体", "楷体", "隶书"};
 
     private static final int VALICATE_CODE_LENGTH = 6;
 

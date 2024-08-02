@@ -88,36 +88,36 @@ public class VerifyCodeController {
      */
     @PostMapping  ("/mail")
     public Result<String> MailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
-        IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
-        String code;
-        //设置响应头
-        response.setHeader("Pragma", "no-cache");
-        //设置响应头
-        response.setHeader("Cache-Control", "no-cache");
-        //在代理服务器端防止缓冲
-        response.setDateHeader("Expires", 0);
-        if (request.getSession().getAttribute("RequestMailTime") != null) {
-            if (System.currentTimeMillis()-(long)request.getSession().getAttribute("RequestMailTime") < 60000){
-                return Result.error("60秒内请勿重复发送验证码");
-            }
-        }
-        if (isEmptyString(email)){
-            return Result.error("邮箱为空");
-        }
-
         try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
+            IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
+            String code;
+            //设置响应头
+            response.setHeader("Pragma", "no-cache");
+            //设置响应头
+            response.setHeader("Cache-Control", "no-cache");
+            //在代理服务器端防止缓冲
+            response.setDateHeader("Expires", 0);
+            if (request.getSession().getAttribute("RequestMailTime") != null) {
+                if (System.currentTimeMillis() - (long) request.getSession().getAttribute("RequestMailTime") < 60000) {
+                    return Result.error("60秒内请勿重复发送验证码");
+                }
+            }
+            if (isEmptyString(email)) {
+                return Result.error("邮箱为空");
+            }
+
             code = iVerifyCodeGen.generate(1, 1, streams);
             //将VerifyCode绑定session
             request.getSession().setAttribute("RequestMailTime",System.currentTimeMillis());
             request.getSession().setAttribute("Mail",email);
             request.getSession().setAttribute("MailCode", code);
-//            System.out.println("验证码为："+code);
+            //            System.out.println("验证码为："+code);
+            mailService.sendEmail(email, code, "用户");
+            log.info("新用户发送邮件验证码：{}", email);
+            return Result.success();
         } catch (IOException e) {
             return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
         }
-        mailService.sendEmail(email, code, "用户");
-        log.info("新用户发送邮件验证码：{}", email);
-        return Result.success();
     }
 
     /**
