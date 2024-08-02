@@ -25,7 +25,6 @@ public class PhoneCodeToolTest {
     public void testMobileEncryptWithNull() {
         // Arrange
         String mobile = null;
-        String expected = null;
 
         // Act
         String result = PhoneCodeTool.mobileEncrypt(mobile);
