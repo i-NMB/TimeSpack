@@ -21,6 +21,9 @@ public class PhoneCodeTool {
      * @date 2024/4/18
      */
     public static String mobileEncrypt(String mobile){
+        if (mobile == null || mobile.length() != 11) {
+            return mobile;
+        }
         return mobile.replaceAll("(\\d{2})\\d{7}(\\d{2})","$1*******$2");
     }
 

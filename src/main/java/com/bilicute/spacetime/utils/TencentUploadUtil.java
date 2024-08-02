@@ -186,10 +186,9 @@ public class TencentUploadUtil {
     * @作者: i囡漫笔
     * @日期: 2023/12/14
     */
-    private static boolean isLegitimacy(String fileName, InputStream fileStream) throws IOException {
+    static boolean isLegitimacy(String fileName, InputStream fileStream) throws IOException {
         boolean result = false;
         String hz = fileName.substring(fileName.lastIndexOf(".")+1);
-        System.out.println("后缀为："+hz);
         if (fileStream == null) {
             return result;
         }

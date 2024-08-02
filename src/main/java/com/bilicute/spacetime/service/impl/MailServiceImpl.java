@@ -50,7 +50,7 @@ public class MailServiceImpl implements MailService {
         try {
             nickname= MimeUtility.encodeText("TimeSpace");
         } catch (UnsupportedEncodingException e) {
-            log.error("编码不支持异常", e); // 使用error级别记录异常
+            log.error("编码不支持异常", e);
         }
 
         try {
@@ -74,7 +74,6 @@ public class MailServiceImpl implements MailService {
             //调用 JavaMailSender 的 send() 方法来完成邮件发送操作，其中 mimeMessage 参数即为构建好的 MIME 类型信息对象。
             javaMailSender.send(mimeMessage);
         } catch (Exception e) {
-            //：捕获可能发生的异常并抛出运行时异常，以便能够及时处理问题。
             throw new RuntimeException(e);
         }
     }

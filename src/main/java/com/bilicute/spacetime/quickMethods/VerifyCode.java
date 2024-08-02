@@ -31,6 +31,7 @@ public class VerifyCode {
         if (phoneCode == null) {
             return false;
         }
+        System.out.println("传递的手机验证码为" + request.getSession().getAttribute("PhoneCode"));
         //返回是否验证通过
         return phoneCode.equals(request.getSession().getAttribute("PhoneCode"));
     }

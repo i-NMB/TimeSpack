@@ -50,6 +50,7 @@ public class VerifyCodeControllerTest {
     private VerifyCodeController verifyCodeController;
     @Mock
     private MailService mailService;
+
     private MockMvc mockMvc;
 
     @Test
