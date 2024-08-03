@@ -7,17 +7,19 @@ import com.bilicute.spacetime.service.IVerifyCodeGen;
 import com.bilicute.spacetime.service.MailService;
 import com.bilicute.spacetime.service.impl.SimpleCharVerifyCodeGenImpl;
 import com.bilicute.spacetime.utils.PhoneCodeTool;
+import com.bilicute.spacetime.utils.RandomUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.sms4j.api.SmsBlend;
+import org.dromara.sms4j.core.factory.SmsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.bilicute.spacetime.utils.PhoneCodeTool.isPhone;
@@ -88,8 +90,6 @@ public class VerifyCodeController {
      */
     @PostMapping  ("/mail")
     public Result<String> MailVerifyCode(HttpServletRequest request, HttpServletResponse response,@Email String email) {
-        try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
-            IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
             String code;
             //设置响应头
             response.setHeader("Pragma", "no-cache");
@@ -106,7 +106,8 @@ public class VerifyCodeController {
                 return Result.error("邮箱为空");
             }
 
-            code = iVerifyCodeGen.generate(1, 1, streams);
+        code = RandomUtils.randomString(6);
+        ;
             //将VerifyCode绑定session
             request.getSession().setAttribute("RequestMailTime",System.currentTimeMillis());
             request.getSession().setAttribute("Mail",email);
@@ -115,9 +116,7 @@ public class VerifyCodeController {
             mailService.sendEmail(email, code, "用户");
             log.info("新用户发送邮件验证码：{}", email);
             return Result.success();
-        } catch (IOException e) {
-            return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
-        }
+
     }
 
     /**
@@ -130,7 +129,6 @@ public class VerifyCodeController {
      */
     @PostMapping  ("/mailByUser")
     public Result<String> UserMailVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-        IVerifyCodeGen iVerifyCodeGen = new SimpleCharVerifyCodeGenImpl();
         String code;
         //设置响应头
         response.setHeader("Pragma", "no-cache");
@@ -148,15 +146,11 @@ public class VerifyCodeController {
                 return Result.error("60秒内请勿重复发送验证码");
             }
         }
-        try (ByteArrayOutputStream streams = new ByteArrayOutputStream()) {
-            code = iVerifyCodeGen.generate(1, 1, streams);
+        code = RandomUtils.randomString(6);
             //将VerifyCode绑定session
-            request.getSession().setAttribute("loggedInEmail",loggedInEmail);
-            request.getSession().setAttribute("MailCode", code);
+        request.getSession().setAttribute("loggedInEmail", loggedInEmail);
+        request.getSession().setAttribute("MailCode", code);
 //            System.out.println("验证码为："+code);
-        } catch (IOException e) {
-            return Result.error("生成邮箱验证码发送错误：" + e.getMessage());
-        }
         mailService.sendEmail(loggedInEmail, code, QuickMethods.getLoggedInNickname());
         log.info("老用户发送邮件验证码，邮箱：{}", loggedInEmail);
         return Result.success();
@@ -192,8 +186,8 @@ public class VerifyCodeController {
         request.getSession().setAttribute("phone",phone);
         request.getSession().setAttribute("PhoneCode", phoneCode);
         //发送短信
-//        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
-//        smsBlend.sendMessage(phone, phoneCode);
+        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
+        smsBlend.sendMessage(phone, phoneCode);
         return Result.success();
     }
 
@@ -219,8 +213,8 @@ public class VerifyCodeController {
         request.getSession().setAttribute("loggedInPhone",loggedInPhone);
         request.getSession().setAttribute("PhoneCode", phoneCode);
         //发送短信
-//        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
-//        smsBlend.sendMessage(loggedInPhone, phoneCode);
+        SmsBlend smsBlend = SmsFactory.getSmsBlend("tx-register");
+        smsBlend.sendMessage(loggedInPhone, phoneCode);
         return Result.success();
     }
 }

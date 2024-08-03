@@ -173,7 +173,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void f() throws UnsupportedEncodingException {
+    public void f() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -211,7 +211,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void h() throws UnsupportedEncodingException {
+    public void h() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
 
@@ -235,7 +235,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void i() throws UnsupportedEncodingException {
+    public void i() {
         //模拟登录
         UserControllerTest.loginTestUser(response);
         verifyCodeController.UserMailVerifyCode(request, response);
