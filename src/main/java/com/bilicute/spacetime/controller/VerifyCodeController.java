@@ -107,7 +107,6 @@ public class VerifyCodeController {
             }
 
         code = RandomUtils.randomString(6);
-        ;
             //将VerifyCode绑定session
             request.getSession().setAttribute("RequestMailTime",System.currentTimeMillis());
             request.getSession().setAttribute("Mail",email);
